@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Pinyon+Script&family=Marcellus&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-rock-900: #2E3438;
+  --color-rock-800: #5C6B5F;
+  --color-rock-700: #8A98A6;
+  
+  --color-slate-charcoal: #2E3438;
+  
+  --color-deep-teal-900: #1B3C41;
+  --color-deep-teal-850: #224A51;
+  --color-deep-teal-800: #2D5C63;
+  --color-deep-teal-500: #3E7C85;
+  --color-deep-teal: #2D5C63;
+  
+  --color-fog-blue: #8A98A6;
+  --color-fog-light: #B4C0CB;
+  
+  --color-pine-900: #1F2824;
+  --color-pine-800: #2D5C63;
+  --color-pine-700: #5C6B5F;
+  --color-pine-600: #6D7E71;
+  --color-pine-500: #829486;
+  
+  --color-warm-white: #F6F4EF;
+  --color-warm-mist: #F6F4EF;
+  --color-stone-sand: #D8CBB8;
+  --color-card-beige: #EFEAE1;
+  --color-muted-silver: #8A98A6;
+
+  --font-bricolage: "Bricolage Grotesque", sans-serif;
+  --font-instrument: "Instrument Serif", serif;
+  --font-marcellus: "Marcellus", serif;
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-script: "Pinyon Script", cursive;
+
+  --font-sans: var(--font-jakarta);
+  --font-heading: var(--font-marcellus);
+  --font-serif: var(--font-marcellus);
+}
+
+@layer base {
+  body {
+    @apply bg-warm-white text-rock-900 font-sans antialiased overflow-x-hidden selection:bg-pine-800 selection:text-warm-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-warm-white);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted-silver);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-rock-700);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Cinematic Utilities */
+.glass-panel {
+  @apply bg-warm-white/80 backdrop-blur-md border border-rock-900/5 shadow-sm;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}

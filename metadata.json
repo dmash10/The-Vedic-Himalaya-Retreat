@@ -1,0 +1,8 @@
+{
+  "name": "The Vedic Himalaya Retreat",
+  "description": "A luxury cinematic resort website for The Vedic Himalaya Retreat inside the Himalayas, featuring immersive storytelling, a modern atmospheric UI, and destination booking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
