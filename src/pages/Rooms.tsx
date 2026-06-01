@@ -31,7 +31,7 @@ export default function Rooms() {
   const selectedRoomId = searchParams.get("room");
 
   const [rooms, setRooms] = useState<any[]>([]);
-  const { rooms: dbRooms } = useRooms();
+  const { rooms: dbRooms, loading } = useRooms();
   const { getValue } = useContent();
 
   const roomsHeading = getValue('rooms', 'rooms_heading', 'Sanctuary Suites');
@@ -199,6 +199,14 @@ export default function Rooms() {
     setAddSpecialPooja(false);
     setAddCompulsoryBreakfast(true);
   };
+
+  if (loading) {
+    return (
+      <div className="bg-[#FAF9F5] min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-pine-800"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FAF9F5] text-rock-900 pt-28 pb-24 min-h-screen font-sans selection:bg-pine-800 selection:text-white">
@@ -892,15 +900,7 @@ export default function Rooms() {
                 <p className="text-zinc-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto text-pretty font-sans font-normal">
                   {roomsSubheading}
                 </p>
-                {noticeVisible && roomsNotice && (
-                  <div className="max-w-xl mx-auto mt-8 p-4 bg-amber-50 border border-amber-200/50 rounded-xl text-left flex gap-3 text-amber-950 shadow-xs font-sans">
-                    <Info className="w-5 h-5 shrink-0 text-amber-700 mt-0.5" />
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 block mb-1">Advisory Notice</span>
-                      <p className="text-xs leading-relaxed font-medium whitespace-pre-line text-amber-800">{roomsNotice}</p>
-                    </div>
-                  </div>
-                )}
+
               </header>
 
               {/* Grid with Pristine Multi-image Suite Cards */}
