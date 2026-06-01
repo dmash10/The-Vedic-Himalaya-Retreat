@@ -38,6 +38,50 @@ export default function Rooms() {
   const roomsSubheading = getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging');
   const roomsNotice = getValue('rooms', 'rooms_notice', 'Important Booking Notice...');
   const noticeVisible = getValue('rooms', 'notice_visible', 'true') !== 'false';
+  const roomsHeroVisible = getValue('rooms', 'rooms_hero_visible', 'true') !== 'false';
+
+  const getIconComponent = (iconName: any) => {
+    if (!iconName) return Bed;
+    if (typeof iconName !== 'string') return iconName;
+    const map: { [key: string]: any } = {
+      Bed, Fan, Tv, Bath, Wifi, Coffee, Sparkles, ShieldCheck, Star, Check, Calendar, Users, Lock, CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, X, MessageSquare, Flame, Compass, Utensils, Mountain, Info
+    };
+    return map[iconName] || Bed;
+  };
+
+  const cmsAmenities = useMemo(() => {
+    let list = [];
+    try {
+      list = JSON.parse(getValue('rooms', 'rooms_amenities', '[]'));
+    } catch (e) {}
+    if (!list || list.length === 0) {
+      list = [
+        { label: "2 Double Beds", icon: "Bed", desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
+        { label: "Whisper Cool Fan", icon: "Fan", desc: "High-capacity whisper silent designer cooling and ventilation fan" },
+        { label: "Spa Slate Bath", icon: "Bath", desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
+        { label: "Smart Sound Hub", icon: "Tv", desc: "Massive 55\" cinematic display with premium room audio" },
+        { label: "Ultimate Fiber", icon: "Wifi", desc: "Ultra performance high-speed complimentary internet" },
+        { label: "Hot Beverage Station", icon: "Coffee", desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
+      ];
+    }
+    return list;
+  }, [content]);
+
+  const cmsReviews = useMemo(() => {
+    let list = [];
+    try {
+      list = JSON.parse(getValue('rooms', 'rooms_reviews', '[]'));
+    } catch (e) {}
+    if (!list || list.length === 0) {
+      list = [
+        { name: "Suresh Patel", rating: 5, location: "Ahmedabad", date: "May 25, 2024", text: "Outstanding quality. Beautiful rich pine wood ceilings, spacious layouts, and a truly majestic feel. We felt pampered every minute.", source: "google" },
+        { name: "Kuldeep Rana", rating: 4, location: "Haryana", date: "May 22, 2022", text: "Good hotel for the price. Rooms are spacious but the WiFi was slow. Location is perfect - away from Guptkashi's crowded market. Would have given 5 stars if breakfast timing was earlier.", source: "google" },
+        { name: "Pooja Hegde", rating: 5, location: "Hyderabad", date: "May 10, 2024", text: "The grand master room did not disappoint. Clean, massive, stunning window scenes, and excellent staff service. Perfect 10/10.", source: "tripadvisor" },
+        { name: "Rajiv Singhal", rating: 5, location: "Noida", date: "Jan 2024", text: "Outstanding spaciousness for the entire family. Heated blankets and gorgeous layout.", source: "google" }
+      ];
+    }
+    return list.filter((r: any) => r.is_visible !== false);
+  }, [content]);
 
   const rooms = useMemo(() => {
     if (!dbRooms || dbRooms.length === 0) return [];
@@ -56,23 +100,15 @@ export default function Rooms() {
           "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1000",
           "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&q=80&w=800"
         ],
-        amenities: [
-          { label: "2 Double Beds", icon: Bed, desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
-          { label: "Whisper Cool Fan", icon: Fan, desc: "High-capacity whisper silent designer cooling and ventilation fan" },
-          { label: "Spa Slate Bath", icon: Bath, desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
-          { label: "Smart Sound Hub", icon: Tv, desc: "Massive 55\" cinematic display with premium room audio" },
-          { label: "Ultimate Fiber", icon: Wifi, desc: "Ultra performance high-speed complimentary internet" },
-          { label: "Hot Beverage Station", icon: Coffee, desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
-        ],
-        reviews: [
-          { name: "Suresh Patel", rating: 5, location: "Ahmedabad", date: "May 25, 2024", text: "Outstanding quality. Beautiful rich pine wood ceilings, spacious layouts, and a truly majestic feel. We felt pampered every minute.", source: "google" },
-          { name: "Kuldeep Rana", rating: 4, location: "Haryana", date: "May 22, 2022", text: "Good hotel for the price. Rooms are spacious but the WiFi was slow. Location is perfect - away from Guptkashi's crowded market. Would have given 5 stars if breakfast timing was earlier.", source: "google" },
-          { name: "Pooja Hegde", rating: 5, location: "Hyderabad", date: "May 10, 2024", text: "The grand master room did not disappoint. Clean, massive, stunning window scenes, and excellent staff service. Perfect 10/10.", source: "tripadvisor" },
-          { name: "Rajiv Singhal", rating: 5, location: "Noida", date: "Jan 2024", text: "Outstanding spaciousness for the entire family. Heated blankets and gorgeous layout.", source: "google" }
-        ]
+        amenities: cmsAmenities.map((a: any) => ({
+          label: a.label,
+          icon: getIconComponent(a.icon),
+          desc: a.desc
+        })),
+        reviews: cmsReviews
       };
     });
-  }, [dbRooms]);
+  }, [dbRooms, cmsAmenities, cmsReviews]);
 
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || rooms[0] || null;
   const [activeImage, setActiveImage] = useState("");

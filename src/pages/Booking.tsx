@@ -4,9 +4,12 @@ import { Sparkles, Calendar, Users, Home, Phone, Check, ChevronLeft } from "luci
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 export default function Booking() {
   const { settings } = useSiteSettings();
+  const { getValue, loading, content } = useContent();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2 Guests");
@@ -23,6 +26,48 @@ export default function Booking() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
   const whatsappNumber = settings.whatsapp_number || "917060326489";
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
+
+  const bookingHeading = getValue('booking', 'booking_heading', 'Reserve Your');
+  const bookingHeadingItalic = getValue('booking', 'booking_heading_italic', 'Stay');
+  const bookingBadge = getValue('booking', 'booking_badge', 'Guaranteed sanctuary booking');
+  const bookingSubheading = getValue('booking', 'booking_subheading', 'Elevate your Himalayan ascent with a direct direct-booking premium rate.');
+  const bookingVisible = getValue('booking', 'booking_visible', 'true') !== 'false';
+
+  if (!bookingVisible) {
+    return (
+      <div className="bg-[#FAF9F5] text-slate-charcoal pt-32 pb-24 min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div className="container mx-auto px-4 max-w-md relative z-10 text-center space-y-6 bg-white p-8 md:p-12 border border-[#D8CBB8]/30 shadow-2xl rounded-2xl">
+          <h1 className="text-3xl font-heading tracking-tight text-slate-charcoal">
+            Bookings <span className="italic font-normal text-[#1B4C44]">Paused</span>
+          </h1>
+          <p className="text-[#1C2E2A]/70 text-xs font-medium font-sans leading-relaxed">
+            Online reservation requests are currently paused for system updates. Please connect with our reservation desk directly via WhatsApp.
+          </p>
+          <a 
+            href={`https://wa.me/${whatsappNumber}`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center justify-center bg-[#1B4C44] hover:bg-[#143731] text-white font-sans font-extrabold text-[10px] uppercase tracking-[0.2em] px-6 py-3.5 rounded-xl transition-all shadow-md"
+          >
+            Connect WhatsApp Desk
+          </a>
+        </div>
+        
+        {/* Decorative mountain background line-art */}
+        <div className="fixed inset-0 z-0 pointer-events-none block opacity-15">
+          <img 
+            src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=2000" 
+            className="w-full h-full object-cover grayscale" 
+            alt="mountains" 
+          />
+          <div className="absolute inset-0 bg-[#FAF9F5]/90 blend-multiply" />
+        </div>
+      </div>
+    );
+  }
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,13 +162,13 @@ export default function Booking() {
             
             <header className="mb-8 relative z-10">
               <h1 className="text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal mb-3">
-                Reserve Your <span className="italic font-normal text-[#1B4C44]">Stay</span>
+                {bookingHeading} <span className="italic font-normal text-[#1B4C44]">{bookingHeadingItalic}</span>
               </h1>
               <p className="text-[#1B4C44] text-[11px] font-black uppercase tracking-widest font-mono flex items-center gap-1.5 mb-1">
-                <Sparkles size={12} className="text-[#A88C52]" /> Guaranteed sanctuary booking
+                <Sparkles size={12} className="text-[#A88C52]" /> {bookingBadge}
               </p>
               <p className="text-rock-600/70 text-xs font-medium font-sans">
-                Elevate your Himalayan ascent with a direct direct-booking premium rate.
+                {bookingSubheading}
               </p>
             </header>
 

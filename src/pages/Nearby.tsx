@@ -257,6 +257,29 @@ export default function Nearby() {
   const nearbyHeading = getValue('nearby', 'nearby_heading', 'Himalayan Travel Guide');
   const nearbySubheading = getValue('nearby', 'nearby_subheading', 'Coordinates of Rudraprayag');
 
+  const nearbySlideBadge = getValue('nearby', 'nearby_slide_badge', 'Rudraprayag Coordinates');
+
+  const nearbyBentoTagline = getValue('nearby', 'nearby_bento_tagline', 'EXPLORATION DIRECTORY');
+  const nearbyBentoHeading = getValue('nearby', 'nearby_bento_heading', 'High Himalayan');
+  const nearbyBentoHeadingItalic = getValue('nearby', 'nearby_bento_heading_italic', 'Coordinates');
+
+  const nearbyTreksTagline = getValue('nearby', 'nearby_treks_tagline', 'REGION RESEARCH');
+  const nearbyTreksHeading = getValue('nearby', 'nearby_treks_heading', 'Trekking & Valley');
+  const nearbyTreksHeadingItalic = getValue('nearby', 'nearby_treks_heading_italic', 'Guide');
+  const nearbyTreksDesc = getValue('nearby', 'nearby_treks_desc', 'Expert-curated treks ranging from easy heritage walks to challenging high-altitude ascents through pristine Himalayan terrain.');
+
+  const nearbyScenesTagline = getValue('nearby', 'nearby_scenes_tagline', 'VISUAL JOURNAL');
+  const nearbyScenesHeading = getValue('nearby', 'nearby_scenes_heading', 'Glances of');
+  const nearbyScenesHeadingItalic = getValue('nearby', 'nearby_scenes_heading_italic', 'Rudraprayag');
+  const nearbyScenesDesc = getValue('nearby', 'nearby_scenes_desc', 'Breathtaking glances of alpine lakes, high altitude meadows, ringing brass bells, and misty pine routes. Click components to expand view.');
+
+  const nearbyCtaBadge = getValue('nearby', 'nearby_cta_badge', 'Your Sacred Sanctuary awaits');
+  const nearbyCtaHeading = getValue('nearby', 'nearby_cta_heading', 'Trek the peaks.');
+  const nearbyCtaHeadingItalic = getValue('nearby', 'nearby_cta_heading_italic', 'Find your peace.');
+  const nearbyCtaDesc = getValue('nearby', 'nearby_cta_desc', 'The Vedic Himalaya Retreat is carefully nested at Guptkashi, offering elite transit and absolute evening meditation silence after high altitudes treks.');
+  const nearbyCtaBtnText = getValue('nearby', 'nearby_cta_btn_text', 'Reserve Your Basecamp Stay');
+  const nearbyCtaBtnLink = getValue('nearby', 'nearby_cta_btn_link', '/rooms');
+
   // Section Visibility Settings
   const tourVisible = getValue('nearby', 'nearby_tour_visible', 'true') !== 'false';
   const treksVisible = getValue('nearby', 'nearby_treks_visible', 'true') !== 'false';
@@ -426,7 +449,7 @@ export default function Nearby() {
                   className="space-y-3"
                 >
                   <p className="text-[11px] font-bold text-[#A88C52] uppercase tracking-[0.2em]">
-                    Rudraprayag Coordinates
+                    {nearbySlideBadge}
                   </p>
                   
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[#FAF9F5] leading-tight tracking-wide font-normal">
@@ -515,10 +538,10 @@ export default function Nearby() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-8 mb-16 gap-4">
               <div className="space-y-3">
                 <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-[#A88C52] block">
-                  EXPLORATION DIRECTORY
+                  {nearbyBentoTagline}
                 </span>
                 <h2 className="text-3xl sm:text-5xl font-serif text-[#FAF9F5] font-light leading-none">
-                  High Himalayan <span className="italic font-normal text-[#E5D7C3]">Coordinates</span>
+                  {nearbyBentoHeading} <span className="italic font-normal text-[#E5D7C3]">{nearbyBentoHeadingItalic}</span>
                 </h2>
               </div>
               
@@ -651,11 +674,14 @@ export default function Nearby() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-6 mb-10 gap-6">
                   <div className="space-y-2">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-[#A88C52] flex items-center gap-2">
-                      <Activity size={12} className="text-[#A88C52]" /> REGION RESEARCH
+                      <Activity size={12} className="text-[#A88C52]" /> {nearbyTreksTagline}
                     </span>
                     <h3 className="text-2xl sm:text-4xl font-serif text-[#FAF9F5] font-light">
-                      Trekking &amp; Valley <span className="italic font-normal text-[#E5D7C3]">Guide</span>
+                      {nearbyTreksHeading} <span className="italic font-normal text-[#E5D7C3]">{nearbyTreksHeadingItalic}</span>
                     </h3>
+                    <p className="text-xs text-[#FAF9F5]/60 max-w-sm font-sans leading-relaxed mt-2 text-left">
+                      {nearbyTreksDesc}
+                    </p>
                   </div>
 
                   {/* Difficulty Filters */}
@@ -750,14 +776,14 @@ export default function Nearby() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-6 mb-10 gap-4">
                   <div className="space-y-2">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-[#A88C52] flex items-center gap-2">
-                      <Camera size={12} /> VISUAL JOURNAL
+                      <Camera size={12} /> {nearbyScenesTagline}
                     </span>
                     <h3 className="text-2xl sm:text-4xl font-serif text-[#FAF9F5] font-light">
-                      Glances of <span className="italic font-normal text-[#E5D7C3]">Rudraprayag</span>
+                      {nearbyScenesHeading} <span className="italic font-normal text-[#E5D7C3]">{nearbyScenesHeadingItalic}</span>
                     </h3>
                   </div>
                   <p className="text-xs text-[#FAF9F5]/60 max-w-sm font-sans leading-relaxed">
-                    Breathtaking glances of alpine lakes, high altitude meadows, ringing brass bells, and misty pine routes. Click components to expand view.
+                    {nearbyScenesDesc}
                   </p>
                 </div>
 
@@ -797,22 +823,22 @@ export default function Nearby() {
               
               <div className="relative z-10 space-y-6">
                 <span className="text-[10px] uppercase tracking-[0.25em] font-extrabold text-[#A88C52] bg-[#A88C52]/10 px-4 py-1.5 rounded-full inline-block">
-                  Your Sacred Sanctuary awaits
+                  {nearbyCtaBadge}
                 </span>
                 
                 <h3 className="text-3xl sm:text-4xl font-serif text-[#FAF9F5] font-light tracking-wide leading-tight">
-                  Trek the peaks. <br />
-                  <span className="italic font-normal text-[#E5D7C3]">Find your peace.</span>
+                  {nearbyCtaHeading} <br />
+                  <span className="italic font-normal text-[#E5D7C3]">{nearbyCtaHeadingItalic}</span>
                 </h3>
                 
                 <p className="text-xs sm:text-sm text-[#FAF9F5]/70 max-w-md mx-auto leading-relaxed font-sans">
-                  The Vedic Himalaya Retreat is carefully nested at Guptkashi, offering elite transit and absolute evening meditation silence after high altitudes treks.
+                  {nearbyCtaDesc}
                 </p>
                 
                 <div className="pt-2">
-                  <Link to="/rooms">
+                  <Link to={nearbyCtaBtnLink}>
                     <button className="h-12 px-10 bg-[#FAF9F5] hover:bg-[#A88C52] text-[#0B1714] font-extrabold hover:text-[#FAF9F5] text-xs uppercase tracking-widest rounded-xl transition-all duration-300 shadow-xl cursor-pointer">
-                      Reserve Your Basecamp Stay
+                      {nearbyCtaBtnText}
                     </button>
                   </Link>
                 </div>

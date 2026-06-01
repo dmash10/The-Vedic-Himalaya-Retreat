@@ -27,6 +27,7 @@ const PAGES_LIST = [
   { id: 'nearby', label: 'Nearby Places' },
   { id: 'gallery', label: 'Gallery Page' },
   { id: 'contact', label: 'Contact Us' },
+  { id: 'booking', label: 'Booking Page' },
   { id: 'privacy', label: 'Privacy Policy' },
   { id: 'terms', label: 'Terms of Stay' }
 ];
@@ -304,6 +305,8 @@ export default function AdminPages() {
         hero_line2: getValue('home', 'hero_line2', 'Pines'),
         hero_subtitle: getValue('home', 'hero_subtitle', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi'),
         hero_image: getValue('home', 'hero_image', ''),
+        hero_cta: getValue('home', 'hero_cta', 'EXPLORE ROOMS'),
+        hero_cta_link: getValue('home', 'hero_cta_link', '/rooms'),
         story_line1: getValue('home', 'story_line1', 'Casual Elegance'),
         story_line2: getValue('home', 'story_line2', 'Meets Alpine Charm'),
         story_desc: getValue('home', 'story_desc', 'Inspired by our pristine cedar forest surroundings...'),
@@ -342,6 +345,8 @@ export default function AdminPages() {
         rooms_image: getValue('rooms', 'rooms_image', ''),
         rooms_notice: getValue('rooms', 'rooms_notice', 'Important Booking Notice...'),
       });
+      try { setRoomsAmenities(JSON.parse(getValue('rooms', 'rooms_amenities', '[]'))); } catch { setRoomsAmenities([]); }
+      try { setRoomsReviews(JSON.parse(getValue('rooms', 'rooms_reviews', '[]'))); } catch { setRoomsReviews([]); }
     } else if (activePageId === 'dining') {
       setFormFields({
         dining_heading: getValue('dining', 'dining_heading', 'Pure Sattvik Dining'),
@@ -393,9 +398,31 @@ export default function AdminPages() {
         weddings_heading: getValue('weddings', 'weddings_heading', 'Destination Weddings'),
         weddings_subheading: getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas'),
         weddings_image: getValue('weddings', 'weddings_image', ''),
+        weddings_hero_badge: getValue('weddings', 'weddings_hero_badge', 'SACRED WEDDINGS & CELEBRATIONS'),
+        weddings_hero_desc: getValue('weddings', 'weddings_hero_desc', ''),
         weddings_story_title: getValue('weddings', 'weddings_story_title', 'Ancestral Purity'),
         weddings_story_subtitle: getValue('weddings', 'weddings_story_subtitle', 'In Sacred Commemoration'),
         weddings_story_desc: getValue('weddings', 'weddings_story_desc', ''),
+        weddings_story_script: getValue('weddings', 'weddings_story_script', 'Himalayan Pure Blessings'),
+        weddings_story_heading: getValue('weddings', 'weddings_story_heading', 'Intimate, Cinematic'),
+        weddings_story_heading_italic: getValue('weddings', 'weddings_story_heading_italic', '&'),
+        weddings_story_subheading: getValue('weddings', 'weddings_story_subheading', 'Unforgettable'),
+        weddings_story_paragraph: getValue('weddings', 'weddings_story_paragraph', 'From beautiful pre-marriage morning rituals on our mountain-sky deodar terraces to customized wedding lawns set before a majestic valley backdrop, The Vedic Himalaya Retreat coordinates an exceptional blend of premium hospitality, local Garhwali flavor thalis, and pure mountain atmosphere.'),
+        weddings_venues_tagline: getValue('weddings', 'weddings_venues_tagline', 'SACRED VENUE GRID'),
+        weddings_venues_heading: getValue('weddings', 'weddings_venues_heading', 'Our Ceremony'),
+        weddings_venues_heading_italic: getValue('weddings', 'weddings_venues_heading_italic', 'Spaces'),
+        weddings_venues_desc: getValue('weddings', 'weddings_venues_desc', 'Choose from our hand-selected indoor and outdoor spaces, each featuring high altitude forest views and traditional wood hearth configurations.'),
+        weddings_offerings_tagline: getValue('weddings', 'weddings_offerings_tagline', 'Wedding Specifications'),
+        weddings_offerings_heading: getValue('weddings', 'weddings_offerings_heading', 'Sacred'),
+        weddings_offerings_heading_italic: getValue('weddings', 'weddings_offerings_heading_italic', 'Aesthetics'),
+        weddings_offerings_desc: getValue('weddings', 'weddings_offerings_desc', 'Bespoke Arrangements & Sanctuary parameters'),
+        weddings_gallery_tagline: getValue('weddings', 'weddings_gallery_tagline', 'PHOTO CAPTURES'),
+        weddings_gallery_heading: getValue('weddings', 'weddings_gallery_heading', 'Celebration'),
+        weddings_gallery_heading_italic: getValue('weddings', 'weddings_gallery_heading_italic', 'Aesthetics'),
+        weddings_gallery_desc: getValue('weddings', 'weddings_gallery_desc', 'A cinematic visual registry of tables decorated exclusively with wild mountain blooms and wooden embers.'),
+        weddings_cta_btn_text: getValue('weddings', 'weddings_cta_btn_text', 'Inquire for Events'),
+        weddings_cta_btn_link: getValue('weddings', 'weddings_cta_btn_link', '/contact'),
+        weddings_cta_footnote: getValue('weddings', 'weddings_cta_footnote', 'Booking open for 2026/2027 Himalayan Seasons'),
       });
       try { setWeddingPolaroids(JSON.parse(getValue('weddings', 'weddings_polaroids', '[]'))); } catch { setWeddingPolaroids([]); }
       try { setVenues(JSON.parse(getValue('weddings', 'venue_cards', '[]'))); } catch { setVenues([]); }
@@ -405,6 +432,20 @@ export default function AdminPages() {
         experiences_heading: getValue('experiences', 'experiences_heading', 'Curated Journeys'),
         experiences_subheading: getValue('experiences', 'experiences_subheading', 'Acclimatize in the Sacred Atmosphere'),
         experiences_image: getValue('experiences', 'experiences_image', ''),
+        experiences_slide_badge: getValue('experiences', 'experiences_slide_badge', 'Activities & Comforts'),
+        experiences_bento_tagline: getValue('experiences', 'experiences_bento_tagline', 'VISUAL ARCHIVE'),
+        experiences_bento_heading: getValue('experiences', 'experiences_bento_heading', 'Experience'),
+        experiences_bento_heading_italic: getValue('experiences', 'experiences_bento_heading_italic', 'Gallery'),
+        experiences_scenes_tagline: getValue('experiences', 'experiences_scenes_tagline', 'RETREAT ARCHIVE'),
+        experiences_scenes_heading: getValue('experiences', 'experiences_scenes_heading', 'Retreat'),
+        experiences_scenes_heading_italic: getValue('experiences', 'experiences_scenes_heading_italic', 'Scenes'),
+        experiences_scenes_desc: getValue('experiences', 'experiences_scenes_desc', 'Real photographic glances of our pinewood interiors, high-altitude yoga shala, Sattvik mountain dining, and misty cedar surroundings. Click any image to expand.'),
+        experiences_cta_badge: getValue('experiences', 'experiences_cta_badge', 'Plan Your Trip'),
+        experiences_cta_heading: getValue('experiences', 'experiences_cta_heading', 'Book Your'),
+        experiences_cta_heading_italic: getValue('experiences', 'experiences_cta_heading_italic', 'Vedic Stay'),
+        experiences_cta_desc: getValue('experiences', 'experiences_cta_desc', 'Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.'),
+        experiences_cta_btn_text: getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation'),
+        experiences_cta_btn_link: getValue('experiences', 'experiences_cta_btn_link', '/rooms'),
       });
       try { setExperienceSlides(JSON.parse(getValue('experiences', 'experience_slides', '[]'))); } catch { setExperienceSlides([]); }
       try { setExperiencePhotos(JSON.parse(getValue('experiences', 'experience_gallery', '[]'))); } catch { setExperiencePhotos([]); }
@@ -413,6 +454,24 @@ export default function AdminPages() {
         nearby_heading: getValue('nearby', 'nearby_heading', 'Himalayan Travel Guide'),
         nearby_subheading: getValue('nearby', 'nearby_subheading', 'Coordinates of Rudraprayag'),
         nearby_image: getValue('nearby', 'nearby_image', ''),
+        nearby_slide_badge: getValue('nearby', 'nearby_slide_badge', 'Nearby Sacred Destinations'),
+        nearby_treks_tagline: getValue('nearby', 'nearby_treks_tagline', 'SACRED TRAILS'),
+        nearby_treks_heading: getValue('nearby', 'nearby_treks_heading', 'Trekking'),
+        nearby_treks_heading_italic: getValue('nearby', 'nearby_treks_heading_italic', 'Directory'),
+        nearby_treks_desc: getValue('nearby', 'nearby_treks_desc', 'Expert-curated treks ranging from easy heritage walks to challenging high-altitude ascents through pristine Himalayan terrain.'),
+        nearby_bento_tagline: getValue('nearby', 'nearby_bento_tagline', 'DESTINATION ARCHIVE'),
+        nearby_bento_heading: getValue('nearby', 'nearby_bento_heading', 'Destination'),
+        nearby_bento_heading_italic: getValue('nearby', 'nearby_bento_heading_italic', 'Gallery'),
+        nearby_scenes_tagline: getValue('nearby', 'nearby_scenes_tagline', 'RUDRAPRAYAG GLANCES'),
+        nearby_scenes_heading: getValue('nearby', 'nearby_scenes_heading', 'Rudraprayag'),
+        nearby_scenes_heading_italic: getValue('nearby', 'nearby_scenes_heading_italic', 'Scenes'),
+        nearby_scenes_desc: getValue('nearby', 'nearby_scenes_desc', 'Photographic captures of the sacred Mandakini valley surroundings, ancient temples, and alpine landscapes.'),
+        nearby_cta_badge: getValue('nearby', 'nearby_cta_badge', 'Your Sacred Sanctuary awaits'),
+        nearby_cta_heading: getValue('nearby', 'nearby_cta_heading', 'Plan Your'),
+        nearby_cta_heading_italic: getValue('nearby', 'nearby_cta_heading_italic', 'Sacred Journey'),
+        nearby_cta_desc: getValue('nearby', 'nearby_cta_desc', 'Let us coordinate your temple circuits, trail guides, and vehicle transfers from our base in Guptkashi.'),
+        nearby_cta_btn_text: getValue('nearby', 'nearby_cta_btn_text', 'Contact For Coordination'),
+        nearby_cta_btn_link: getValue('nearby', 'nearby_cta_btn_link', '/contact'),
       });
       try { setNearbySlides(JSON.parse(getValue('nearby', 'nearby_slides', '[]'))); } catch { setNearbySlides([]); }
       try { setTreksDirectory(JSON.parse(getValue('nearby', 'treks_directory', '[]'))); } catch { setTreksDirectory([]); }
@@ -422,6 +481,9 @@ export default function AdminPages() {
         gallery_heading: getValue('gallery', 'gallery_heading', 'Captured Stillness'),
         gallery_subheading: getValue('gallery', 'gallery_subheading', 'Bespoke Deodar-framed spaces'),
         gallery_image: getValue('gallery', 'gallery_image', ''),
+        gallery_hero_badge: getValue('gallery', 'gallery_hero_badge', 'OUR VISUAL STORY'),
+        gallery_hero_desc: getValue('gallery', 'gallery_hero_desc', ''),
+        gallery_categories: getValue('gallery', 'gallery_categories', 'Peaks & Vibe, Sanctuary Suites, Spiritual Life'),
       });
       try { setGalleryImages(JSON.parse(getValue('gallery', 'gallery_images', '[]'))); } catch { setGalleryImages([]); }
     } else if (activePageId === 'contact') {
@@ -429,8 +491,20 @@ export default function AdminPages() {
         contact_heading: getValue('contact', 'contact_heading', 'Reach Out'),
         contact_subheading: getValue('contact', 'contact_subheading', 'Reservations & coordinates'),
         contact_image: getValue('contact', 'contact_image', ''),
-        contact_email: getValue('contact', 'contact_email', 'stay@vedichimalaya.com'),
-        contact_map_pin: getValue('contact', 'contact_map_pin', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495')
+        contact_email: getValue('contact', 'contact_email', 'stay@vedichimalayaretreat.com'),
+        contact_map_pin: getValue('contact', 'contact_map_pin', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495'),
+        contact_badge: getValue('contact', 'contact_badge', 'REACH OUT TO US'),
+        contact_italic_text: getValue('contact', 'contact_italic_text', 'Sacred Arrival'),
+        contact_instagram: getValue('contact', 'contact_instagram', '@thevedichimalayaretreat'),
+        contact_instagram_url: getValue('contact', 'contact_instagram_url', 'https://instagram.com/thevedichimalayaretreat'),
+        contact_form_title: getValue('contact', 'contact_form_title', 'Send an Inquiry'),
+      });
+    } else if (activePageId === 'booking') {
+      setFormFields({
+        booking_heading: getValue('booking', 'booking_heading', 'Reserve Your'),
+        booking_heading_italic: getValue('booking', 'booking_heading_italic', 'Stay'),
+        booking_badge: getValue('booking', 'booking_badge', 'Guaranteed sanctuary booking'),
+        booking_subheading: getValue('booking', 'booking_subheading', 'Elevate your Himalayan ascent with a direct direct-booking premium rate.'),
       });
     } else if (['privacy', 'terms'].includes(activePageId)) {
       setFormFields({
@@ -461,6 +535,9 @@ export default function AdminPages() {
       updates.push({ section: 'home', key: 'polaroids', value: JSON.stringify(polaroids) });
       updates.push({ section: 'home', key: 'offerings', value: JSON.stringify(offerings) });
       updates.push({ section: 'home', key: 'amenities', value: JSON.stringify(amenities) });
+    } else if (activePageId === 'rooms') {
+      updates.push({ section: 'rooms', key: 'rooms_amenities', value: JSON.stringify(roomsAmenities) });
+      updates.push({ section: 'rooms', key: 'rooms_reviews', value: JSON.stringify(roomsReviews) });
     } else if (activePageId === 'about') {
       updates.push({ section: 'about', key: 'pillars', value: JSON.stringify(pillars) });
     } else if (activePageId === 'dining') {
@@ -594,6 +671,10 @@ export default function AdminPages() {
                           <TextInputGroup label="Hero Line 1" icon={Type} value={formFields.hero_line1} onChange={(val) => setFormFields((prev: any) => ({ ...prev, hero_line1: val }))} />
                           <TextInputGroup label="Hero Line 2 (Italic)" icon={Type} value={formFields.hero_line2} onChange={(val) => setFormFields((prev: any) => ({ ...prev, hero_line2: val }))} />
                           <TextInputGroup label="Hero Subtitle" icon={Type} value={formFields.hero_subtitle} onChange={(val) => setFormFields((prev: any) => ({ ...prev, hero_subtitle: val }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Hero Button Text" icon={Type} value={formFields.hero_cta} onChange={(val) => setFormFields((prev: any) => ({ ...prev, hero_cta: val }))} />
+                            <TextInputGroup label="Hero Button Link" icon={LinkIcon} value={formFields.hero_cta_link} onChange={(val) => setFormFields((prev: any) => ({ ...prev, hero_cta_link: val }))} />
+                          </div>
                         </div>
                         <ImageUploader label="Hero Image" currentImage={formFields.hero_image} onImageChange={(path) => setFormFields((prev: any) => ({ ...prev, hero_image: path }))} aspectRatio="aspect-video w-full" />
                       </div>
@@ -819,18 +900,67 @@ export default function AdminPages() {
                 {/* ----------------- ROOMS INTRO ----------------- */}
                 {activePageId === 'rooms' && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
-                      <div className="md:col-span-2 space-y-4">
-                        <TextInputGroup label="Heading" icon={Type} value={formFields.rooms_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, rooms_heading: v }))} />
-                        <TextInputGroup label="Subheading" icon={Type} value={formFields.rooms_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, rooms_subheading: v }))} />
+                    <SectionToggle label="Rooms Hero Section" checked={visibilities.rooms_hero_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, rooms_hero_visible: v }))} />
+                    {visibilities.rooms_hero_visible && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
+                        <div className="md:col-span-2 space-y-4">
+                          <TextInputGroup label="Heading" icon={Type} value={formFields.rooms_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, rooms_heading: v }))} />
+                          <TextInputGroup label="Subheading" icon={Type} value={formFields.rooms_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, rooms_subheading: v }))} />
+                        </div>
+                        <ImageUploader label="Cover Image" currentImage={formFields.rooms_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, rooms_image: p }))} aspectRatio="aspect-video w-full" />
                       </div>
-                      <ImageUploader label="Cover Image" currentImage={formFields.rooms_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, rooms_image: p }))} aspectRatio="aspect-video w-full" />
-                    </div>
+                    )}
 
                     <SectionToggle label="Advisory Notice Box" checked={visibilities.notice_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, notice_visible: v }))} />
                     {visibilities.notice_visible && (
                       <TextAreaGroup label="Advisory Warning Details" value={formFields.rooms_notice} onChange={(v) => setFormFields((prev: any) => ({ ...prev, rooms_notice: v }))} rows={4} />
                     )}
+
+                    <ListEditor
+                      title="Room Amenities (Global fallback)"
+                      items={roomsAmenities}
+                      onChange={setRoomsAmenities}
+                      createDefaultItem={() => ({ label: 'New Amenity', icon: 'Wifi', desc: '', is_visible: true })}
+                      getItemLabel={(item) => item.label}
+                      renderItemEditor={(item, idx, updateField) => (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                          <TextInputGroup label="Amenity Label" icon={Type} value={item.label} onChange={(v) => updateField('label', v)} />
+                          <TextInputGroup label="Description Detail" icon={Type} value={item.desc} onChange={(v) => updateField('desc', v)} />
+                          <div className="text-left w-full">
+                            <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
+                            <select value={item.icon || 'Wifi'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                              {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                    />
+
+                    <ListEditor
+                      title="Room Guest Reviews (Global fallback)"
+                      items={roomsReviews}
+                      onChange={setRoomsReviews}
+                      createDefaultItem={() => ({ name: 'New Guest', rating: 5, location: '', date: '', text: '', source: 'google', is_visible: true })}
+                      getItemLabel={(item) => item.name}
+                      renderItemEditor={(item, idx, updateField) => (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                          <div className="space-y-4">
+                            <TextInputGroup label="Guest Name" icon={Type} value={item.name} onChange={(v) => updateField('name', v)} />
+                            <TextInputGroup label="Rating (1-5)" icon={Tag} value={String(item.rating)} onChange={(v) => updateField('rating', parseInt(v) || 5)} />
+                            <TextInputGroup label="Location / City" icon={MapPin} value={item.location} onChange={(v) => updateField('location', v)} />
+                            <TextInputGroup label="Review Date" icon={Clock} value={item.date} onChange={(v) => updateField('date', v)} />
+                            <div className="text-left w-full">
+                              <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Review Source</label>
+                              <select value={item.source || 'google'} onChange={(e) => updateField('source', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                <option value="google" className="bg-[#0D1412]">Google</option>
+                                <option value="tripadvisor" className="bg-[#0D1412]">TripAdvisor</option>
+                              </select>
+                            </div>
+                          </div>
+                          <TextAreaGroup label="Review Text" value={item.text} onChange={(v) => updateField('text', v)} rows={4} />
+                        </div>
+                      )}
+                    />
                   </div>
                 )}
 
@@ -1103,22 +1233,34 @@ export default function AdminPages() {
                         <div className="md:col-span-2 space-y-4">
                           <TextInputGroup label="Heading" icon={Type} value={formFields.weddings_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_heading: v }))} />
                           <TextInputGroup label="Subheading" icon={Type} value={formFields.weddings_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_subheading: v }))} />
+                          <TextInputGroup label="Hero Badge Text" icon={Tag} value={formFields.weddings_hero_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_hero_badge: v }))} />
+                          <TextAreaGroup label="Hero Description Paragraph" value={formFields.weddings_hero_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_hero_desc: v }))} rows={2} />
                         </div>
                         <ImageUploader label="Cover Image" currentImage={formFields.weddings_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, weddings_image: p }))} aspectRatio="aspect-video w-full" />
                       </div>
                     )}
 
-                    <SectionToggle label="Weddings Story Section" checked={visibilities.weddings_story_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_story_visible: v }))} />
+                    <SectionToggle label="Weddings Story Section" checked={visibilities.weddings_story_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_story_visible: v }))} description="Narrative intro section below hero" />
                     {visibilities.weddings_story_visible && (
                       <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
-                        <TextInputGroup label="Story Title" icon={Type} value={formFields.weddings_story_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_title: v }))} />
-                        <TextInputGroup label="Story Subtitle" icon={Type} value={formFields.weddings_story_subtitle} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_subtitle: v }))} />
-                        <TextAreaGroup label="Story Description" value={formFields.weddings_story_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_desc: v }))} />
+                        <TextInputGroup label="Script Text (Cursive)" icon={Type} value={formFields.weddings_story_script} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_script: v }))} />
+                        <div className="grid grid-cols-3 gap-4">
+                          <TextInputGroup label="Heading Part 1" icon={Type} value={formFields.weddings_story_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_heading: v }))} />
+                          <TextInputGroup label="Heading Italic" icon={Type} value={formFields.weddings_story_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_heading_italic: v }))} />
+                          <TextInputGroup label="Heading Part 2" icon={Type} value={formFields.weddings_story_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_subheading: v }))} />
+                        </div>
+                        <TextAreaGroup label="Story Paragraph" value={formFields.weddings_story_paragraph} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_paragraph: v }))} rows={3} />
                       </div>
                     )}
 
                     <SectionToggle label="Weddings Polaroids Section" checked={visibilities.weddings_polaroids_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_polaroids_visible: v }))} />
                     {visibilities.weddings_polaroids_visible && (
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <TextInputGroup label="Polaroid Story Title" icon={Type} value={formFields.weddings_story_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_title: v }))} />
+                          <TextInputGroup label="Polaroid Story Subtitle" icon={Type} value={formFields.weddings_story_subtitle} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_subtitle: v }))} />
+                          <TextAreaGroup label="Polaroid Story Description" value={formFields.weddings_story_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_story_desc: v }))} />
+                        </div>
                       <ListEditor
                         title="Wedding Polaroid Photos"
                         items={weddingPolaroids}
@@ -1136,59 +1278,99 @@ export default function AdminPages() {
                           </div>
                         )}
                       />
+                      </div>
                     )}
 
                     <SectionToggle label="Wedding Venues Section" checked={visibilities.weddings_venues_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_venues_visible: v }))} />
                     {visibilities.weddings_venues_visible && (
-                      <ListEditor
-                        title="Celebration Venues"
-                        items={venues}
-                        onChange={setVenues}
-                        createDefaultItem={() => ({ id: 'lawn', title: 'New Venue', capacity: 'Up to 20 guests', location: '', highlight: '', vibe: '', tags: [], image: '', is_visible: true })}
-                        getItemLabel={(item) => item.title}
-                        getItemImage={(item) => item.image}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <div className="space-y-4">
-                              <TextInputGroup label="Venue ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
-                              <TextInputGroup label="Venue Name" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                              <TextInputGroup label="Capacity Limit" icon={Type} value={item.capacity} onChange={(v) => updateField('capacity', v)} />
-                              <TextInputGroup label="Location Coordinates" icon={MapPin} value={item.location} onChange={(v) => updateField('location', v)} />
-                              <TextInputGroup label="Highlight Phrase" icon={Sparkles} value={item.highlight} onChange={(v) => updateField('highlight', v)} />
-                              <TextInputGroup label="Vibe details" icon={Heart} value={item.vibe} onChange={(v) => updateField('vibe', v)} />
-                              <TextAreaGroup label="Tags (Comma separated)" value={item.tags ? (Array.isArray(item.tags) ? item.tags.join(', ') : item.tags) : ''} onChange={(v) => updateField('tags', v.split(',').map((t: string) => t.trim()))} />
-                            </div>
-                            <ImageUploader label="Venue Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <TextInputGroup label="Venues Tagline" icon={Type} value={formFields.weddings_venues_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_venues_tagline: v }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Venues Heading" icon={Type} value={formFields.weddings_venues_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_venues_heading: v }))} />
+                            <TextInputGroup label="Venues Heading (Italic)" icon={Type} value={formFields.weddings_venues_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_venues_heading_italic: v }))} />
                           </div>
-                        )}
-                      />
+                          <TextAreaGroup label="Venues Description" value={formFields.weddings_venues_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_venues_desc: v }))} rows={2} />
+                        </div>
+                        <ListEditor
+                          title="Celebration Venues"
+                          items={venues}
+                          onChange={setVenues}
+                          createDefaultItem={() => ({ id: 'lawn', title: 'New Venue', capacity: 'Up to 20 guests', location: '', highlight: '', vibe: '', tags: [], image: '', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="Venue ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
+                                <TextInputGroup label="Venue Name" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <TextInputGroup label="Capacity Limit" icon={Type} value={item.capacity} onChange={(v) => updateField('capacity', v)} />
+                                <TextInputGroup label="Location Coordinates" icon={MapPin} value={item.location} onChange={(v) => updateField('location', v)} />
+                                <TextInputGroup label="Highlight Phrase" icon={Sparkles} value={item.highlight} onChange={(v) => updateField('highlight', v)} />
+                                <TextInputGroup label="Vibe details" icon={Heart} value={item.vibe} onChange={(v) => updateField('vibe', v)} />
+                                <TextAreaGroup label="Tags (Comma separated)" value={item.tags ? (Array.isArray(item.tags) ? item.tags.join(', ') : item.tags) : ''} onChange={(v) => updateField('tags', v.split(',').map((t: string) => t.trim()))} />
+                              </div>
+                              <ImageUploader label="Venue Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
+                            </div>
+                          )}
+                        />
+                      </div>
                     )}
 
                     <SectionToggle label="Wedding Offerings/Specs Section" checked={visibilities.weddings_offerings_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_offerings_visible: v }))} />
                     {visibilities.weddings_offerings_visible && (
-                      <ListEditor
-                        title="Wedding Offering Specifications"
-                        items={weddingOfferings}
-                        onChange={setWeddingOfferings}
-                        createDefaultItem={() => ({ num: '01', badge: 'SPECIFICATION', title: 'New Spec', description: '', image: '', bgClass: 'bg-[#0f2822]', textClass: 'text-[#FAF9F5]', coords: '', is_visible: true })}
-                        getItemLabel={(item) => item.title}
-                        getItemImage={(item) => item.image}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <div className="space-y-4">
-                              <TextInputGroup label="Num ID" icon={Tag} value={item.num} onChange={(v) => updateField('num', v)} />
-                              <TextInputGroup label="Badge Label" icon={Tag} value={item.badge} onChange={(v) => updateField('badge', v)} />
-                              <TextInputGroup label="Offering Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                              <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
-                              <TextInputGroup label="Coords" icon={Compass} value={item.coords} onChange={(v) => updateField('coords', v)} />
-                              <TextInputGroup label="Bg Class (tailwindcss)" icon={Type} value={item.bgClass} onChange={(v) => updateField('bgClass', v)} />
-                              <TextInputGroup label="Text Class (tailwindcss)" icon={Type} value={item.textClass} onChange={(v) => updateField('textClass', v)} />
-                            </div>
-                            <ImageUploader label="Offering Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <TextInputGroup label="Offerings Tagline" icon={Type} value={formFields.weddings_offerings_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_offerings_tagline: v }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Offerings Heading" icon={Type} value={formFields.weddings_offerings_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_offerings_heading: v }))} />
+                            <TextInputGroup label="Offerings Heading (Italic)" icon={Type} value={formFields.weddings_offerings_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_offerings_heading_italic: v }))} />
                           </div>
-                        )}
-                      />
+                          <TextInputGroup label="Offerings Sub-description" icon={Type} value={formFields.weddings_offerings_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_offerings_desc: v }))} />
+                        </div>
+                        <ListEditor
+                          title="Wedding Offering Specifications"
+                          items={weddingOfferings}
+                          onChange={setWeddingOfferings}
+                          createDefaultItem={() => ({ num: '01', badge: 'SPECIFICATION', title: 'New Spec', description: '', image: '', bgClass: 'bg-[#0f2822]', textClass: 'text-[#FAF9F5]', coords: '', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="Num ID" icon={Tag} value={item.num} onChange={(v) => updateField('num', v)} />
+                                <TextInputGroup label="Badge Label" icon={Tag} value={item.badge} onChange={(v) => updateField('badge', v)} />
+                                <TextInputGroup label="Offering Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
+                                <TextInputGroup label="Coords" icon={Compass} value={item.coords} onChange={(v) => updateField('coords', v)} />
+                                <TextInputGroup label="Bg Class (tailwindcss)" icon={Type} value={item.bgClass} onChange={(v) => updateField('bgClass', v)} />
+                                <TextInputGroup label="Text Class (tailwindcss)" icon={Type} value={item.textClass} onChange={(v) => updateField('textClass', v)} />
+                              </div>
+                              <ImageUploader label="Offering Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
+                            </div>
+                          )}
+                        />
+                      </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Gallery Section Headings</div>
+                      <TextInputGroup label="Gallery Tagline" icon={Type} value={formFields.weddings_gallery_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_tagline: v }))} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Gallery Heading" icon={Type} value={formFields.weddings_gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading: v }))} />
+                        <TextInputGroup label="Gallery Heading (Italic)" icon={Type} value={formFields.weddings_gallery_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading_italic: v }))} />
+                      </div>
+                      <TextAreaGroup label="Gallery Description" value={formFields.weddings_gallery_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_desc: v }))} rows={2} />
+                    </div>
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bottom CTA Section</div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="CTA Button Text" icon={Type} value={formFields.weddings_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_text: v }))} />
+                        <TextInputGroup label="CTA Button Link" icon={LinkIcon} value={formFields.weddings_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_link: v }))} />
+                      </div>
+                      <TextInputGroup label="Footnote Text" icon={Type} value={formFields.weddings_cta_footnote} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_footnote: v }))} />
+                    </div>
                   </div>
                 )}
 
@@ -1205,51 +1387,90 @@ export default function AdminPages() {
 
                     <SectionToggle label="Activities Tour Section" checked={visibilities.experiences_tour_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, experiences_tour_visible: v }))} />
                     {visibilities.experiences_tour_visible && (
-                      <ListEditor
-                        title="Activities Tour Slides"
-                        items={experienceSlides}
-                        onChange={setExperienceSlides}
-                        createDefaultItem={() => ({ id: 'yoga', category: 'WELLNESS', title: 'New Activity', subtitle: '', description: '', image: '', icon: 'Wind', is_visible: true })}
-                        getItemLabel={(item) => item.title}
-                        getItemImage={(item) => item.image}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <div className="space-y-4">
-                              <TextInputGroup label="Slide ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
-                              <TextInputGroup label="Category Tag" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
-                              <TextInputGroup label="Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                              <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
-                              <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
-                              <div className="text-left w-full">
-                                <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
-                                <select value={item.icon || 'Wind'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                  {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
-                                </select>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
+                          <TextInputGroup label="Activities Slide Badge Label" icon={Type} value={formFields.experiences_slide_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_slide_badge: v }))} />
+                        </div>
+                        <ListEditor
+                          title="Activities Tour Slides"
+                          items={experienceSlides}
+                          onChange={setExperienceSlides}
+                          createDefaultItem={() => ({ id: 'yoga', category: 'WELLNESS', title: 'New Activity', subtitle: '', description: '', image: '', icon: 'Wind', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="Slide ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
+                                <TextInputGroup label="Category Tag" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
+                                <TextInputGroup label="Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
+                                <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
+                                <div className="text-left w-full">
+                                  <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
+                                  <select value={item.icon || 'Wind'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                    {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
+                                  </select>
+                                </div>
                               </div>
+                              <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
-                            <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
-                          </div>
-                        )}
-                      />
+                          )}
+                        />
+                      </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bento Gallery Headings</div>
+                      <TextInputGroup label="Bento Tagline" icon={Type} value={formFields.experiences_bento_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_bento_tagline: v }))} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Bento Heading 1" icon={Type} value={formFields.experiences_bento_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_bento_heading: v }))} />
+                        <TextInputGroup label="Bento Heading 2 (Italic)" icon={Type} value={formFields.experiences_bento_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_bento_heading_italic: v }))} />
+                      </div>
+                    </div>
 
                     <SectionToggle label="Scenes/Gallery Section" checked={visibilities.experiences_gallery_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, experiences_gallery_visible: v }))} />
                     {visibilities.experiences_gallery_visible && (
-                      <ListEditor
-                        title="Experience Photo Scenes"
-                        items={experiencePhotos}
-                        onChange={setExperiencePhotos}
-                        createDefaultItem={() => ({ url: '', caption: 'New Scene', is_visible: true })}
-                        getItemLabel={(item) => item.caption}
-                        getItemImage={(item) => item.url}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <TextInputGroup label="Caption Text" icon={Type} value={item.caption} onChange={(v) => updateField('caption', v)} />
-                            <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Retreat Scenes Headings</div>
+                          <TextInputGroup label="Scenes Tagline" icon={Type} value={formFields.experiences_scenes_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_scenes_tagline: v }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Scenes Heading" icon={Type} value={formFields.experiences_scenes_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_scenes_heading: v }))} />
+                            <TextInputGroup label="Scenes Heading (Italic)" icon={Type} value={formFields.experiences_scenes_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_scenes_heading_italic: v }))} />
                           </div>
-                        )}
-                      />
+                          <TextAreaGroup label="Scenes Description" value={formFields.experiences_scenes_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_scenes_desc: v }))} rows={2} />
+                        </div>
+                        <ListEditor
+                          title="Experience Photo Scenes"
+                          items={experiencePhotos}
+                          onChange={setExperiencePhotos}
+                          createDefaultItem={() => ({ url: '', caption: 'New Scene', is_visible: true })}
+                          getItemLabel={(item) => item.caption}
+                          getItemImage={(item) => item.url}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <TextInputGroup label="Caption Text" icon={Type} value={item.caption} onChange={(v) => updateField('caption', v)} />
+                              <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
+                            </div>
+                          )}
+                        />
+                      </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bottom CTA Section</div>
+                      <TextInputGroup label="CTA Badge" icon={Tag} value={formFields.experiences_cta_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_badge: v }))} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="CTA Heading" icon={Type} value={formFields.experiences_cta_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_heading: v }))} />
+                        <TextInputGroup label="CTA Heading (Italic)" icon={Type} value={formFields.experiences_cta_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_heading_italic: v }))} />
+                      </div>
+                      <TextAreaGroup label="CTA Description" value={formFields.experiences_cta_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_desc: v }))} rows={2} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Button Text" icon={Type} value={formFields.experiences_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_btn_text: v }))} />
+                        <TextInputGroup label="Button Link" icon={LinkIcon} value={formFields.experiences_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_btn_link: v }))} />
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -1266,99 +1487,163 @@ export default function AdminPages() {
 
                     <SectionToggle label="Destinations Tour Section" checked={visibilities.nearby_tour_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, nearby_tour_visible: v }))} />
                     {visibilities.nearby_tour_visible && (
-                      <ListEditor
-                        title="Destination Slides"
-                        items={nearbySlides}
-                        onChange={setNearbySlides}
-                        createDefaultItem={() => ({ id: 'trek', category: 'TREK', title: 'New Destination', subtitle: '', description: '', image: '', icon: 'Mountain', altitude: '', distance: '', duration: '', is_visible: true })}
-                        getItemLabel={(item) => item.title}
-                        getItemImage={(item) => item.image}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <div className="space-y-4">
-                              <TextInputGroup label="ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
-                              <TextInputGroup label="Category Tag" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
-                              <TextInputGroup label="Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                              <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
-                              <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
-                              <div className="grid grid-cols-3 gap-2">
-                                <TextInputGroup label="Altitude" icon={Compass} value={item.altitude} onChange={(v) => updateField('altitude', v)} />
-                                <TextInputGroup label="Distance" icon={MapPin} value={item.distance} onChange={(v) => updateField('distance', v)} />
-                                <TextInputGroup label="Duration" icon={Clock} value={item.duration} onChange={(v) => updateField('duration', v)} />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
+                          <TextInputGroup label="Destinations Slide Badge Label" icon={Type} value={formFields.nearby_slide_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_slide_badge: v }))} />
+                        </div>
+                        <ListEditor
+                          title="Destination Slides"
+                          items={nearbySlides}
+                          onChange={setNearbySlides}
+                          createDefaultItem={() => ({ id: 'trek', category: 'TREK', title: 'New Destination', subtitle: '', description: '', image: '', icon: 'Mountain', altitude: '', distance: '', duration: '', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
+                                <TextInputGroup label="Category Tag" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
+                                <TextInputGroup label="Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
+                                <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
+                                <div className="grid grid-cols-3 gap-2">
+                                  <TextInputGroup label="Altitude" icon={Compass} value={item.altitude} onChange={(v) => updateField('altitude', v)} />
+                                  <TextInputGroup label="Distance" icon={MapPin} value={item.distance} onChange={(v) => updateField('distance', v)} />
+                                  <TextInputGroup label="Duration" icon={Clock} value={item.duration} onChange={(v) => updateField('duration', v)} />
+                                </div>
+                                <div className="text-left w-full">
+                                  <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
+                                  <select value={item.icon || 'Mountain'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                    {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
+                                  </select>
+                                </div>
                               </div>
-                              <div className="text-left w-full">
-                                <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
-                                <select value={item.icon || 'Mountain'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                  {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
-                                </select>
-                              </div>
+                              <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
-                            <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
-                          </div>
-                        )}
-                      />
+                          )}
+                        />
+                      </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bento Gallery Headings</div>
+                      <TextInputGroup label="Bento Tagline" icon={Type} value={formFields.nearby_bento_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_bento_tagline: v }))} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Bento Heading 1" icon={Type} value={formFields.nearby_bento_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_bento_heading: v }))} />
+                        <TextInputGroup label="Bento Heading 2 (Italic)" icon={Type} value={formFields.nearby_bento_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_bento_heading_italic: v }))} />
+                      </div>
+                    </div>
 
                     <SectionToggle label="Treks Directory Section" checked={visibilities.nearby_treks_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, nearby_treks_visible: v }))} />
                     {visibilities.nearby_treks_visible && (
-                      <ListEditor
-                        title="Treks Directory Guide"
-                        items={treksDirectory}
-                        onChange={setTreksDirectory}
-                        createDefaultItem={() => ({ title: 'New Trek', subtitle: '', difficulty: 'Easy', altitude: '', distance: '', bestSeason: '', duration: '', highlight: '', description: '', is_visible: true })}
-                        getItemLabel={(item) => item.title}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <TextInputGroup label="Trek Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                            <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
-                            <div className="text-left w-full">
-                              <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Difficulty</label>
-                              <select value={item.difficulty || 'Easy'} onChange={(e) => updateField('difficulty', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                <option value="Easy" className="bg-[#0D1412]">Easy</option>
-                                <option value="Moderate" className="bg-[#0D1412]">Moderate</option>
-                                <option value="Difficult" className="bg-[#0D1412]">Difficult</option>
-                              </select>
-                            </div>
-                            <TextInputGroup label="Max Altitude" icon={Compass} value={item.altitude} onChange={(v) => updateField('altitude', v)} />
-                            <TextInputGroup label="Distance" icon={MapPin} value={item.distance} onChange={(v) => updateField('distance', v)} />
-                            <TextInputGroup label="Best Season" icon={Clock} value={item.bestSeason} onChange={(v) => updateField('bestSeason', v)} />
-                            <TextInputGroup label="Duration" icon={Clock} value={item.duration} onChange={(v) => updateField('duration', v)} />
-                            <TextInputGroup label="Highlight Phrase" icon={Sparkles} value={item.highlight} onChange={(v) => updateField('highlight', v)} />
-                            <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Treks Directory Headings</div>
+                          <TextInputGroup label="Treks Tagline" icon={Type} value={formFields.nearby_treks_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_treks_tagline: v }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Treks Heading" icon={Type} value={formFields.nearby_treks_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_treks_heading: v }))} />
+                            <TextInputGroup label="Treks Heading (Italic)" icon={Type} value={formFields.nearby_treks_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_treks_heading_italic: v }))} />
                           </div>
-                        )}
-                      />
+                          <TextAreaGroup label="Treks Description" value={formFields.nearby_treks_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_treks_desc: v }))} rows={2} />
+                        </div>
+                        <ListEditor
+                          title="Treks Directory Guide"
+                          items={treksDirectory}
+                          onChange={setTreksDirectory}
+                          createDefaultItem={() => ({ title: 'New Trek', subtitle: '', difficulty: 'Easy', altitude: '', distance: '', bestSeason: '', duration: '', highlight: '', description: '', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <TextInputGroup label="Trek Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                              <TextInputGroup label="Subtitle Tagline" icon={Type} value={item.subtitle} onChange={(v) => updateField('subtitle', v)} />
+                              <div className="text-left w-full">
+                                <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Difficulty</label>
+                                <select value={item.difficulty || 'Easy'} onChange={(e) => updateField('difficulty', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                  <option value="Easy" className="bg-[#0D1412]">Easy</option>
+                                  <option value="Moderate" className="bg-[#0D1412]">Moderate</option>
+                                  <option value="Difficult" className="bg-[#0D1412]">Difficult</option>
+                                </select>
+                              </div>
+                              <TextInputGroup label="Max Altitude" icon={Compass} value={item.altitude} onChange={(v) => updateField('altitude', v)} />
+                              <TextInputGroup label="Distance" icon={MapPin} value={item.distance} onChange={(v) => updateField('distance', v)} />
+                              <TextInputGroup label="Best Season" icon={Clock} value={item.bestSeason} onChange={(v) => updateField('bestSeason', v)} />
+                              <TextInputGroup label="Duration" icon={Clock} value={item.duration} onChange={(v) => updateField('duration', v)} />
+                              <TextInputGroup label="Highlight Phrase" icon={Sparkles} value={item.highlight} onChange={(v) => updateField('highlight', v)} />
+                              <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
+                            </div>
+                          )}
+                        />
+                      </div>
                     )}
 
                     <SectionToggle label="Nearby Gallery Section" checked={visibilities.nearby_gallery_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, nearby_gallery_visible: v }))} />
                     {visibilities.nearby_gallery_visible && (
-                      <ListEditor
-                        title="Nearby Photo Scenes"
-                        items={nearbyPhotos}
-                        onChange={setNearbyPhotos}
-                        createDefaultItem={() => ({ url: '', caption: 'New Scene', is_visible: true })}
-                        getItemLabel={(item) => item.caption}
-                        getItemImage={(item) => item.url}
-                        renderItemEditor={(item, idx, updateField) => (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                            <TextInputGroup label="Caption Text" icon={Type} value={item.caption} onChange={(v) => updateField('caption', v)} />
-                            <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Nearby Photo Scenes Headings</div>
+                          <TextInputGroup label="Scenes Tagline" icon={Type} value={formFields.nearby_scenes_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_scenes_tagline: v }))} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="Scenes Heading" icon={Type} value={formFields.nearby_scenes_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_scenes_heading: v }))} />
+                            <TextInputGroup label="Scenes Heading (Italic)" icon={Type} value={formFields.nearby_scenes_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_scenes_heading_italic: v }))} />
                           </div>
-                        )}
-                      />
+                          <TextAreaGroup label="Scenes Description" value={formFields.nearby_scenes_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_scenes_desc: v }))} rows={2} />
+                        </div>
+                        <ListEditor
+                          title="Nearby Photo Scenes"
+                          items={nearbyPhotos}
+                          onChange={setNearbyPhotos}
+                          createDefaultItem={() => ({ url: '', caption: 'New Scene', is_visible: true })}
+                          getItemLabel={(item) => item.caption}
+                          getItemImage={(item) => item.url}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <TextInputGroup label="Caption Text" icon={Type} value={item.caption} onChange={(v) => updateField('caption', v)} />
+                              <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
+                            </div>
+                          )}
+                        />
+                      </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bottom CTA Section</div>
+                      <TextInputGroup label="CTA Badge" icon={Tag} value={formFields.nearby_cta_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_badge: v }))} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="CTA Heading" icon={Type} value={formFields.nearby_cta_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_heading: v }))} />
+                        <TextInputGroup label="CTA Heading (Italic)" icon={Type} value={formFields.nearby_cta_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_heading_italic: v }))} />
+                      </div>
+                      <TextAreaGroup label="CTA Description" value={formFields.nearby_cta_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_desc: v }))} rows={2} />
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Button Text" icon={Type} value={formFields.nearby_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_btn_text: v }))} />
+                        <TextInputGroup label="Button Link" icon={LinkIcon} value={formFields.nearby_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_btn_link: v }))} />
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {/* ----------------- GALLERY PAGE ----------------- */}
                 {activePageId === 'gallery' && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
-                      <div className="md:col-span-2 space-y-4">
-                        <TextInputGroup label="Heading" icon={Type} value={formFields.gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_heading: v }))} />
-                        <TextInputGroup label="Subheading" icon={Type} value={formFields.gallery_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_subheading: v }))} />
+                    <SectionToggle
+                      label="Gallery Hero Section"
+                      checked={visibilities.gallery_hero_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, gallery_hero_visible: v }))}
+                      description="Toggle gallery hero intro panel visibility"
+                    />
+                    {visibilities.gallery_hero_visible && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
+                        <div className="md:col-span-2 space-y-4">
+                          <TextInputGroup label="Hero Badge" icon={Tag} value={formFields.gallery_hero_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_hero_badge: v }))} />
+                          <TextInputGroup label="Heading" icon={Type} value={formFields.gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_heading: v }))} />
+                          <TextAreaGroup label="Subheading / Description" value={formFields.gallery_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_subheading: v }))} rows={2} />
+                        </div>
+                        <ImageUploader label="Cover Image" currentImage={formFields.gallery_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, gallery_image: p }))} aspectRatio="aspect-video w-full" />
                       </div>
-                      <ImageUploader label="Cover Image" currentImage={formFields.gallery_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, gallery_image: p }))} aspectRatio="aspect-video w-full" />
+                    )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Category Filter Tabs</div>
+                      <TextInputGroup label="Category Tabs (comma-separated, do not include 'All')" icon={Tag} value={formFields.gallery_categories} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_categories: v }))} />
                     </div>
 
                     <ListEditor
@@ -1376,9 +1661,9 @@ export default function AdminPages() {
                             <div className="text-left w-full">
                               <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
                               <select value={item.category || 'Peaks & Vibe'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                <option value="Peaks & Vibe" className="bg-[#0D1412]">Peaks & Vibe</option>
-                                <option value="Sanctuary Suites" className="bg-[#0D1412]">Sanctuary Suites</option>
-                                <option value="Spiritual Life" className="bg-[#0D1412]">Spiritual Life</option>
+                                {(formFields.gallery_categories || "Peaks & Vibe, Sanctuary Suites, Spiritual Life").split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
+                                  <option key={c} value={c} className="bg-[#0D1412]">{c}</option>
+                                ))}
                               </select>
                             </div>
                           </div>
@@ -1392,14 +1677,54 @@ export default function AdminPages() {
                 {/* ----------------- CONTACT US ----------------- */}
                 {activePageId === 'contact' && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
-                      <div className="md:col-span-2 space-y-4">
-                        <TextInputGroup label="Heading" icon={Type} value={formFields.contact_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_heading: v }))} />
-                        <TextInputGroup label="Subheading" icon={Type} value={formFields.contact_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_subheading: v }))} />
-                        <TextInputGroup label="Reservation Email Coordinates" icon={Mail} value={formFields.contact_email} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_email: v }))} />
-                        <TextInputGroup label="Map Pin Location Text" icon={MapPin} value={formFields.contact_map_pin} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_map_pin: v }))} />
+                    <SectionToggle label="Contact Hero Section" checked={visibilities.contact_hero_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, contact_hero_visible: v }))} />
+                    {visibilities.contact_hero_visible && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-white/5 rounded-xl border border-[#1C2E2A]">
+                        <div className="md:col-span-2 space-y-4">
+                          <TextInputGroup label="Contact Badge Label" icon={Tag} value={formFields.contact_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_badge: v }))} />
+                          <TextInputGroup label="Heading" icon={Type} value={formFields.contact_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_heading: v }))} />
+                          <TextInputGroup label="Subheading" icon={Type} value={formFields.contact_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_subheading: v }))} />
+                          <TextInputGroup label="Italic Phrase" icon={Type} value={formFields.contact_italic_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_italic_text: v }))} />
+                          <TextInputGroup label="Reservation Email Coordinates" icon={Mail} value={formFields.contact_email} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_email: v }))} />
+                          <TextInputGroup label="Map Pin Location Text" icon={MapPin} value={formFields.contact_map_pin} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_map_pin: v }))} />
+                        </div>
+                        <ImageUploader label="Cover Image" currentImage={formFields.contact_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, contact_image: p }))} aspectRatio="aspect-video w-full" />
                       </div>
-                      <ImageUploader label="Cover Image" currentImage={formFields.contact_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, contact_image: p }))} aspectRatio="aspect-video w-full" />
+                    )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Instagram Coordinates</div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Instagram Username Handle" icon={Type} value={formFields.contact_instagram} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_instagram: v }))} />
+                        <TextInputGroup label="Instagram Profile URL" icon={LinkIcon} value={formFields.contact_instagram_url} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_instagram_url: v }))} />
+                      </div>
+                    </div>
+
+                    <SectionToggle label="Inquiry Form Section" checked={visibilities.contact_form_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, contact_form_visible: v }))} />
+                    {visibilities.contact_form_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <TextInputGroup label="Inquiry Form Section Title" icon={Type} value={formFields.contact_form_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_form_title: v }))} />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ----------------- BOOKING PAGE ----------------- */}
+                {activePageId === 'booking' && (
+                  <div className="space-y-6">
+                    <SectionToggle
+                      label="Online Booking Enabled"
+                      checked={visibilities.booking_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, booking_visible: v }))}
+                      description="Toggle online booking forms and reservation capability"
+                    />
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextInputGroup label="Heading" icon={Type} value={formFields.booking_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_heading: v }))} />
+                        <TextInputGroup label="Heading (Italic)" icon={Type} value={formFields.booking_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_heading_italic: v }))} />
+                      </div>
+                      <TextInputGroup label="Badge Text" icon={Tag} value={formFields.booking_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_badge: v }))} />
+                      <TextAreaGroup label="Subheading" value={formFields.booking_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_subheading: v }))} rows={2} />
                     </div>
                   </div>
                 )}

@@ -24,6 +24,8 @@ export default function Gallery() {
 
   const galleryHeading = getValue('gallery', 'gallery_heading', 'Captured Stillness');
   const gallerySubheading = getValue('gallery', 'gallery_subheading', 'Take a slow, visual tour of our deodar-framed spaces, snow summits, and restorative pilgrimage amenities.');
+  const galleryHeroVisible = getValue('gallery', 'gallery_hero_visible', 'true') !== 'false';
+  const galleryHeroBadge = getValue('gallery', 'gallery_hero_badge', 'THE SANCTUARY CHRONICLES');
 
   let dbImages: GalleryImage[] = [];
   try {
@@ -87,7 +89,8 @@ export default function Gallery() {
   const galleryImages = (dbImages && dbImages.length > 0) ? dbImages : defaultImages;
   const visibleImages = galleryImages.filter((img) => img.is_visible !== false);
 
-  const categories = ["All", "Peaks & Vibe", "Sanctuary Suites", "Spiritual Life"];
+  const categoriesStr = getValue('gallery', 'gallery_categories', 'Peaks & Vibe, Sanctuary Suites, Spiritual Life');
+  const categories = ["All", ...categoriesStr.split(',').map((c: string) => c.trim()).filter(c => c && c !== "All")];
 
   const filteredImages = selectedCategory === "All" 
     ? visibleImages 
@@ -112,19 +115,21 @@ export default function Gallery() {
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         
         {/* Editorial Header */}
-        <header className="mb-14 text-center space-y-5 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#1B4C44]/5 text-[#1B4C44] text-[10px] uppercase font-bold tracking-[0.25em] rounded-full border border-[#1B4C44]/10">
-            <Sparkles size={11} className="text-[#A88C52]" />
-            <span>THE SANCTUARY CHRONICLES</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-6xl font-heading font-medium tracking-tight text-slate-charcoal leading-[1.1]">
-            {galleryHeading}
-          </h1>
-          <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-md mx-auto font-sans leading-relaxed">
-            {gallerySubheading}
-          </p>
-        </header>
+        {galleryHeroVisible && (
+          <header className="mb-14 text-center space-y-5 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#1B4C44]/5 text-[#1B4C44] text-[10px] uppercase font-bold tracking-[0.25em] rounded-full border border-[#1B4C44]/10">
+              <Sparkles size={11} className="text-[#A88C52]" />
+              <span>{galleryHeroBadge}</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-heading font-medium tracking-tight text-slate-charcoal leading-[1.1]">
+              {galleryHeading}
+            </h1>
+            <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-md mx-auto font-sans leading-relaxed">
+              {gallerySubheading}
+            </p>
+          </header>
+        )}
 
         {/* Category Selector Tabs */}
         <div className="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-12">

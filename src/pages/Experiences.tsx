@@ -30,6 +30,24 @@ export default function Experiences() {
   const experiencesSubheading = getValue('experiences', 'experiences_subheading', 'Acclimatize in the Sacred Atmosphere');
   const experiencesImage = getValue('experiences', 'experiences_image', '');
 
+  const experiencesSlideBadge = getValue('experiences', 'experiences_slide_badge', 'Activities & Comforts');
+
+  const experiencesBentoTagline = getValue('experiences', 'experiences_bento_tagline', 'VISUAL ARCHIVE');
+  const experiencesBentoHeading = getValue('experiences', 'experiences_bento_heading', 'Experience');
+  const experiencesBentoHeadingItalic = getValue('experiences', 'experiences_bento_heading_italic', 'Gallery');
+
+  const experiencesScenesTagline = getValue('experiences', 'experiences_scenes_tagline', 'RETREAT ARCHIVE');
+  const experiencesScenesHeading = getValue('experiences', 'experiences_scenes_heading', 'Retreat');
+  const experiencesScenesHeadingItalic = getValue('experiences', 'experiences_scenes_heading_italic', 'Scenes');
+  const experiencesScenesDesc = getValue('experiences', 'experiences_scenes_desc', 'Real photographic glances of our pinewood interiors, high-altitude yoga shala, Sattvik mountain dining, and misty cedar surroundings. Click any image to expand.');
+
+  const experiencesCtaBadge = getValue('experiences', 'experiences_cta_badge', 'Plan Your Trip');
+  const experiencesCtaHeading = getValue('experiences', 'experiences_cta_heading', 'Book Your');
+  const experiencesCtaHeadingItalic = getValue('experiences', 'experiences_cta_heading_italic', 'Vedic Stay');
+  const experiencesCtaDesc = getValue('experiences', 'experiences_cta_desc', 'Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.');
+  const experiencesCtaBtnText = getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation');
+  const experiencesCtaBtnLink = getValue('experiences', 'experiences_cta_btn_link', '/rooms');
+
   const tourVisible = getValue('experiences', 'experiences_tour_visible', 'true') !== 'false';
   const galleryVisible = getValue('experiences', 'experiences_gallery_visible', 'true') !== 'false';
 
@@ -247,7 +265,7 @@ export default function Experiences() {
                   className="space-y-3"
                 >
                   <p className="text-[11px] font-bold text-[#A88C52] uppercase tracking-[0.2em]">
-                    Activities &amp; Comforts
+                    {experiencesSlideBadge}
                   </p>
                   
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[#FAF9F5] leading-tight tracking-wide font-normal">
@@ -321,10 +339,10 @@ export default function Experiences() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-8 mb-16 gap-4">
               <div className="space-y-3">
                 <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-[#A88C52] block">
-                  VISUAL ARCHIVE
+                  {experiencesBentoTagline}
                 </span>
                 <h2 className="text-3xl sm:text-5xl font-serif text-[#FAF9F5] font-light leading-none">
-                  Experience <span className="italic font-normal text-[#E5D7C3]">Gallery</span>
+                  {experiencesBentoHeading} <span className="italic font-normal text-[#E5D7C3]">{experiencesBentoHeadingItalic}</span>
                 </h2>
               </div>
               
@@ -471,14 +489,14 @@ export default function Experiences() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-6 mb-10 gap-4">
                   <div className="space-y-2">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-extrabold text-[#A88C52] flex items-center gap-2">
-                      <Camera size={12} /> RETREAT ARCHIVE
+                      <Camera size={12} /> {experiencesScenesTagline}
                     </span>
                     <h3 className="text-2xl sm:text-4xl font-serif text-[#FAF9F5] font-light">
-                      Retreat <span className="italic font-normal text-[#E5D7C3]">Scenes</span>
+                      {experiencesScenesHeading} <span className="italic font-normal text-[#E5D7C3]">{experiencesScenesHeadingItalic}</span>
                     </h3>
                   </div>
                   <p className="text-xs text-[#FAF9F5]/60 max-w-sm font-sans leading-relaxed">
-                    Real photographic glances of our pinewood interiors, high-altitude yoga shala, Sattvik mountain dining, and misty cedar surroundings. Click any image to expand.
+                    {experiencesScenesDesc}
                   </p>
                 </div>
 
@@ -518,21 +536,21 @@ export default function Experiences() {
               
               <div className="relative z-10 space-y-6">
                 <span className="text-[10px] uppercase tracking-[0.25em] font-extrabold text-[#A88C52] bg-[#A88C52]/10 px-4 py-1.5 rounded-full inline-block">
-                  Plan Your Trip
+                  {experiencesCtaBadge}
                 </span>
                 
                 <h3 className="text-3xl sm:text-4xl font-serif text-[#FAF9F5] font-light tracking-wide leading-tight">
-                  Book Your <span className="italic font-normal text-[#E5D7C3]">Vedic Stay</span>
+                  {experiencesCtaHeading} <span className="italic font-normal text-[#E5D7C3]">{experiencesCtaHeadingItalic}</span>
                 </h3>
                 
                 <p className="text-xs sm:text-sm text-[#FAF9F5]/70 max-w-md mx-auto leading-relaxed font-sans">
-                  Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.
+                  {experiencesCtaDesc}
                 </p>
                 
                 <div className="pt-2">
-                  <Link to="/rooms">
+                  <Link to={experiencesCtaBtnLink}>
                     <button className="h-12 px-10 bg-[#FAF9F5] hover:bg-[#A88C52] text-[#0B1714] font-extrabold hover:text-[#FAF9F5] text-xs uppercase tracking-widest rounded-xl transition-all duration-300 shadow-xl cursor-pointer">
-                      Confirm Your Reservation
+                      {experiencesCtaBtnText}
                     </button>
                   </Link>
                 </div>

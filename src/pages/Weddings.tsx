@@ -136,9 +136,36 @@ export default function Weddings() {
   const weddingsHeading = getValue('weddings', 'weddings_heading', 'Destination Weddings');
   const weddingsSubheading = getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas');
   const weddingsImage = getValue('weddings', 'weddings_image', '');
+  const weddingsHeroBadge = getValue('weddings', 'weddings_hero_badge', 'SACRED WEDDINGS & CELEBRATIONS');
+  const weddingsHeroDesc = getValue('weddings', 'weddings_hero_desc', '');
   const weddingsStoryTitle = getValue('weddings', 'weddings_story_title', 'Ancestral Purity');
   const weddingsStorySubtitle = getValue('weddings', 'weddings_story_subtitle', 'In Sacred Commemoration');
   const weddingsStoryDesc = getValue('weddings', 'weddings_story_desc', 'Take part in customizable celebratory layouts where the alpine air remains whispery and crisp. Let our stone-hearth specialists and organic culinary designers assemble beautiful tables decorated exclusively with wild mountain flowers.');
+
+  const weddingsStoryScript = getValue('weddings', 'weddings_story_script', 'Himalayan Pure Blessings');
+  const weddingsStoryHeading = getValue('weddings', 'weddings_story_heading', 'Intimate, Cinematic');
+  const weddingsStoryHeadingItalic = getValue('weddings', 'weddings_story_heading_italic', '&');
+  const weddingsStorySubheading = getValue('weddings', 'weddings_story_subheading', 'Unforgettable');
+  const weddingsStoryParagraph = getValue('weddings', 'weddings_story_paragraph', 'From beautiful pre-marriage morning rituals on our mountain-sky deodar terraces to customized wedding lawns set before a majestic valley backdrop, The Vedic Himalaya Retreat coordinates an exceptional blend of premium hospitality, local Garhwali flavor thalis, and pure mountain atmosphere.');
+
+  const weddingsVenuesTagline = getValue('weddings', 'weddings_venues_tagline', 'SACRED VENUE GRID');
+  const weddingsVenuesHeading = getValue('weddings', 'weddings_venues_heading', 'Our Ceremony');
+  const weddingsVenuesHeadingItalic = getValue('weddings', 'weddings_venues_heading_italic', 'Spaces');
+  const weddingsVenuesDesc = getValue('weddings', 'weddings_venues_desc', 'Choose from our hand-selected indoor and outdoor spaces, each featuring high altitude forest views and traditional wood hearth configurations.');
+
+  const weddingsOfferingsTagline = getValue('weddings', 'weddings_offerings_tagline', 'Wedding Specifications');
+  const weddingsOfferingsHeading = getValue('weddings', 'weddings_offerings_heading', 'Sacred');
+  const weddingsOfferingsHeadingItalic = getValue('weddings', 'weddings_offerings_heading_italic', 'Aesthetics');
+  const weddingsOfferingsDesc = getValue('weddings', 'weddings_offerings_desc', 'Bespoke Arrangements & Sanctuary parameters');
+
+  const weddingsGalleryTagline = getValue('weddings', 'weddings_gallery_tagline', 'PHOTO CAPTURES');
+  const weddingsGalleryHeading = getValue('weddings', 'weddings_gallery_heading', 'Celebration');
+  const weddingsGalleryHeadingItalic = getValue('weddings', 'weddings_gallery_heading_italic', 'Aesthetics');
+  const weddingsGalleryDesc = getValue('weddings', 'weddings_gallery_desc', 'A cinematic visual registry of tables decorated exclusively with wild mountain blooms and wooden embers.');
+
+  const weddingsCtaBtnText = getValue('weddings', 'weddings_cta_btn_text', 'Inquire for Events');
+  const weddingsCtaBtnLink = getValue('weddings', 'weddings_cta_btn_link', '/contact');
+  const weddingsCtaFootnote = getValue('weddings', 'weddings_cta_footnote', 'Booking open for 2026/2027 Himalayan Seasons');
 
   const heroVisible = getValue('weddings', 'weddings_hero_visible', 'true') !== 'false';
   const storyVisible = getValue('weddings', 'weddings_story_visible', 'true') !== 'false';
@@ -317,7 +344,7 @@ export default function Weddings() {
               className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/10 text-[#D8CBB8] text-[9px] uppercase font-bold tracking-[0.25em] rounded-full border border-white/10 backdrop-blur-xs select-none"
             >
               <Sparkles size={11} className="text-[#A88C52] animate-pulse" />
-              <span>SACRED WEDDINGS & CELEBRATIONS</span>
+              <span>{weddingsHeroBadge}</span>
             </motion.div>
             
             <motion.h1 
@@ -337,6 +364,17 @@ export default function Weddings() {
             >
               {weddingsSubheading}
             </motion.p>
+
+            {weddingsHeroDesc && (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="text-xs md:text-sm max-w-lg mx-auto text-white/70 leading-relaxed font-light"
+              >
+                {weddingsHeroDesc}
+              </motion.p>
+            )}
           </div>
         </section>
       )}
@@ -352,14 +390,14 @@ export default function Weddings() {
              className="space-y-4"
           >
             <span className="font-script text-2xl md:text-4.5xl text-[#A88C52]">
-              Himalayan Pure Blessings
+              {weddingsStoryScript}
             </span>
             <h2 className="text-3xl md:text-5.5xl font-serif font-light tracking-tight text-[#1B4C44] leading-tight">
-              Intimate, Cinematic <span className="italic font-normal font-serif">&amp;</span> Unforgettable
+              {weddingsStoryHeading} <span className="italic font-normal font-serif">{weddingsStoryHeadingItalic}</span> {weddingsStorySubheading}
             </h2>
             <div className="w-12 h-[1px] bg-stone-300 mx-auto my-3" />
             <p className="text-xs md:text-md text-slate-charcoal/75 leading-relaxed max-w-2xl mx-auto font-sans font-light text-justify md:text-center">
-              From beautiful pre-marriage morning rituals on our mountain-sky deodar terraces to customized wedding lawns set before a majestic valley backdrop, The Vedic Himalaya Retreat coordinates an exceptional blend of premium hospitality, local Garhwali flavor thalis, and pure mountain atmosphere.
+              {weddingsStoryParagraph}
             </p>
           </motion.div>
         </section>
@@ -527,13 +565,13 @@ export default function Weddings() {
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="text-center space-y-3 mb-16">
               <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-                SACRED VENUE GRID
+                {weddingsVenuesTagline}
               </span>
               <h2 className="text-3xl md:text-5xl font-serif text-[#1B4C44] font-light">
-                Our Ceremony <span className="italic font-normal font-serif">Spaces</span>
+                {weddingsVenuesHeading} <span className="italic font-normal font-serif">{weddingsVenuesHeadingItalic}</span>
               </h2>
               <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-lg mx-auto font-sans leading-relaxed">
-                Choose from our hand-selected indoor and outdoor spaces, each featuring high altitude forest views and traditional wood hearth configurations.
+                {weddingsVenuesDesc}
               </p>
             </div>
 
@@ -608,13 +646,13 @@ export default function Weddings() {
               
               <div className="text-center pt-20 xs:pt-24 sm:pt-28 md:pt-2 mb-6 md:mb-12 max-w-2xl mx-auto space-y-2.5 shrink-0 animate-fade-in">
                 <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block font-sans">
-                  Wedding Specifications
+                  {weddingsOfferingsTagline}
                 </span>
                 <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading text-slate-charcoal mt-1 tracking-tight font-light leading-none">
-                  Sacred <span className="italic font-serif text-[#1B4C44] font-normal">Aesthetics</span>
+                  {weddingsOfferingsHeading} <span className="italic font-serif text-[#1B4C44] font-normal">{weddingsOfferingsHeadingItalic}</span>
                 </h2>
                 <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
-                  Bespoke Arrangements & Sanctuary parameters
+                  {weddingsOfferingsDesc}
                 </p>
               </div>
 
@@ -640,13 +678,13 @@ export default function Weddings() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center space-y-3 mb-12">
             <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-              PHOTO CAPTURES
+              {weddingsGalleryTagline}
             </span>
             <h3 className="text-3xl md:text-5xl font-serif text-[#1B4C44]">
-              Celebration <span className="italic font-normal font-serif">Aesthetics</span>
+              {weddingsGalleryHeading} <span className="italic font-normal font-serif">{weddingsGalleryHeadingItalic}</span>
             </h3>
             <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-lg mx-auto font-sans">
-              A cinematic visual registry of tables decorated exclusively with wild mountain blooms and wooden embers.
+              {weddingsGalleryDesc}
             </p>
           </div>
 
@@ -748,14 +786,14 @@ export default function Weddings() {
 
         {/* Action Button */}
         <div className="flex flex-col items-center mt-16 space-y-4">
-          <Link to="/contact">
+          <Link to={weddingsCtaBtnLink}>
             <button className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#1B4C44] hover:bg-slate-charcoal text-white font-bold uppercase tracking-[0.18em] text-[10px] sm:text-[10.5px] rounded-xl transition-colors duration-300 shadow-md cursor-pointer">
               <Heart size={14} className="text-[#A88C52]" />
-              <span>Inquire for Events</span>
+              <span>{weddingsCtaBtnText}</span>
             </button>
           </Link>
           <span className="text-[9px] text-[#2E3438]/50 uppercase tracking-[0.15em] font-mono">
-            Booking open for 2026/2027 Himalayan Seasons
+            {weddingsCtaFootnote}
           </span>
         </div>
       </section>
