@@ -3,7 +3,7 @@ import { useContent } from '@/hooks/useContent';
 import { useImageZones } from '@/hooks/useImageZones';
 import { motion } from 'framer-motion';
 import {
-  Save, Loader2, Image as ImageIcon, Plus, ChevronDown, Trash2,
+  Save, Loader2, Image as ImageIcon, Plus, ChevronUp, ChevronDown, Trash2,
   Type, Link as LinkIcon, Edit3, Compass, Tag, Sparkles, BookOpen, Clock, Mail, MapPin, Info, X, Eye, EyeOff, FileText, Heart, ShieldAlert,
   Flame, Leaf
 } from 'lucide-react';
@@ -166,6 +166,28 @@ function ListEditor<T>({
     }
   };
 
+  const handleMoveUp = (idx: number) => {
+    if (idx === 0) return;
+    const updated = [...items];
+    const temp = updated[idx];
+    updated[idx] = updated[idx - 1];
+    updated[idx - 1] = temp;
+    onChange(updated);
+    if (activeIdx === idx) setActiveIdx(idx - 1);
+    else if (activeIdx === idx - 1) setActiveIdx(idx);
+  };
+
+  const handleMoveDown = (idx: number) => {
+    if (idx === items.length - 1) return;
+    const updated = [...items];
+    const temp = updated[idx];
+    updated[idx] = updated[idx + 1];
+    updated[idx + 1] = temp;
+    onChange(updated);
+    if (activeIdx === idx) setActiveIdx(idx + 1);
+    else if (activeIdx === idx + 1) setActiveIdx(idx);
+  };
+
   return (
     <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl p-6 space-y-4 text-left">
       <div className="flex items-center justify-between border-b border-[#1C2E2A] pb-3">
@@ -198,16 +220,36 @@ function ListEditor<T>({
             </div>
 
             <div className="flex items-center justify-between border-t border-[#1C2E2A]/50 pt-2 mt-2">
-              <button
-                type="button"
-                onClick={() => handleToggleVisible(idx, item.is_visible)}
-                className={`p-1 rounded cursor-pointer transition-colors ${
-                  item.is_visible !== false ? 'text-emerald-400 hover:text-emerald-300' : 'text-red-400 hover:text-red-300'
-                }`}
-                title={item.is_visible !== false ? "Visible (Click to hide)" : "Hidden (Click to show)"}
-              >
-                {item.is_visible !== false ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleToggleVisible(idx, item.is_visible)}
+                  className={`p-1 rounded cursor-pointer transition-colors ${
+                    item.is_visible !== false ? 'text-emerald-400 hover:text-emerald-300' : 'text-red-400 hover:text-red-300'
+                  }`}
+                  title={item.is_visible !== false ? "Visible (Click to hide)" : "Hidden (Click to show)"}
+                >
+                  {item.is_visible !== false ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleMoveUp(idx)}
+                  disabled={idx === 0}
+                  className="p-1 rounded text-white/40 hover:text-[#C4A665] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                  title="Move Up"
+                >
+                  <ChevronUp className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleMoveDown(idx)}
+                  disabled={idx === items.length - 1}
+                  className="p-1 rounded text-white/40 hover:text-[#C4A665] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                  title="Move Down"
+                >
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => handleRemove(idx)}
@@ -513,6 +555,90 @@ export default function AdminPages() {
       });
     }
   }, [activePageId, contentLoading, content]);
+
+  // Bulk Upload State & Methods
+  const [isBulkUploading, setIsBulkUploading] = useState<string | null>(null);
+
+  const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetList: 'gallery' | 'experience' | 'nearby') => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const galleryZone = zones.find((z: any) => z.zone_key === 'gallery');
+    if (!galleryZone) {
+      toast.error('Image upload zone not found');
+      return;
+    }
+
+    setIsBulkUploading(targetList);
+    let successCount = 0;
+
+    if (targetList === 'gallery') {
+      const newImages = [...galleryImages];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) continue;
+        try {
+          const result = await addMedia(galleryZone.id, file, 'image');
+          if (result?.success && result.url) {
+            newImages.push({
+              src: result.url,
+              category: 'Peaks & Vibe',
+              title: file.name.split('.')[0] || 'New Photo',
+              desc: 'Uploaded via bulk catalog',
+              is_visible: true
+            });
+            successCount++;
+          }
+        } catch (err) {
+          console.error("Bulk upload error:", err);
+        }
+      }
+      setGalleryImages(newImages);
+    } else if (targetList === 'experience') {
+      const newPhotos = [...experiencePhotos];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) continue;
+        try {
+          const result = await addMedia(galleryZone.id, file, 'image');
+          if (result?.success && result.url) {
+            newPhotos.push({
+              url: result.url,
+              caption: file.name.split('.')[0] || 'New Scene',
+              is_visible: true
+            });
+            successCount++;
+          }
+        } catch (err) {
+          console.error("Bulk upload error:", err);
+        }
+      }
+      setExperiencePhotos(newPhotos);
+    } else if (targetList === 'nearby') {
+      const newPhotos = [...nearbyPhotos];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) continue;
+        try {
+          const result = await addMedia(galleryZone.id, file, 'image');
+          if (result?.success && result.url) {
+            newPhotos.push({
+              url: result.url,
+              caption: file.name.split('.')[0] || 'New Scene',
+              is_visible: true
+            });
+            successCount++;
+          }
+        } catch (err) {
+          console.error("Bulk upload error:", err);
+        }
+      }
+      setNearbyPhotos(newPhotos);
+    }
+
+    setIsBulkUploading(null);
+    toast.success(`Successfully uploaded ${successCount} files to the collection!`);
+  };
 
   // Unified Save Method
   const handleSavePage = async () => {
@@ -1441,6 +1567,19 @@ export default function AdminPages() {
                           </div>
                           <TextAreaGroup label="Scenes Description" value={formFields.experiences_scenes_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_scenes_desc: v }))} rows={2} />
                         </div>
+
+                        <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 flex items-center justify-between text-left">
+                          <div>
+                            <span className="text-xs font-bold text-[#C4A665] uppercase tracking-wider block">Bulk Upload Experience Scenes</span>
+                            <span className="text-[10px] text-[#8E9F96] mt-0.5 block">Select multiple images to upload and auto-insert into the scenes list below.</span>
+                          </div>
+                          <label className={`flex items-center gap-1.5 px-3 py-2 bg-[#1B4C44] hover:bg-[#256055] text-white text-xs font-bold rounded-lg border border-[#1B4C44] transition-colors cursor-pointer shrink-0 ${isBulkUploading === 'experience' ? 'opacity-50 cursor-wait' : ''}`}>
+                            {isBulkUploading === 'experience' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                            {isBulkUploading === 'experience' ? 'UPLOADING...' : 'BULK UPLOAD'}
+                            <input type="file" multiple accept="image/*" disabled={isBulkUploading === 'experience'} onChange={(e) => handleBulkUpload(e, 'experience')} className="hidden" />
+                          </label>
+                        </div>
+
                         <ListEditor
                           title="Experience Photo Scenes"
                           items={experiencePhotos}
@@ -1588,6 +1727,19 @@ export default function AdminPages() {
                           </div>
                           <TextAreaGroup label="Scenes Description" value={formFields.nearby_scenes_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_scenes_desc: v }))} rows={2} />
                         </div>
+
+                        <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 flex items-center justify-between text-left">
+                          <div>
+                            <span className="text-xs font-bold text-[#C4A665] uppercase tracking-wider block">Bulk Upload Nearby Scenes</span>
+                            <span className="text-[10px] text-[#8E9F96] mt-0.5 block">Select multiple images to upload and auto-insert into the scenes list below.</span>
+                          </div>
+                          <label className={`flex items-center gap-1.5 px-3 py-2 bg-[#1B4C44] hover:bg-[#256055] text-white text-xs font-bold rounded-lg border border-[#1B4C44] transition-colors cursor-pointer shrink-0 ${isBulkUploading === 'nearby' ? 'opacity-50 cursor-wait' : ''}`}>
+                            {isBulkUploading === 'nearby' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                            {isBulkUploading === 'nearby' ? 'UPLOADING...' : 'BULK UPLOAD'}
+                            <input type="file" multiple accept="image/*" disabled={isBulkUploading === 'nearby'} onChange={(e) => handleBulkUpload(e, 'nearby')} className="hidden" />
+                          </label>
+                        </div>
+
                         <ListEditor
                           title="Nearby Photo Scenes"
                           items={nearbyPhotos}
@@ -1644,6 +1796,18 @@ export default function AdminPages() {
                     <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
                       <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Category Filter Tabs</div>
                       <TextInputGroup label="Category Tabs (comma-separated, do not include 'All')" icon={Tag} value={formFields.gallery_categories} onChange={(v) => setFormFields((prev: any) => ({ ...prev, gallery_categories: v }))} />
+                    </div>
+
+                    <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 flex items-center justify-between">
+                      <div className="text-left">
+                        <span className="text-xs font-bold text-[#C4A665] uppercase tracking-wider block">Bulk Upload Gallery Images</span>
+                        <span className="text-[10px] text-[#8E9F96] mt-0.5 block">Select multiple images to upload and auto-insert into the gallery list below.</span>
+                      </div>
+                      <label className={`flex items-center gap-1.5 px-3 py-2 bg-[#1B4C44] hover:bg-[#256055] text-white text-xs font-bold rounded-lg border border-[#1B4C44] transition-colors cursor-pointer shrink-0 ${isBulkUploading === 'gallery' ? 'opacity-50 cursor-wait' : ''}`}>
+                        {isBulkUploading === 'gallery' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+                        {isBulkUploading === 'gallery' ? 'UPLOADING...' : 'BULK UPLOAD'}
+                        <input type="file" multiple accept="image/*" disabled={isBulkUploading === 'gallery'} onChange={(e) => handleBulkUpload(e, 'gallery')} className="hidden" />
+                      </label>
                     </div>
 
                     <ListEditor
