@@ -14,7 +14,7 @@ export interface Room {
   amenities: string[];
   image_ids: string[] | null;
   card_image_url: string | null;
-  display_order: number;
+  display_order?: number;
 }
 
 export const useRooms = () => {
@@ -27,7 +27,7 @@ export const useRooms = () => {
       const { data, error } = await supabase
         .from('rooms')
         .select('*')
-        .order('display_order', { ascending: true });
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       setRooms(data || []);
