@@ -302,7 +302,7 @@ export default function AdminPages() {
       setFormFields({
         hero_line1: getValue('home', 'hero_line1', 'Peace in the'),
         hero_line2: getValue('home', 'hero_line2', 'Pines'),
-        hero_subtitle: getValue('home', 'hero_subtitle', 'Village Dewar, Guptkashi'),
+        hero_subtitle: getValue('home', 'hero_subtitle', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi'),
         hero_image: getValue('home', 'hero_image', ''),
         story_line1: getValue('home', 'story_line1', 'Casual Elegance'),
         story_line2: getValue('home', 'story_line2', 'Meets Alpine Charm'),
@@ -430,7 +430,7 @@ export default function AdminPages() {
         contact_subheading: getValue('contact', 'contact_subheading', 'Reservations & coordinates'),
         contact_image: getValue('contact', 'contact_image', ''),
         contact_email: getValue('contact', 'contact_email', 'stay@vedichimalaya.com'),
-        contact_map_pin: getValue('contact', 'contact_map_pin', 'Village Dewar, Guptkashi, Uttarakhand')
+        contact_map_pin: getValue('contact', 'contact_map_pin', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495')
       });
     } else if (['privacy', 'terms'].includes(activePageId)) {
       setFormFields({

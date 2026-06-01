@@ -62,7 +62,7 @@ export function Navbar() {
               <span className="font-heading font-normal text-xl tracking-wider uppercase leading-none">
                 {settings.hotel_name || "Vedic Himalaya"}
               </span>
-              <span className="text-[10px] italic opacity-85 mt-1 uppercase tracking-widest text-stone-sand">{settings.tagline || "Retreat Guptkashi"}</span>
+              <span className="text-[10px] italic opacity-85 mt-1 uppercase tracking-widest text-stone-sand">{settings.tagline || "Retreat Semi Guptkashi"}</span>
              </Link>
 
             {/* Desktop Nav */}

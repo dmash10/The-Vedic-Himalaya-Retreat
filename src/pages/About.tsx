@@ -143,7 +143,7 @@ export default function About() {
           />
           <div className="absolute inset-0 bg-[#0B1714]/20 mix-blend-overlay pointer-events-none" />
           <div className="absolute bottom-0 inset-x-0 p-6 md:p-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
-            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">Guptkashi, Uttarakhand</span>
+            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">Semi Guptkashi, Uttarakhand</span>
             <h4 className="text-xl md:text-2xl font-heading font-medium tracking-tight">Facing the Divine Peaks of Chaukhamba</h4>
           </div>
         </div>

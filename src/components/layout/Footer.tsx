@@ -20,7 +20,7 @@ export function Footer() {
                 {settings.hotel_name || "Vedic Himalaya"}
               </span>
               <span className="italic text-[#D8CBB8] text-sm tracking-wide">
-                {settings.tagline || "Retreat Guptkashi"}
+                {settings.tagline || "Retreat Semi Guptkashi"}
               </span>
             </div>
             <p className="text-[#F6F4EF]/70 text-sm leading-relaxed max-w-xs font-normal font-sans">
@@ -62,7 +62,7 @@ export function Footer() {
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-2.5 group">
                 <MapPin size={16} className="shrink-0 mt-0.5 text-[#8A98A6]" />
-                <span className="leading-snug text-[#F6F4EF]/75 font-sans">{settings.address || "Village Dewar, Guptkashi, Kedarnath Rd, UK"}</span>
+                <span className="leading-snug text-[#F6F4EF]/75 font-sans">{settings.address || "SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495"}</span>
               </div>
               <div className="flex flex-col gap-1.5">
                 {settings.primary_phone && (

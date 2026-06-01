@@ -138,7 +138,7 @@ export default function TermsOfStay() {
 
         {/* Elegant Footer Details */}
         <div className="mt-16 pt-8 border-t border-[#D8CBB8]/20 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono tracking-widest text-slate-charcoal/40 gap-4">
-          <span>VEDIC HIMALAYA // GUPTKASHI SANCTUARY</span>
+          <span>VEDIC HIMALAYA // SEMI GUPTKASHI SANCTUARY</span>
           <span>© {new Date().getFullYear()} ALL CITATIONS RESERVED</span>
         </div>
 

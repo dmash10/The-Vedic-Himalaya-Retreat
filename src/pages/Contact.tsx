@@ -19,7 +19,7 @@ export default function Contact() {
   const contactHeading = getValue('contact', 'contact_heading', 'We Await Your');
   const contactSubheading = getValue('contact', 'contact_subheading', 'Prepare your pilgrimage plans beautifully. Our reservation crew is available 24/7 to orchestrate your luxury stay and pure Sattvik dining requirements.');
 
-  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'Village Dewar, Guptkashi, Uttarakhand, India 246439');
+  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495');
   const contactEmailText = getValue('contact', 'contact_email', settings.email || 'stay@vedichimalaya.com');
 
   const handleSubmit = (e: React.FormEvent) => {

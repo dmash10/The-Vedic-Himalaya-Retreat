@@ -188,7 +188,7 @@ export default function AdminSettings() {
           <div className="p-5 space-y-4">
             <div>
               <SettingInput
-                label="WhatsApp Number (e.g. 919999999999)"
+                label="WhatsApp Number (e.g. 919536926336)"
                 icon={MessageSquare}
                 value={localSettings.whatsapp_number}
                 onChange={(val) => handleChange('whatsapp_number', val)}
@@ -223,7 +223,7 @@ export default function AdminSettings() {
                 value={localSettings.address}
                 onChange={(e) => handleChange('address', e.target.value)}
                 rows={2}
-                placeholder="Village Dewar, Guptkashi, Uttarakhand"
+                placeholder="SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495"
                 className="w-full px-4 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665] transition-all resize-none leading-relaxed font-medium"
                 required
               />

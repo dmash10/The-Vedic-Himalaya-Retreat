@@ -166,7 +166,7 @@ export default function Home() {
 
   const heroTitleLine1 = getValue('home', 'hero_line1', 'Peace in the');
   const heroTitleLine2 = getValue('home', 'hero_line2', 'Pines');
-  const heroSubtitle = getValue('home', 'hero_subtitle', 'Village Dewar, Guptkashi');
+  const heroSubtitle = getValue('home', 'hero_subtitle', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi');
   const heroImage = getValue('home', 'hero_image', 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=2000');
   const heroCta = getValue('home', 'hero_cta', 'Reserve Your Stay');
   const heroCtaLink = getValue('home', 'hero_cta_link', '/rooms');
@@ -188,7 +188,7 @@ export default function Home() {
   if (marqueeItems.length === 0) {
     marqueeItems = [
       "The Vedic Himalaya Retreat",
-      "Guptkashi Sanctuary",
+      "Semi Guptkashi Sanctuary",
       "Kedarnath Guest Rest",
       "Village Dewar Haven",
       "Misty Peak Vistas",
@@ -740,7 +740,7 @@ export default function Home() {
                 Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.
               </p>
               <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
-                The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Village Dewar, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.
+                The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.
               </p>
             </div>
 
@@ -790,7 +790,7 @@ export default function Home() {
                     Pure Clean Air
                   </h4>
                   <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
-                    Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Guptkashi's scenic ridge.
+                    Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.
                   </p>
                 </div>
               </div>
