@@ -34,9 +34,6 @@ export default function Rooms() {
   const { rooms: dbRooms, loading } = useRooms();
   const { getValue, loading: contentLoading, content } = useContent();
 
-  // Prevent flash of fallback text while CMS content loads
-  if (contentLoading && content.length === 0) return <PageLoader />;
-
   const roomsHeading = getValue('rooms', 'rooms_heading', 'Sanctuary Suites');
   const roomsSubheading = getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging');
   const roomsNotice = getValue('rooms', 'rooms_notice', 'Important Booking Notice...');
@@ -200,6 +197,9 @@ export default function Rooms() {
     setAddSpecialPooja(false);
     setAddCompulsoryBreakfast(true);
   };
+
+  // Prevent flash of fallback text while CMS content loads
+  if (contentLoading && content.length === 0) return <PageLoader />;
 
   if (loading) return <PageLoader />;
 
