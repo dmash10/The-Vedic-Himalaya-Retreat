@@ -4,6 +4,7 @@ import { Leaf, Flame, Wind, Sparkles, Utensils, Coffee, ChevronRight, Check, Che
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useMenu } from "@/hooks/useMenu";
+import PageLoader from "@/components/PageLoader";
 
 function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
   const Icon = (LucideIcons as any)[name];
@@ -13,8 +14,12 @@ function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name:
 
 export default function Dining() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
   const { menuItems } = useMenu();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
+
 
   const diningHeading = getValue('dining', 'dining_heading', 'Pure Sattvik Dining');
   const diningSubheading = getValue('dining', 'dining_subheading', 'Nourishment for Body & Soul');

@@ -3,6 +3,7 @@ import { Phone, Mail, Instagram, MapPin, Sparkles, Send, Check } from "lucide-re
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/hooks/useContent";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import PageLoader from "@/components/PageLoader";
 
 export default function Contact() {
   const [firstName, setFirstName] = useState("");
@@ -13,8 +14,11 @@ export default function Contact() {
 
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
   const { settings } = useSiteSettings();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const contactHeading = getValue('contact', 'contact_heading', 'We Await Your');
   const contactSubheading = getValue('contact', 'contact_subheading', 'Prepare your pilgrimage plans beautifully. Our reservation crew is available 24/7 to orchestrate your luxury stay and pure Sattvik dining requirements.');

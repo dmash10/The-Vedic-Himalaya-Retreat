@@ -15,12 +15,16 @@ import {
 } from "lucide-react";
 import { Footer } from "../components/layout/Footer";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 export default function Experiences() {
   const [current, setCurrent] = useState(0);
   const [selectedPhotoIdx, setSelectedPhotoIdx] = useState<number | null>(null);
 
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const experiencesHeading = getValue('experiences', 'experiences_heading', 'Curated Journeys');
   const experiencesSubheading = getValue('experiences', 'experiences_subheading', 'Acclimatize in the Sacred Atmosphere');

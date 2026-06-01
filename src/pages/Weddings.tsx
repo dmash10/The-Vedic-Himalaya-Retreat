@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 import { Users, UtensilsCrossed, Key, Sparkles, Heart, ChevronLeft, ChevronRight, Calendar, Compass, MapPin, Wine } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 interface WeddingOfferingCardProps {
   key?: string;
@@ -127,7 +128,10 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOffe
 
 export default function Weddings() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const weddingsHeading = getValue('weddings', 'weddings_heading', 'Destination Weddings');
   const weddingsSubheading = getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas');

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Footer } from "../components/layout/Footer";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 import { useEffect } from "react";
 
 interface Trek {
@@ -248,7 +249,10 @@ export default function Nearby() {
   const [selectedPhotoIdx, setSelectedPhotoIdx] = useState<number | null>(null);
   const [difficultyFilter, setDifficultyFilter] = useState<"All" | "Easy" | "Moderate" | "Difficult">("All");
 
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const nearbyHeading = getValue('nearby', 'nearby_heading', 'Himalayan Travel Guide');
   const nearbySubheading = getValue('nearby', 'nearby_subheading', 'Coordinates of Rudraprayag');

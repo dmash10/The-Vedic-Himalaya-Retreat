@@ -191,7 +191,7 @@ const reviews = [
         date: "May 2025",
         rating: 5,
         state: "Odisha",
-        text: "Loved the absolute silence of Village Dewar. You can sit outside at night and look at the clear starlit sky. Truly unforgettable experience."
+        text: "Loved the absolute silence of Semi Guptkashi. You can sit outside at night and look at the clear starlit sky. Truly unforgettable experience."
     },
     {
         name: "Karan Talwar",

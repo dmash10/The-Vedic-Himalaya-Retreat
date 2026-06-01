@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ContentProvider } from "./contexts/ContentContext";
 import { Layout } from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Rooms from "./pages/Rooms";
@@ -27,6 +28,7 @@ import { Toaster } from "sonner";
 
 export default function App() {
   return (
+    <ContentProvider>
     <BrowserRouter>
       <Toaster richColors position="top-right" />
       <Routes>
@@ -66,5 +68,6 @@ export default function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </ContentProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSearchParams, Link } from "react-router-dom";
 import { 
@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useRooms } from "@/hooks/useRooms";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 // Integrated Brand Logos for high psychological trust
 const GoogleLogo = () => (
@@ -30,50 +31,50 @@ export default function Rooms() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedRoomId = searchParams.get("room");
 
-  const [rooms, setRooms] = useState<any[]>([]);
   const { rooms: dbRooms, loading } = useRooms();
-  const { getValue } = useContent();
+  const { getValue, loading: contentLoading, content } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (contentLoading && content.length === 0) return <PageLoader />;
 
   const roomsHeading = getValue('rooms', 'rooms_heading', 'Sanctuary Suites');
   const roomsSubheading = getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging');
   const roomsNotice = getValue('rooms', 'rooms_notice', 'Important Booking Notice...');
   const noticeVisible = getValue('rooms', 'notice_visible', 'true') !== 'false';
 
-  useEffect(() => {
-    if (dbRooms && dbRooms.length > 0) {
-      const mapped = dbRooms.filter((r: any) => r.is_visible !== false).map((r: any) => {
-        const isPinewood = r.slug === 'pinewood-family-suite' || r.slug === 'pinewood-suite';
-        return {
-          id: r.slug || r.id,
-          title: r.name,
-          badge: isPinewood ? "Signature Reserve" : "Premium Suite",
-          price: r.real_price || 11500,
-          fake_price: r.fake_price || 15000,
-          description: r.description || "Himalayan luxury Suite wreathed in pines.",
-          images: [
-            r.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
-            "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000",
-            "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1000",
-            "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&q=80&w=800"
-          ],
-          amenities: [
-            { label: "2 Double Beds", icon: Bed, desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
-            { label: "Whisper Cool Fan", icon: Fan, desc: "High-capacity whisper silent designer cooling and ventilation fan" },
-            { label: "Spa Slate Bath", icon: Bath, desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
-            { label: "Smart Sound Hub", icon: Tv, desc: "Massive 55\" cinematic display with premium room audio" },
-            { label: "Ultimate Fiber", icon: Wifi, desc: "Ultra performance high-speed complimentary internet" },
-            { label: "Hot Beverage Station", icon: Coffee, desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
-          ],
-          reviews: [
-            { name: "Suresh Patel", rating: 5, location: "Ahmedabad", date: "May 25, 2024", text: "Outstanding quality. Beautiful rich pine wood ceilings, spacious layouts, and a truly majestic feel. We felt pampered every minute.", source: "google" },
-            { name: "Kuldeep Rana", rating: 4, location: "Haryana", date: "May 22, 2022", text: "Good hotel for the price. Rooms are spacious but the WiFi was slow. Location is perfect - away from Guptkashi's crowded market. Would have given 5 stars if breakfast timing was earlier.", source: "google" },
-            { name: "Pooja Hegde", rating: 5, location: "Hyderabad", date: "May 10, 2024", text: "The grand master room did not disappoint. Clean, massive, stunning window scenes, and excellent staff service. Perfect 10/10.", source: "tripadvisor" },
-            { name: "Rajiv Singhal", rating: 5, location: "Noida", date: "Jan 2024", text: "Outstanding spaciousness for the entire family. Heated blankets and gorgeous layout.", source: "google" }
-          ]
-        };
-      });
-      setRooms(mapped);
-    }
+  const rooms = useMemo(() => {
+    if (!dbRooms || dbRooms.length === 0) return [];
+    return dbRooms.filter((r: any) => r.is_visible !== false).map((r: any) => {
+      const isPinewood = r.slug === 'pinewood-family-suite' || r.slug === 'pinewood-suite';
+      return {
+        id: r.slug || r.id,
+        title: r.name,
+        badge: isPinewood ? "Signature Reserve" : "Premium Suite",
+        price: r.real_price || 11500,
+        fake_price: r.fake_price || 15000,
+        description: r.description || "Himalayan luxury Suite wreathed in pines.",
+        images: [
+          r.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
+          "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000",
+          "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1000",
+          "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&q=80&w=800"
+        ],
+        amenities: [
+          { label: "2 Double Beds", icon: Bed, desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
+          { label: "Whisper Cool Fan", icon: Fan, desc: "High-capacity whisper silent designer cooling and ventilation fan" },
+          { label: "Spa Slate Bath", icon: Bath, desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
+          { label: "Smart Sound Hub", icon: Tv, desc: "Massive 55\" cinematic display with premium room audio" },
+          { label: "Ultimate Fiber", icon: Wifi, desc: "Ultra performance high-speed complimentary internet" },
+          { label: "Hot Beverage Station", icon: Coffee, desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
+        ],
+        reviews: [
+          { name: "Suresh Patel", rating: 5, location: "Ahmedabad", date: "May 25, 2024", text: "Outstanding quality. Beautiful rich pine wood ceilings, spacious layouts, and a truly majestic feel. We felt pampered every minute.", source: "google" },
+          { name: "Kuldeep Rana", rating: 4, location: "Haryana", date: "May 22, 2022", text: "Good hotel for the price. Rooms are spacious but the WiFi was slow. Location is perfect - away from Guptkashi's crowded market. Would have given 5 stars if breakfast timing was earlier.", source: "google" },
+          { name: "Pooja Hegde", rating: 5, location: "Hyderabad", date: "May 10, 2024", text: "The grand master room did not disappoint. Clean, massive, stunning window scenes, and excellent staff service. Perfect 10/10.", source: "tripadvisor" },
+          { name: "Rajiv Singhal", rating: 5, location: "Noida", date: "Jan 2024", text: "Outstanding spaciousness for the entire family. Heated blankets and gorgeous layout.", source: "google" }
+        ]
+      };
+    });
   }, [dbRooms]);
 
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || rooms[0] || null;
@@ -200,13 +201,7 @@ export default function Rooms() {
     setAddCompulsoryBreakfast(true);
   };
 
-  if (loading) {
-    return (
-      <div className="bg-[#FAF9F5] min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-pine-800"></div>
-      </div>
-    );
-  }
+  if (loading) return <PageLoader />;
 
   return (
     <div className="bg-[#FAF9F5] text-rock-900 pt-28 pb-24 min-h-screen font-sans selection:bg-pine-800 selection:text-white">

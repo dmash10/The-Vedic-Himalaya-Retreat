@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { Mountain, Compass, ShieldCheck, Heart, Sparkles, Sun } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
   const Icon = (LucideIcons as any)[name];
@@ -12,7 +13,10 @@ function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name:
 export default function About() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
-  const { content, getValue } = useContent();
+  const { content, loading, getValue } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const aboutHeading = getValue('about', 'about_heading', 'Rooted in the');
   const aboutSubheading = getValue('about', 'about_subheading', 'Kedarnath Sanctuary');

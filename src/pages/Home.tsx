@@ -7,6 +7,7 @@ import { ArrowRight, Maximize2, BedDouble, Bath, Mountain, Flame, Sparkles, Comp
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useRooms } from "@/hooks/useRooms";
+import PageLoader from "@/components/PageLoader";
 
 function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
   const Icon = (LucideIcons as any)[name];
@@ -161,8 +162,11 @@ export default function Home() {
     ]
   });
 
-  const { content, getValue } = useContent();
+  const { content, loading, getValue } = useContent();
   const { rooms } = useRooms();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const heroTitleLine1 = getValue('home', 'hero_line1', 'Peace in the');
   const heroTitleLine2 = getValue('home', 'hero_line2', 'Pines');
@@ -190,7 +194,7 @@ export default function Home() {
       "The Vedic Himalaya Retreat",
       "Semi Guptkashi Sanctuary",
       "Kedarnath Guest Rest",
-      "Village Dewar Haven",
+      "Semi Guptkashi Haven",
       "Misty Peak Vistas",
       "Luxury Mountain Suites"
     ];

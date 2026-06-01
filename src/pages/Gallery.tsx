@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
+import PageLoader from "@/components/PageLoader";
 
 interface GalleryImage {
   src: string;
@@ -16,7 +17,10 @@ export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const { getValue } = useContent();
+  const { getValue, loading, content } = useContent();
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const galleryHeading = getValue('gallery', 'gallery_heading', 'Captured Stillness');
   const gallerySubheading = getValue('gallery', 'gallery_subheading', 'Take a slow, visual tour of our deodar-framed spaces, snow summits, and restorative pilgrimage amenities.');
