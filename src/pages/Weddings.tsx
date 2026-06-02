@@ -162,10 +162,6 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
         WebkitTransformStyle: isMobile ? "flat" : "preserve-3d",
         willChange: "transform, opacity"
       }}
-      transition={{ 
-        duration: 0.45,
-        ease: [0.16, 1, 0.3, 1]
-      }}
       className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
     >
       {/* Subtle glamorous glint texture overlay for light ray highlights */}
