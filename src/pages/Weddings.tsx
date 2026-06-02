@@ -58,6 +58,7 @@ const getWeddingTransformParams = (idx: number, total: number) => {
     let currentRotateX = 0;
     let currentZ = 0;
 
+    // Smoothly calculate Y translation, Z-rotation, 3D rotation, and 3D Z translation
     if (idx < total - 1) {
       const activeStart = idx * step;
       const slideStart = activeStart + step * 0.3;
@@ -74,10 +75,10 @@ const getWeddingTransformParams = (idx: number, total: number) => {
         currentRotateX = 25;
         currentZ = -80;
       } else {
-        const threshold = slideStart + (slideEnd - slideStart) / 2;
-        currentY = progress <= threshold ? "0vh" : "-120vh";
-        currentRotate = progress <= threshold ? baseRotate : (idx % 2 === 0 ? -12 : 12);
         const ratio = (progress - slideStart) / (slideEnd - slideStart);
+        currentY = `${ratio * -120}vh`;
+        const targetRotate = idx % 2 === 0 ? -12 : 12;
+        currentRotate = baseRotate + ratio * (targetRotate - baseRotate);
         currentRotateX = ratio * 25;
         currentZ = ratio * -80;
       }
@@ -88,19 +89,31 @@ const getWeddingTransformParams = (idx: number, total: number) => {
       currentZ = 0;
     }
 
-    let activeOffsetCount = 0;
+    // Smoothly calculate scale changes from behind cards sliding away
+    let activeOffsetScale = 0;
     for (let k = 0; k < idx; k++) {
+      const cardSlideStart = k * step + step * 0.3;
       const cardSlideEnd = k * step + step * 0.9;
-      if (progress >= cardSlideEnd) {
-        activeOffsetCount++;
+      if (progress <= cardSlideStart) {
+        // no contribution
+      } else if (progress >= cardSlideEnd) {
+        activeOffsetScale += 0.07;
+      } else {
+        const ratio = (progress - cardSlideStart) / (cardSlideEnd - cardSlideStart);
+        activeOffsetScale += ratio * 0.07;
       }
     }
-    currentScale = initialScale + activeOffsetCount * 0.07;
+    currentScale = initialScale + activeOffsetScale;
 
+    // Smoothly calculate scale change when this card itself slides away
     if (idx < total - 1) {
       const activeStart = idx * step;
       const slideStart = activeStart + step * 0.3;
-      if (progress >= slideStart) {
+      const slideEnd = activeStart + step * 0.9;
+      if (progress > slideStart && progress < slideEnd) {
+        const ratio = (progress - slideStart) / (slideEnd - slideStart);
+        currentScale = 1.0 + ratio * 0.08;
+      } else if (progress >= slideEnd) {
         currentScale = 1.08;
       }
     }
