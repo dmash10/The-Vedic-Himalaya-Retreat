@@ -16,6 +16,7 @@ import {
 import { Footer } from "../components/layout/Footer";
 import { useContent } from "@/hooks/useContent";
 import PageLoader from "@/components/PageLoader";
+import BentoGallery from "@/components/BentoGallery";
 
 export default function Experiences() {
   const [current, setCurrent] = useState(0);
@@ -357,131 +358,35 @@ export default function Experiences() {
             </div>
 
             {/* Premium Bento Masonry Grid matching Home exactly */}
-            {visibleSlides.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[repeat(4,120px)] md:grid-rows-[repeat(3,250px)] gap-2 md:gap-4 mb-24">
-                
-                {/* Box 1: Large centerpiece */}
-                {visibleSlides[0] && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    onClick={() => onGalleryItemClick(0)}
-                    className="col-span-2 row-span-2 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-                  >
-                    <img 
-                      src={visibleSlides[0].image} 
-                      alt={visibleSlides[0].title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                    <div className="absolute bottom-4 left-4 right-4 text-left">
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 01</span>
-                      <h4 className="text-md sm:text-lg font-serif text-[#FAF9F5] font-normal mt-1">{visibleSlides[0].title}</h4>
-                    </div>
-                  </motion.div>
-                )}
+            {visibleSlides.length > 0 && (() => {
+              const bentoOrder = [0, 1, 2, 4, 3];
+              const mappedBentoItems = bentoOrder.map((slideIdx) => {
+                const slide = visibleSlides[slideIdx];
+                if (!slide) return null;
+                return {
+                  image: slide.image,
+                  title: slide.title,
+                  category: slide.category || `Slide ${(slideIdx + 1).toString().padStart(2, "0")}`,
+                  originalIndex: slideIdx
+                };
+              }).filter(Boolean) as any[];
 
-                {/* Box 2 */}
-                {visibleSlides[1] && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
-                    onClick={() => onGalleryItemClick(1)}
-                    className="col-span-1 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-                  >
-                    <img 
-                      src={visibleSlides[1].image} 
-                      alt={visibleSlides[1].title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                    <div className="absolute bottom-3 left-3 right-3 text-left">
-                      <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 02</span>
-                      <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-0.5">{visibleSlides[1].title}</h4>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Box 3 */}
-                {visibleSlides[2] && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    onClick={() => onGalleryItemClick(2)}
-                    className="col-span-1 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-                  >
-                    <img 
-                      src={visibleSlides[2].image} 
-                      alt={visibleSlides[2].title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                    <div className="absolute bottom-3 left-3 right-3 text-left">
-                      <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 03</span>
-                      <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-0.5">{visibleSlides[2].title}</h4>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Box 4 */}
-                {visibleSlides[4] && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    onClick={() => onGalleryItemClick(4)}
-                    className="col-span-1 row-span-2 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-                  >
-                    <img 
-                      src={visibleSlides[4].image} 
-                      alt={visibleSlides[4].title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                    <div className="absolute bottom-4 left-3 right-3 text-left">
-                      <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 05</span>
-                      <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-1 leading-snug">{visibleSlides[4].title}</h4>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Box 5 */}
-                {visibleSlides[3] && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    onClick={() => onGalleryItemClick(3)}
-                    className="col-span-1 md:col-span-2 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-                  >
-                    <img 
-                      src={visibleSlides[3].image} 
-                      alt={visibleSlides[3].title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                    <div className="absolute bottom-4 left-4 right-4 text-left">
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 04</span>
-                      <h4 className="text-md font-serif text-[#FAF9F5] font-normal mt-0.5">{visibleSlides[3].title}</h4>
-                    </div>
-                  </motion.div>
-                )}
-
-              </div>
-            )}
+              return (
+                <div className="mb-24">
+                  <BentoGallery 
+                    items={mappedBentoItems} 
+                    onItemClick={(index) => {
+                      const originalIndex = mappedBentoItems[index]?.originalIndex;
+                      if (originalIndex !== undefined) {
+                        onGalleryItemClick(originalIndex);
+                      }
+                    }} 
+                    theme="dark"
+                    borderRadiusClass="rounded-xl"
+                  />
+                </div>
+              );
+            })()}
 
             {/* Premium Photographic Image Gallery Section */}
             {galleryVisible && visiblePhotos.length > 0 && (

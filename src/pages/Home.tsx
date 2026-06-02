@@ -8,6 +8,7 @@ import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useRooms } from "@/hooks/useRooms";
 import PageLoader from "@/components/PageLoader";
+import BentoGallery from "@/components/BentoGallery";
 
 function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
   const Icon = (LucideIcons as any)[name];
@@ -977,57 +978,20 @@ export default function Home() {
               </div>
             </div>
              
-             <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[repeat(4,120px)] md:grid-rows-[repeat(3,250px)] gap-2 md:gap-4">
-               {/* Large featured spot */}
-               <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1 }}
-                 className="col-span-2 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-               >
-                 <img src={bentoGalleryItems[0]?.image || "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1000"} alt={bentoGalleryItems[0]?.title || "Dining"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-               </motion.div>
-               {/* Smaller spots */}
-               <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1, delay: 0.1 }}
-                 className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-               >
-                 <img src={bentoGalleryItems[1]?.image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[1]?.title || "Wedding"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-               </motion.div>
-               <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1, delay: 0.2 }}
-                 className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-               >
-                 <img src={bentoGalleryItems[2]?.image || "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[2]?.title || "Pines"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-               </motion.div>
-               {/* Tall spot */}
-               <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1, delay: 0.3 }}
-                 className="col-span-1 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-               >
-                 <img src={bentoGalleryItems[3]?.image || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[3]?.title || "Cafe"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-               </motion.div>
-               {/* Wide spot / Mobile extra spot */}
-               <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1, delay: 0.4 }}
-                 className="col-span-1 md:col-span-2 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-               >
-                 <img src={bentoGalleryItems[4]?.image || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200"} alt={bentoGalleryItems[4]?.title || "Glamping"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-               </motion.div>
-             </div>
+             {(() => {
+               const mappedBentoItems = bentoGalleryItems.map((item, idx) => ({
+                 image: item.image,
+                 title: item.title,
+                 category: `Slide ${(idx + 1).toString().padStart(2, "0")}`
+               }));
+               return (
+                 <BentoGallery 
+                   items={mappedBentoItems} 
+                   theme="light" 
+                   borderRadiusClass="rounded-xl"
+                 />
+               );
+             })()}
 
              <div className="mt-8 flex justify-center md:hidden">
                 <Link to="/gallery" className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2E3438] border-b border-[#2E3438]/30 pb-1 hover:border-deep-teal hover:text-deep-teal transition-colors">

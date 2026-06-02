@@ -24,6 +24,7 @@ import { Footer } from "../components/layout/Footer";
 import { useContent } from "@/hooks/useContent";
 import PageLoader from "@/components/PageLoader";
 import { useEffect } from "react";
+import BentoGallery from "@/components/BentoGallery";
 
 interface Trek {
   title: string;
@@ -554,119 +555,35 @@ export default function Nearby() {
             </div>
 
             {/* Curated Bento Grid of Destinations identical to Experience design */}
-            <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[repeat(4,120px)] md:grid-rows-[repeat(3,250px)] gap-2 md:gap-4 mb-24">
-              
-              {/* Box 1: Large Centerpiece (Tungnath Peak) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                onClick={() => onTrekLocationClick(0)}
-                className="col-span-2 row-span-2 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1626082896492-766af4fc6595?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Tungnath Chandrashila" 
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 01 • Summit</span>
-                  <h4 className="text-md sm:text-lg font-serif text-[#FAF9F5] font-normal mt-1">Tungnath &amp; Chandrashila</h4>
-                </div>
-              </motion.div>
+            {slides.length > 0 && (() => {
+              const bentoOrder = [0, 2, 3, 5, 4];
+              const mappedBentoItems = bentoOrder.map((slideIdx) => {
+                const slide = slides[slideIdx];
+                if (!slide) return null;
+                return {
+                  image: slide.image,
+                  title: slide.title,
+                  category: slide.category || `Slide ${(slideIdx + 1).toString().padStart(2, "0")}`,
+                  originalIndex: slideIdx
+                };
+              }).filter(Boolean) as any[];
 
-              {/* Box 2: Chopta Valley */}
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                onClick={() => onTrekLocationClick(2)}
-                className="col-span-1 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=800" 
-                  alt="Chopta Valley" 
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                <div className="absolute bottom-3 left-3 right-3">
-                  <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 03 • Meadows</span>
-                  <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-0.5">Chopta Alpine Valley</h4>
+              return (
+                <div className="mb-24">
+                  <BentoGallery 
+                    items={mappedBentoItems} 
+                    onItemClick={(index) => {
+                      const originalIndex = mappedBentoItems[index]?.originalIndex;
+                      if (originalIndex !== undefined) {
+                        onTrekLocationClick(originalIndex);
+                      }
+                    }} 
+                    theme="dark"
+                    borderRadiusClass="rounded-xl"
+                  />
                 </div>
-              </motion.div>
-
-              {/* Box 3: Kartik Swami */}
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                onClick={() => onTrekLocationClick(3)}
-                className="col-span-1 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=800" 
-                  alt="Kartik Swami Temple" 
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                <div className="absolute bottom-3 left-3 right-3">
-                  <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 04 • Ridge</span>
-                  <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-0.5">Kartik Swami Spire</h4>
-                </div>
-              </motion.div>
-
-              {/* Box 4: Madmaheshwar Meadow */}
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                onClick={() => onTrekLocationClick(5)}
-                className="col-span-1 row-span-2 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=800" 
-                  alt="Madmaheshwar" 
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-3 right-3">
-                  <span className="text-[8px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 06 • Wilderness</span>
-                  <h4 className="text-xs sm:text-sm font-serif text-[#FAF9F5] font-normal mt-1 leading-snug">Madmaheshwar Meadows</h4>
-                </div>
-              </motion.div>
-
-              {/* Box 5: Deoria Tal Lake */}
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                onClick={() => onTrekLocationClick(4)}
-                className="col-span-1 md:col-span-2 row-span-1 bg-[#122A22]/20 overflow-hidden relative group rounded-xl border border-white/10 cursor-pointer"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Deoria Tal Lake" 
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out" 
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1714] via-[#0B1714]/20 to-transparent opacity-85 group-hover:opacity-60 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-extrabold text-[#A88C52]">Slide 05 • Mirror Lake</span>
-                  <h4 className="text-md font-serif text-[#FAF9F5] font-normal mt-0.5">Deoria Tal Glacial Mirror</h4>
-                </div>
-              </motion.div>
-
-            </div>
+              );
+            })()}
 
             {/* Detailed Trekking & Trails Directory Section (Research added) */}
             {treksVisible && treksDirectory.length > 0 && (

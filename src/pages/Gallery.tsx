@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import PageLoader from "@/components/PageLoader";
+import BentoGallery from "@/components/BentoGallery";
 
 interface GalleryImage {
   src: string;
@@ -13,9 +14,7 @@ interface GalleryImage {
 }
 
 export default function Gallery() {
-  const easePremium = [0.22, 1, 0.36, 1] as const;
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const { getValue, loading, content } = useContent();
 
@@ -96,20 +95,6 @@ export default function Gallery() {
     ? visibleImages 
     : visibleImages.filter(img => img.category === selectedCategory);
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null) {
-      setLightboxIndex(prev => (prev !== null && prev > 0 ? prev - 1 : filteredImages.length - 1));
-    }
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null) {
-      setLightboxIndex(prev => (prev !== null && prev < filteredImages.length - 1 ? prev + 1 : 0));
-    }
-  };
-
   return (
     <div className="bg-[#FAF9F5] text-slate-charcoal pt-32 pb-24 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
@@ -149,106 +134,29 @@ export default function Gallery() {
         </div>
 
         {/* Cinematic Bento Layout Grid - Desktop & Mobile */}
-        <motion.div 
-          layout 
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[280px]"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredImages.map((img, i) => {
-              // Interspersed custom layout sizing
-              let itemSpan = "col-span-1 row-span-1";
-              if (i % 5 === 0) itemSpan = "col-span-2 row-span-2";
-              else if (i % 4 === 1) itemSpan = "col-span-1 row-span-2";
+        {(() => {
+          const mappedGalleryItems = filteredImages.map(img => ({
+            image: img.src,
+            title: img.title,
+            category: img.category,
+            description: img.desc
+          }));
 
-              return (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.6, ease: easePremium }}
-                  key={img.src}
-                  onClick={() => setLightboxIndex(i)}
-                  className={`relative group overflow-hidden bg-[#EFEAE1]/40 rounded-2xl border border-[#D8CBB8]/30 shadow-xs cursor-pointer select-none ${itemSpan}`}
-                >
-                  {/* Overlay shadow & title */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-10 flex flex-col justify-end p-4 text-white">
-                    <span className="text-[8px] uppercase tracking-widest text-[#D8CBB8] font-bold font-mono mb-1">{img.category}</span>
-                    <h3 className="text-xs sm:text-sm font-heading font-bold text-white tracking-wide">{img.title}</h3>
-                    <p className="text-[10px] text-white/80 leading-relaxed font-sans line-clamp-2 mt-1">{img.desc}</p>
-                  </div>
-                  
-                  {/* Subtle static bottom label for mobile */}
-                  <div className="absolute bottom-3 right-3 z-10 sm:hidden bg-black/45 p-1.5 rounded-lg border border-white/10 text-white">
-                    <Maximize2 size={11} />
-                  </div>
+          const galleryGetItemSpan = (i: number) => {
+            if (i % 5 === 0) return "col-span-2 row-span-2";
+            if (i % 4 === 1) return "col-span-1 row-span-2";
+            return "col-span-1 row-span-1";
+          };
 
-                  {/* High Quality Image */}
-                  <img 
-                    src={img.src} 
-                    alt={img.title} 
-                    className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-103 contrast-105" 
-                  />
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Lightbox Modal */}
-        <AnimatePresence>
-          {lightboxIndex !== null && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setLightboxIndex(null)}
-              className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
-            >
-              <button 
-                onClick={() => setLightboxIndex(null)}
-                className="absolute top-6 right-6 text-white/70 hover:text-white p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="relative max-w-4xl w-full flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
-                
-                {/* Image display */}
-                <div className="relative w-full aspect-video md:max-h-[70vh] flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black">
-                  <img 
-                    src={filteredImages[lightboxIndex].src} 
-                    alt={filteredImages[lightboxIndex].title} 
-                    className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
-                  />
-                  
-                  {/* Navigation controls */}
-                  <button 
-                    onClick={handlePrev}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/85 hover:text-white rounded-full bg-black/50 border border-white/15 hover:bg-black/80 transition-colors cursor-pointer select-none"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-
-                  <button 
-                    onClick={handleNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/85 hover:text-white rounded-full bg-black/50 border border-white/15 hover:bg-black/80 transition-colors cursor-pointer select-none"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-
-                {/* Subtitle & details label below image */}
-                <div className="text-center text-white mt-5 max-w-lg space-y-1.5 px-4">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#D8CBB8] font-mono">{filteredImages[lightboxIndex].category}</span>
-                  <h4 className="text-lg font-heading tracking-wide font-medium">{filteredImages[lightboxIndex].title}</h4>
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans">{filteredImages[lightboxIndex].desc}</p>
-                </div>
-
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          return (
+            <BentoGallery 
+              items={mappedGalleryItems} 
+              getItemSpan={galleryGetItemSpan}
+              theme="light"
+              borderRadiusClass="rounded-2xl"
+            />
+          );
+        })()}
 
       </div>
     </div>
