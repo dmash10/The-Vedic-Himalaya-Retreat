@@ -21,6 +21,7 @@ interface OfferingCardProps {
   idx: number;
   total: number;
   scrollYProgress: any;
+  isMobile: boolean;
 }
 
 // Custom scroll-based scale-up and slide transform keyframe generator (freestyle, zero tilt, zero opacity fade)
@@ -123,16 +124,16 @@ const getTransformParams = (idx: number, total: number) => {
   };
 };
 
-function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps) {
+function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: OfferingCardProps) {
   const params = getTransformParams(idx, total);
   
   const scale = useTransform(scrollYProgress, params.inputs, params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
-  const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
-  const z = useTransform(scrollYProgress, params.inputs, params.z);
+  const rotateX = useTransform(scrollYProgress, params.inputs, isMobile ? params.rotateX.map(() => 0) : params.rotateX);
+  const z = useTransform(scrollYProgress, params.inputs, isMobile ? params.z.map(() => 0) : params.z);
   
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.0]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], isMobile ? [1.0, 1.0] : [1.1, 1.0]);
 
   return (
     <motion.div 
@@ -142,12 +143,12 @@ function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps)
         opacity,
         rotateX,
         z,
-        transformOrigin: "bottom center",
+        transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
-        transformStyle: "preserve-3d",
-        WebkitTransformStyle: "preserve-3d",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+        WebkitTransformStyle: isMobile ? "flat" : "preserve-3d",
         willChange: "transform, opacity"
       }}
       transition={{ 
@@ -207,6 +208,14 @@ function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps)
 }
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
@@ -669,7 +678,7 @@ export default function Home() {
                {/* Inline declared data list representing top-tier experience metrics */}
               {(() => {
                 return (
-                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
+                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: isMobile ? undefined : "800px" }}>
                     {visibleOfferings.map((offer, idx) => (
                       <OfferingCard 
                         key={offer.num} 
@@ -677,6 +686,7 @@ export default function Home() {
                         idx={idx} 
                         total={visibleOfferings.length} 
                         scrollYProgress={offeringsScroll}
+                        isMobile={isMobile}
                       />
                     ))}
                   </div>

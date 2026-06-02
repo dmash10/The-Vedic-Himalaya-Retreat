@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 import { Users, UtensilsCrossed, Key, Sparkles, Heart, ChevronLeft, ChevronRight, Calendar, Compass, MapPin, Wine } from "lucide-react";
@@ -11,6 +11,7 @@ interface WeddingOfferingCardProps {
   idx: number;
   total: number;
   scrollYProgress: any;
+  isMobile: boolean;
 }
 
 const getWeddingTransformParams = (idx: number, total: number) => {
@@ -132,17 +133,17 @@ const getWeddingTransformParams = (idx: number, total: number) => {
   };
 };
 
-function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOfferingCardProps) {
+function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: WeddingOfferingCardProps) {
   const params = getWeddingTransformParams(idx, total);
   
   const scale = useTransform(scrollYProgress, params.inputs, params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotate = useTransform(scrollYProgress, params.inputs, params.rotate);
-  const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
-  const z = useTransform(scrollYProgress, params.inputs, params.z);
+  const rotateX = useTransform(scrollYProgress, params.inputs, isMobile ? params.rotateX.map(() => 0) : params.rotateX);
+  const z = useTransform(scrollYProgress, params.inputs, isMobile ? params.z.map(() => 0) : params.z);
   
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.0]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], isMobile ? [1.0, 1.0] : [1.1, 1.0]);
 
   return (
     <motion.div 
@@ -153,12 +154,12 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOffe
         rotate,
         rotateX,
         z,
-        transformOrigin: "bottom center",
+        transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
-        transformStyle: "preserve-3d",
-        WebkitTransformStyle: "preserve-3d",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+        WebkitTransformStyle: isMobile ? "flat" : "preserve-3d",
         willChange: "transform, opacity"
       }}
       transition={{ 
@@ -213,6 +214,14 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOffe
 }
 
 export default function Weddings() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const easePremium = [0.22, 1, 0.36, 1] as const;
   const { getValue, loading, content } = useContent();
 
@@ -744,7 +753,7 @@ export default function Weddings() {
                 </p>
               </div>
 
-              <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
+              <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: isMobile ? undefined : "800px" }}>
                 {visibleOfferings.map((offer, idx) => (
                   <WeddingOfferingCard 
                     key={offer.num} 
@@ -752,6 +761,7 @@ export default function Weddings() {
                     idx={idx} 
                     total={visibleOfferings.length} 
                     scrollYProgress={weddingSpecsScroll}
+                    isMobile={isMobile}
                   />
                 ))}
               </div>
