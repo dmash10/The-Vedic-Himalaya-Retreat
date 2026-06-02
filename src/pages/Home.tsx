@@ -33,7 +33,8 @@ const getTransformParams = (idx: number, total: number) => {
       y: ["0vh", "0vh"],
       opacity: [1, 1],
       rotateX: [0, 0],
-      z: [0, 0]
+      z: [0, 0],
+      visibility: ["visible", "visible"]
     };
   }
 
@@ -44,12 +45,16 @@ const getTransformParams = (idx: number, total: number) => {
   const opacity: number[] = [];
   const rotateX: number[] = [];
   const z: number[] = [];
+  const visibility: string[] = [];
 
   const initialScale = 1.0 - idx * 0.07;
 
-  // Align keyframe inputs directly on active step boundaries (eliminating empty gap scroll zones)
+  // Align keyframe inputs directly on active step boundaries and include intermediate points for opacity fade
   for (let k = 0; k <= total - 1; k++) {
     inputs.push(k * step);
+    if (k < total - 1) {
+      inputs.push(k * step + 0.85 * step);
+    }
   }
 
   const uniqueInputs = Array.from(new Set(inputs)).sort((a, b) => a - b);
@@ -61,6 +66,7 @@ const getTransformParams = (idx: number, total: number) => {
     let currentOpacity = 1.0;
     let currentRotateX = 0;
     let currentZ = 0;
+    let currentVisibility = "visible";
 
     // Y, rotateX, and Z translate scroll calculations
     if (idx < total - 1) {
@@ -71,20 +77,36 @@ const getTransformParams = (idx: number, total: number) => {
         currentY = "0vh";
         currentRotateX = 0;
         currentZ = 0;
+        currentOpacity = 1.0;
+        currentVisibility = "visible";
       } else if (progress >= slideEnd) {
         currentY = "-120vh";
         currentRotateX = 25;
         currentZ = -80;
+        currentOpacity = 0.0;
+        currentVisibility = "hidden";
       } else {
         const ratio = (progress - slideStart) / (slideEnd - slideStart);
         currentY = `${ratio * -120}vh`;
         currentRotateX = ratio * 25;
         currentZ = ratio * -80;
+        
+        // Keep card fully visible while moving, fade out only at the very end of transition
+        if (ratio < 0.85) {
+          currentOpacity = 1.0;
+          currentVisibility = "visible";
+        } else {
+          // Linear transition from 1.0 to 0.0 in the last 15% of progress
+          currentOpacity = 1.0 - (ratio - 0.85) / 0.15;
+          currentVisibility = "visible";
+        }
       }
     } else {
       currentY = "0vh";
       currentRotateX = 0;
       currentZ = 0;
+      currentOpacity = 1.0;
+      currentVisibility = "visible";
     }
 
     // Smoothly calculate scale changes from behind cards sliding away
@@ -120,6 +142,7 @@ const getTransformParams = (idx: number, total: number) => {
     opacity.push(currentOpacity);
     rotateX.push(currentRotateX);
     z.push(currentZ);
+    visibility.push(currentVisibility);
   });
 
   return {
@@ -128,7 +151,8 @@ const getTransformParams = (idx: number, total: number) => {
     y,
     opacity,
     rotateX,
-    z
+    z,
+    visibility
   };
 };
 
@@ -140,8 +164,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
   const z = useTransform(scrollYProgress, params.inputs, params.z);
-  
-  const imageScale = useTransform(scrollYProgress, [0, 1], isMobile ? [1.0, 1.0] : [1.1, 1.0]);
+  const visibility = useTransform(scrollYProgress, params.inputs, params.visibility);
 
   return (
     <motion.div 
@@ -151,6 +174,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
         opacity,
         rotateX,
         z,
+        visibility,
         transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
         backfaceVisibility: "hidden",
@@ -159,7 +183,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
         WebkitTransformStyle: "preserve-3d",
         willChange: "transform, opacity"
       }}
-      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
+      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
     >
       {/* Subtle glamorous glint texture overlay for light ray highlights */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
@@ -194,13 +218,12 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
       </div>
 
       {/* Right Visual nesting layout representing a "card inside a card" holding the illustration */}
-      <div className="flex-1 md:w-1/2 p-1 sm:p-2 bg-white/10 md:bg-white/5 md:backdrop-blur-md rounded-[1.3rem] sm:rounded-[1.8rem] border border-white/10 overflow-hidden relative group h-36 xs:h-44 sm:h-52 md:h-auto min-h-[140px] md:min-h-0">
+      <div className="flex-1 md:w-1/2 p-1 sm:p-2 bg-white/10 md:bg-white/5 rounded-[1.3rem] sm:rounded-[1.8rem] border border-white/10 overflow-hidden relative group h-36 xs:h-44 sm:h-52 md:h-auto min-h-[140px] md:min-h-0">
         <div className="w-full h-full rounded-[1rem] sm:rounded-[1.3rem] overflow-hidden relative">
-          <motion.img 
+          <img 
             src={offer.image} 
             alt={offer.title} 
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ scale: imageScale }}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             referrerPolicy="no-referrer"
           />
           {/* Gentle overlay gradient to soften image edges */}
