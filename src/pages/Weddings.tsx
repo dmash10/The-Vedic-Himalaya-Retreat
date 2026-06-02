@@ -240,10 +240,25 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
 export default function Weddings() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const mql = window.matchMedia("(max-width: 767px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+    };
+    setIsMobile(mql.matches);
+    
+    try {
+      mql.addEventListener("change", onChange);
+    } catch (err) {
+      mql.addListener(onChange);
+    }
+    
+    return () => {
+      try {
+        mql.removeEventListener("change", onChange);
+      } catch (err) {
+        mql.removeListener(onChange);
+      }
+    };
   }, []);
 
   const easePremium = [0.22, 1, 0.36, 1] as const;

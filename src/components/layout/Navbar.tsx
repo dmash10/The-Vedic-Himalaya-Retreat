@@ -31,9 +31,13 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrolled = window.scrollY > 50;
+      setIsScrolled((prev) => {
+        if (prev !== scrolled) return scrolled;
+        return prev;
+      });
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Check on initial load
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);

@@ -294,20 +294,42 @@ export default function SocialProofSection() {
     const [selectedReview, setSelectedReview] = useState<any | null>(null);
     const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Dynamic columns configuration based on screen width
+    // Dynamic columns configuration based on screen width using matching media queries (fires only on breakpoint crossing)
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 1024) {
+        const mqlLarge = window.matchMedia("(min-width: 1024px)");
+        const mqlMedium = window.matchMedia("(min-width: 768px)");
+        
+        const updateCount = () => {
+            if (mqlLarge.matches) {
                 setVisibleCount(3);
-            } else if (window.innerWidth >= 768) {
+            } else if (mqlMedium.matches) {
                 setVisibleCount(2);
             } else {
                 setVisibleCount(1);
             }
         };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+
+        updateCount();
+        
+        // Modern event listener support
+        try {
+            mqlLarge.addEventListener("change", updateCount);
+            mqlMedium.addEventListener("change", updateCount);
+        } catch (e) {
+            // Fallback for older browsers
+            mqlLarge.addListener(updateCount);
+            mqlMedium.addListener(updateCount);
+        }
+
+        return () => {
+            try {
+                mqlLarge.removeEventListener("change", updateCount);
+                mqlMedium.removeEventListener("change", updateCount);
+            } catch (e) {
+                mqlLarge.removeListener(updateCount);
+                mqlMedium.removeListener(updateCount);
+            }
+        };
     }, []);
 
     // Sync reviews with localStorage initially, with overwrite validation for updates
