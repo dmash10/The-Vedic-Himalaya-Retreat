@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 const navItems = [
   { label: 'Dashboard', href: '/cms-panel', icon: LayoutDashboard, exact: true },
   { label: 'Page Editor', href: '/cms-panel/pages', icon: FileText },
-  { label: 'Rooms', href: '/cms-panel/rooms', icon: BedDouble },
+  { label: 'Rooms & Suites', href: '/cms-panel/rooms', icon: BedDouble },
   { label: 'Restaurant', href: '/cms-panel/menu', icon: UtensilsCrossed },
   { label: 'Settings', href: '/cms-panel/settings', icon: Settings },
 ];

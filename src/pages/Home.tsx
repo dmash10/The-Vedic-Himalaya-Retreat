@@ -24,46 +24,113 @@ interface OfferingCardProps {
 }
 
 // Custom scroll-based scale-up and slide transform keyframe generator (freestyle, zero tilt, zero opacity fade)
-const getTransformParams = (idx: number) => {
-  if (idx === 0) {
+const getTransformParams = (idx: number, total: number) => {
+  if (total <= 1) {
     return {
-      inputs:  [0.0, 0.10, 0.33, 1.0],
-      scale:   [1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0]
+      inputs: [0, 1],
+      scale: [1, 1],
+      y: ["0vh", "0vh"],
+      opacity: [1, 1],
+      rotateX: [0, 0],
+      z: [0, 0]
     };
   }
-  if (idx === 1) {
-    return {
-      inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 1.0],
-      scale:   [0.93, 0.93, 1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    };
+
+  const step = 1.0 / (total - 1);
+  const inputs: number[] = [];
+  const scale: number[] = [];
+  const y: string[] = [];
+  const opacity: number[] = [];
+  const rotateX: number[] = [];
+  const z: number[] = [];
+
+  const initialScale = 1.0 - idx * 0.07;
+
+  for (let k = 0; k < total - 1; k++) {
+    const start = k * step;
+    inputs.push(start);
+    inputs.push(start + step * 0.3);
+    inputs.push(start + step * 0.9);
   }
-  if (idx === 2) {
-    return {
-      inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 0.70, 0.93, 1.0],
-      scale:   [0.86, 0.86, 0.93, 0.93, 1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    };
-  }
-  // For idx === 3
+  inputs.push(1.0);
+
+  const uniqueInputs = Array.from(new Set(inputs)).sort((a, b) => a - b);
+  const clampedInputs = uniqueInputs.map(v => Math.max(0, Math.min(1, v)));
+
+  clampedInputs.forEach(progress => {
+    let currentY = "0vh";
+    let currentScale = initialScale;
+    let currentOpacity = 1.0;
+    let currentRotateX = 0;
+    let currentZ = 0;
+
+    if (idx < total - 1) {
+      const activeStart = idx * step;
+      const slideStart = activeStart + step * 0.3;
+      const slideEnd = activeStart + step * 0.9;
+
+      if (progress <= slideStart) {
+        currentY = "0vh";
+        currentRotateX = 0;
+        currentZ = 0;
+      } else if (progress >= slideEnd) {
+        currentY = "-120vh";
+        currentRotateX = 25;
+        currentZ = -80;
+      } else {
+        currentY = progress <= (slideStart + (slideEnd - slideStart) / 2) ? "0vh" : "-120vh";
+        const ratio = (progress - slideStart) / (slideEnd - slideStart);
+        currentRotateX = ratio * 25;
+        currentZ = ratio * -80;
+      }
+    } else {
+      currentY = "0vh";
+      currentRotateX = 0;
+      currentZ = 0;
+    }
+
+    let activeOffsetCount = 0;
+    for (let k = 0; k < idx; k++) {
+      const cardSlideEnd = k * step + step * 0.9;
+      if (progress >= cardSlideEnd) {
+        activeOffsetCount++;
+      }
+    }
+    currentScale = initialScale + activeOffsetCount * 0.07;
+
+    if (idx < total - 1) {
+      const activeStart = idx * step;
+      const slideStart = activeStart + step * 0.3;
+      if (progress >= slideStart) {
+        currentScale = 1.08;
+      }
+    }
+
+    y.push(currentY);
+    scale.push(currentScale);
+    opacity.push(currentOpacity);
+    rotateX.push(currentRotateX);
+    z.push(currentZ);
+  });
+
   return {
-    inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 0.70, 0.93, 1.0],
-    scale:   [0.79, 0.79, 0.86, 0.86, 0.93, 0.93, 1.0, 1.0],
-    y:       ["0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "0vh"],
-    opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    inputs: clampedInputs,
+    scale,
+    y,
+    opacity,
+    rotateX,
+    z
   };
 };
 
 function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps) {
-  const params = getTransformParams(idx);
+  const params = getTransformParams(idx, total);
   
   const scale = useTransform(scrollYProgress, params.inputs, params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
+  const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
+  const z = useTransform(scrollYProgress, params.inputs, params.z);
   
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.0]);
 
@@ -73,7 +140,15 @@ function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps)
         scale, 
         y,
         opacity,
-        zIndex: total - idx
+        rotateX,
+        z,
+        transformOrigin: "bottom center",
+        zIndex: total - idx,
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        transformStyle: "preserve-3d",
+        WebkitTransformStyle: "preserve-3d",
+        willChange: "transform, opacity"
       }}
       transition={{ 
         duration: 0.45,
@@ -114,7 +189,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress }: OfferingCardProps)
       </div>
 
       {/* Right Visual nesting layout representing a "card inside a card" holding the illustration */}
-      <div className="flex-1 md:w-1/2 p-1 sm:p-2 bg-white/5 backdrop-blur-md rounded-[1.3rem] sm:rounded-[1.8rem] border border-white/10 overflow-hidden relative group h-36 xs:h-44 sm:h-52 md:h-auto min-h-[140px] md:min-h-0">
+      <div className="flex-1 md:w-1/2 p-1 sm:p-2 bg-white/10 md:bg-white/5 md:backdrop-blur-md rounded-[1.3rem] sm:rounded-[1.8rem] border border-white/10 overflow-hidden relative group h-36 xs:h-44 sm:h-52 md:h-auto min-h-[140px] md:min-h-0">
         <div className="w-full h-full rounded-[1rem] sm:rounded-[1.3rem] overflow-hidden relative">
           <motion.img 
             src={offer.image} 
@@ -165,8 +240,6 @@ export default function Home() {
   const { content, loading, getValue } = useContent();
   const { rooms } = useRooms();
 
-  // Prevent flash of fallback text while CMS content loads
-  if (loading && content.length === 0) return <PageLoader />;
 
   const heroTitleLine1 = getValue('home', 'hero_line1', 'Peace in the');
   const heroTitleLine2 = getValue('home', 'hero_line2', 'Pines');
@@ -261,6 +334,60 @@ export default function Home() {
   }
   const visibleAmenities = homeAmenities.filter(amenity => amenity.is_visible !== false);
 
+  // New Missing Sections Settings
+  const whyChooseVisible = getValue('home', 'why_choose_visible', 'true') !== 'false';
+  const whyChooseTagline = getValue('home', 'why_choose_tagline', 'THE VEDIC HIMALAYA DIFFERENCE');
+  const whyChooseHeading = getValue('home', 'why_choose_heading', 'Why Guests Choose');
+  const whyChooseHeadingItalic = getValue('home', 'why_choose_heading_italic', 'Our Sanctuary');
+  const whyChooseDesc1 = getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.');
+  const whyChooseDesc2 = getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.");
+
+  const whyChooseItemsStr = getValue('home', 'why_choose_items', '');
+  let whyChooseItems: any[] = [];
+  try {
+    whyChooseItems = whyChooseItemsStr ? JSON.parse(whyChooseItemsStr) : [];
+  } catch (e) {
+    console.error("Failed to parse why_choose_items:", e);
+  }
+  if (whyChooseItems.length === 0) {
+    whyChooseItems = [
+      { num: "01", category: "CALM SILENCE", title: "Out of the Chaos", desc: "Located high above the busy transit highway. Breathe in the pristine, quiet spruce-and-pine mountain slopes, completely free of diesel horns and traffic engines.", icon: "Compass" },
+      { num: "02", category: "ALPINE COMFORT", title: "Comfortable Cozy Cabins", desc: "Escape the freezing high-altitude winds. Unwind in draft-protected pine suites with private hot water geysers, mountain views, and thick premium winter duvets.", icon: "BedDouble" },
+      { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.", icon: "Wind" },
+      { num: "04", category: "CARING HOSPITALITY", title: "Devoted Himalayan Sewa", desc: "Genuine, humble local team serving selfless mountain devotion—brewing warming morning herbal teas & coordinating peaceful local pilgrimage routes like family.", icon: "Users" }
+    ];
+  }
+
+  const homeGalleryVisible = getValue('home', 'home_gallery_visible', 'true') !== 'false';
+  const homeGalleryBadge = getValue('home', 'home_gallery_badge', 'Gallery');
+  const homeGalleryHeading = getValue('home', 'home_gallery_heading', 'Our Visual Journal');
+  const homeGalleryDesc = getValue('home', 'home_gallery_desc', 'Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.');
+
+  const bentoGalleryItemsStr = getValue('home', 'bento_gallery_items', '');
+  let bentoGalleryItems: any[] = [];
+  try {
+    bentoGalleryItems = bentoGalleryItemsStr ? JSON.parse(bentoGalleryItemsStr) : [];
+  } catch (e) {
+    console.error("Failed to parse bento_gallery_items:", e);
+  }
+  if (bentoGalleryItems.length === 0) {
+    bentoGalleryItems = [
+      { image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1000", title: "Dining" },
+      { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Wedding" },
+      { image: "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800", title: "Pines" },
+      { image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800", title: "Cafe" },
+      { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" }
+    ];
+  }
+
+  const homeCtaVisible = getValue('home', 'home_cta_visible', 'true') !== 'false';
+  const homeCtaBadge = getValue('home', 'home_cta_badge', 'Your Himalayan Haven Awaits');
+  const homeCtaHeading = getValue('home', 'home_cta_heading', 'Ready to Experience the');
+  const homeCtaHeadingItalic = getValue('home', 'home_cta_heading_italic', 'Pinewood Calm?');
+  const homeCtaDesc = getValue('home', 'home_cta_desc', 'Secure your sanctuary space high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.');
+  const homeCtaBtnText = getValue('home', 'home_cta_btn_text', 'Book Your Stay Today');
+  const homeCtaBtnLink = getValue('home', 'home_cta_btn_link', '/rooms');
+
   useEffect(() => {
     const storedSuite = localStorage.getItem("adminRoomsConfig");
     if (storedSuite) {
@@ -292,6 +419,7 @@ export default function Home() {
 
   return (
     <div className="bg-[#F6F4EF] text-slate-charcoal pb-20 md:pb-0 font-sans">
+      {loading && content.length === 0 && <PageLoader />}
       {/* Hero Section */}
       {heroVisible && (
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
@@ -518,7 +646,11 @@ export default function Home() {
 
       {/* Scroll Stack Offerings Section */}
       {offeringsVisible && (
-        <section ref={offeringsSectionRef} className="relative h-[380vh] bg-[#FAF9F5]">
+        <section 
+          ref={offeringsSectionRef} 
+          className="relative bg-[#FAF9F5]"
+          style={{ height: `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
+        >
           <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
             <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
               
@@ -537,7 +669,7 @@ export default function Home() {
                {/* Inline declared data list representing top-tier experience metrics */}
               {(() => {
                 return (
-                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]">
+                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
                     {visibleOfferings.map((offer, idx) => (
                       <OfferingCard 
                         key={offer.num} 
@@ -727,200 +859,159 @@ export default function Home() {
       <SocialProofSection />
 
       {/* Why Choose Us Section - Pure Luxury Alignment */}
-      <section className="py-24 bg-[#EFEAE1]/20 border-b border-[#D8CBB8]/20 overflow-hidden">
-        <div className="container mx-auto px-6 md:px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-7xl mx-auto">
-            
-            {/* Left side: Premium Narrative Banner */}
-            <div className="lg:col-span-5 space-y-6">
-              <span className="text-[9px] uppercase tracking-[0.25em] font-extrabold text-[#1B4C44] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
-                THE VEDIC HIMALAYA DIFFERENCE
-              </span>
-              <h2 className="text-3xl md:text-5xl font-heading font-medium tracking-tight text-slate-charcoal leading-[1.1]">
-                Why Guests Choose <br/>
-                <span className="italic font-serif font-normal text-[#1B4C44]">Our Sanctuary</span>
-              </h2>
-              <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
-                Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.
-              </p>
-              <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
-                The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.
-              </p>
-            </div>
-
-            {/* Right side: Clean, luxury transparent grid with thin line-art icons and zero card styling */}
-            <div className="lg:col-span-7 grid grid-cols-2 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-12">
+      {whyChooseVisible && (
+        <section className="py-24 bg-[#EFEAE1]/20 border-b border-[#D8CBB8]/20 overflow-hidden">
+          <div className="container mx-auto px-6 md:px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-7xl mx-auto">
               
-              {/* Item 1: Out of the Chaos */}
-              <div className="col-span-1 flex flex-col items-start space-y-3 group">
-                <span className="text-slate-charcoal/80 transition-transform duration-500 group-hover:scale-110 inline-block select-none">
-                  <Compass size={40} strokeWidth={1} className="text-[#A88C52] group-hover:text-[#1B4C44] transition-colors duration-500" />
+              {/* Left side: Premium Narrative Banner */}
+              <div className="lg:col-span-5 space-y-6 text-left">
+                <span className="text-[9px] uppercase tracking-[0.25em] font-extrabold text-[#1B4C44] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
+                  {whyChooseTagline}
                 </span>
-                <div className="space-y-1.5">
-                  <span className="text-[8px] md:text-[9px] tracking-widest font-extrabold text-[#A88C52] block font-mono">01 / CALM SILENCE</span>
-                  <h4 className="text-[12px] md:text-sm font-heading font-semibold text-slate-charcoal group-hover:text-[#A88C52] transition-colors duration-300 uppercase tracking-wide">
-                    Out of the Chaos
-                  </h4>
-                  <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
-                    Located high above the busy transit highway. Breathe in the pristine, quiet spruce-and-pine mountain slopes, completely free of diesel horns and traffic engines.
-                  </p>
-                </div>
+                <h2 className="text-3xl md:text-5xl font-heading font-medium tracking-tight text-slate-charcoal leading-[1.1]">
+                  {whyChooseHeading} <br/>
+                  <span className="italic font-serif font-normal text-[#1B4C44]">{whyChooseHeadingItalic}</span>
+                </h2>
+                <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
+                  {whyChooseDesc1}
+                </p>
+                <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
+                  {whyChooseDesc2}
+                </p>
               </div>
 
-              {/* Item 2: Comfortable Cozy Cabins */}
-              <div className="col-span-1 flex flex-col items-start space-y-3 group">
-                <span className="text-slate-charcoal/80 transition-transform duration-500 group-hover:scale-110 inline-block select-none">
-                  <BedDouble size={40} strokeWidth={1} className="text-[#1B4C44] group-hover:text-[#A88C52] transition-colors duration-500" />
-                </span>
-                <div className="space-y-1.5">
-                  <span className="text-[8px] md:text-[9px] tracking-widest font-extrabold text-[#1B4C44] block font-mono">02 / ALPINE COMFORT</span>
-                  <h4 className="text-[12px] md:text-sm font-heading font-semibold text-slate-charcoal group-hover:text-[#1B4C44] transition-colors duration-300 uppercase tracking-wide">
-                    Comfortable Cozy Cabins
-                  </h4>
-                  <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
-                    Escape the freezing high-altitude winds. Unwind in draft-protected pine suites with private hot water geysers, mountain views, and thick premium winter duvets.
-                  </p>
-                </div>
-              </div>
-
-              {/* Item 3: Pure Clean Air */}
-              <div className="col-span-1 flex flex-col items-start space-y-3 group">
-                <span className="text-slate-charcoal/80 transition-transform duration-500 group-hover:scale-110 inline-block select-none">
-                  <Wind size={40} strokeWidth={1} className="text-[#B32D2D] group-hover:text-[#A88C52] transition-colors duration-500" />
-                </span>
-                <div className="space-y-1.5">
-                  <span className="text-[8px] md:text-[9px] tracking-widest font-extrabold text-[#B32D2D] block font-mono">03 / UNTOUCHED BREATH</span>
-                  <h4 className="text-[12px] md:text-sm font-heading font-semibold text-slate-charcoal group-hover:text-[#B32D2D] transition-colors duration-300 uppercase tracking-wide">
-                    Pure Clean Air
-                  </h4>
-                  <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
-                    Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.
-                  </p>
-                </div>
-              </div>
-
-              {/* Item 4: Devoted Himalayan Sewa */}
-              <div className="col-span-1 flex flex-col items-start space-y-3 group">
-                <span className="text-slate-charcoal/80 transition-transform duration-500 group-hover:scale-110 inline-block select-none">
-                  <Users size={40} strokeWidth={1} className="text-[#6D7A71] group-hover:text-[#1B4C44] transition-colors duration-500" />
-                </span>
-                <div className="space-y-1.5">
-                  <span className="text-[8px] md:text-[9px] tracking-widest font-extrabold text-[#6D7A71] block font-mono">04 / CARING HOSPITALITY</span>
-                  <h4 className="text-[12px] md:text-sm font-heading font-semibold text-slate-charcoal group-hover:text-[#6D7A71] transition-colors duration-300 uppercase tracking-wide">
-                    Devoted Himalayan Sewa
-                  </h4>
-                  <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
-                    Genuine, humble local team serving selfless mountain devotion—brewing warming morning herbal teas & coordinating peaceful local pilgrimage routes like family.
-                  </p>
-                </div>
+              {/* Right side: Clean, luxury transparent grid with thin line-art icons and zero card styling */}
+              <div className="lg:col-span-7 grid grid-cols-2 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-12 text-left">
+                {whyChooseItems.filter(item => item.is_visible !== false).map((item, idx) => (
+                  <div key={idx} className="col-span-1 flex flex-col items-start space-y-3 group">
+                    <span className="text-slate-charcoal/80 transition-transform duration-500 group-hover:scale-110 inline-block select-none">
+                      <DynamicIcon name={item.icon || 'Compass'} className="h-10 w-10 text-[#A88C52] group-hover:text-[#1B4C44] transition-colors duration-500" strokeWidth={1} />
+                    </span>
+                    <div className="space-y-1.5">
+                      <span className="text-[8px] md:text-[9px] tracking-widest font-extrabold text-[#A88C52] block font-mono">
+                        {item.num || `0${idx + 1}`} / {item.category || 'CARD'}
+                      </span>
+                      <h4 className="text-[12px] md:text-sm font-heading font-semibold text-slate-charcoal group-hover:text-[#A88C52] transition-colors duration-300 uppercase tracking-wide">
+                        {item.title}
+                      </h4>
+                      <p className="text-[10px] md:text-xs text-slate-charcoal/70 leading-relaxed font-sans text-pretty">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
 
             </div>
-
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Bento Masonry Gallery Section */}
-      <section className="py-20 md:py-24 bg-[#F6F4EF] border-t border-[#D8CBB8]/20">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-col items-center text-center mb-6 md:mb-16 space-y-2 md:space-y-4">
-            <span className="uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold text-deep-teal">Gallery</span>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal">Our <span className="italic text-deep-teal font-normal">{suiteData.title} Visual Journal</span></h2>
-            <p className="text-[11px] sm:text-sm text-slate-charcoal/70 max-w-sm mx-auto text-center font-sans">
-              Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.
+      {homeGalleryVisible && (
+        <section className="py-20 md:py-24 bg-[#F6F4EF] border-t border-[#D8CBB8]/20">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="flex flex-col items-center text-center mb-6 md:mb-16 space-y-2 md:space-y-4">
+              <span className="uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold text-deep-teal">{homeGalleryBadge}</span>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal">Our <span className="italic text-deep-teal font-normal">{homeGalleryHeading}</span></h2>
+              <p className="text-[11px] sm:text-sm text-slate-charcoal/70 max-w-sm mx-auto text-center font-sans">
+                {homeGalleryDesc}
+              </p>
+              <div className="pt-2">
+                <Link to="/gallery" className="inline-flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-widest font-bold hover:text-deep-teal transition text-slate-charcoal border-b border-dashed border-deep-teal/40 pb-0.5">
+                  Full Gallery <ArrowRight size={12} />
+                </Link>
+              </div>
+            </div>
+             
+             <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[repeat(4,120px)] md:grid-rows-[repeat(3,250px)] gap-2 md:gap-4">
+               {/* Large featured spot */}
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 whileInView={{ opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1 }}
+                 className="col-span-2 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
+               >
+                 <img src={bentoGalleryItems[0]?.image || "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1000"} alt={bentoGalleryItems[0]?.title || "Dining"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
+               </motion.div>
+               {/* Smaller spots */}
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 whileInView={{ opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1, delay: 0.1 }}
+                 className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
+               >
+                 <img src={bentoGalleryItems[1]?.image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[1]?.title || "Wedding"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
+               </motion.div>
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 whileInView={{ opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1, delay: 0.2 }}
+                 className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
+               >
+                 <img src={bentoGalleryItems[2]?.image || "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[2]?.title || "Pines"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
+               </motion.div>
+               {/* Tall spot */}
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 whileInView={{ opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1, delay: 0.3 }}
+                 className="col-span-1 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
+               >
+                 <img src={bentoGalleryItems[3]?.image || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800"} alt={bentoGalleryItems[3]?.title || "Cafe"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
+               </motion.div>
+               {/* Wide spot / Mobile extra spot */}
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 whileInView={{ opacity: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1, delay: 0.4 }}
+                 className="col-span-1 md:col-span-2 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
+               >
+                 <img src={bentoGalleryItems[4]?.image || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200"} alt={bentoGalleryItems[4]?.title || "Glamping"} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
+               </motion.div>
+             </div>
+
+             <div className="mt-8 flex justify-center md:hidden">
+                <Link to="/gallery" className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2E3438] border-b border-[#2E3438]/30 pb-1 hover:border-deep-teal hover:text-deep-teal transition-colors">
+                  View Full Gallery
+                </Link>
+             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Elegantly Crafted Call to Action (CTA) Section below Gallery */}
+      {homeCtaVisible && (
+        <section className="py-20 md:py-28 bg-[#1B4C44] text-[#FAF9F5] relative overflow-hidden text-center">
+          {/* Subtle geometric aura or background patterns */}
+          <div className="absolute inset-0 bg-radial-at-c from-[#235C52] via-[#1B4C44] to-[#0E332C] opacity-90" />
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center mix-blend-overlay opacity-[0.06] pointer-events-none" />
+          
+          <div className="container mx-auto px-6 relative z-10 max-w-3xl space-y-6 sm:space-y-8">
+            <span className="uppercase tracking-[0.25em] text-[10px] sm:text-xs font-bold text-[#D8CBB8] block">{homeCtaBadge}</span>
+            <h2 className="text-3xl sm:text-5xl font-heading tracking-tight leading-tight text-[#FAF9F5]">
+              {homeCtaHeading} <br />
+              <span className="italic font-serif font-normal text-[#E5D7C3]">{homeCtaHeadingItalic}</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-warm-white/75 max-w-lg mx-auto font-sans leading-relaxed">
+              {homeCtaDesc}
             </p>
             <div className="pt-2">
-              <Link to="/gallery" className="inline-flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-widest font-bold hover:text-deep-teal transition text-slate-charcoal border-b border-dashed border-deep-teal/40 pb-0.5">
-                Full Gallery <ArrowRight size={12} />
+              <Link to={homeCtaBtnLink}>
+                <button className="h-12 px-8 sm:px-10 bg-[#D8CBB8] hover:bg-[#E5D7C3] text-[#0B1714] text-xs font-extrabold uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg hover:-translate-y-0.5 cursor-pointer">
+                  {homeCtaBtnText}
+                </button>
               </Link>
             </div>
           </div>
-           
-           <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[repeat(4,120px)] md:grid-rows-[repeat(3,250px)] gap-2 md:gap-4">
-             {/* Large featured spot */}
-             <motion.div 
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1 }}
-               className="col-span-2 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-             >
-               <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1000" alt="Dining" className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-             </motion.div>
-             {/* Smaller spots */}
-             <motion.div 
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.1 }}
-               className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-             >
-               <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="Wedding" className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-             </motion.div>
-             <motion.div 
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.2 }}
-               className="col-span-1 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-             >
-               <img src="https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800" alt="Pines" className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-             </motion.div>
-             {/* Tall spot */}
-             <motion.div 
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.3 }}
-               className="col-span-1 row-span-2 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-             >
-               <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800" alt="Cafe" className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-             </motion.div>
-             {/* Wide spot / Mobile extra spot */}
-             <motion.div 
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.4 }}
-               className="col-span-1 md:col-span-2 row-span-1 bg-stone-sand/20 overflow-hidden relative group rounded-xl"
-             >
-               <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200" alt="Glamping" className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-1000 ease-out contrast-110 grayscale-[10%]" />
-             </motion.div>
-           </div>
-
-           <div className="mt-8 flex justify-center md:hidden">
-              <Link to="/gallery" className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2E3438] border-b border-[#2E3438]/30 pb-1 hover:border-deep-teal hover:text-deep-teal transition-colors">
-                View Full Gallery
-              </Link>
-           </div>
-        </div>
-      </section>
-
-      {/* Elegantly Crafted Call to Action (CTA) Section below Gallery */}
-      <section className="py-20 md:py-28 bg-[#1B4C44] text-[#FAF9F5] relative overflow-hidden text-center">
-        {/* Subtle geometric aura or background patterns */}
-        <div className="absolute inset-0 bg-radial-at-c from-[#235C52] via-[#1B4C44] to-[#0E332C] opacity-90" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center mix-blend-overlay opacity-[0.06] pointer-events-none" />
-        
-        <div className="container mx-auto px-6 relative z-10 max-w-3xl space-y-6 sm:space-y-8">
-          <span className="uppercase tracking-[0.25em] text-[10px] sm:text-xs font-bold text-[#D8CBB8] block">Your Himalayan Haven Awaits</span>
-          <h2 className="text-3xl sm:text-5xl font-heading tracking-tight leading-tight">
-            Ready to Experience the <br />
-            <span className="italic font-serif font-normal text-[#E5D7C3]">Pinewood Calm?</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-warm-white/75 max-w-lg mx-auto font-sans leading-relaxed">
-            Secure your sanctuary space high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.
-          </p>
-          <div className="pt-2">
-            <Link to="/rooms">
-              <button className="h-12 px-8 sm:px-10 bg-[#D8CBB8] hover:bg-[#E5D7C3] text-[#0B1714] text-xs font-extrabold uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg hover:-translate-y-0.5 cursor-pointer">
-                Book Your Stay Today
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
 

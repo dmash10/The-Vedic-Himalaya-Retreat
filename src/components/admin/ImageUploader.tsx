@@ -16,7 +16,7 @@ export default function ImageUploader({
   label = 'Image',
   aspectRatio = 'aspect-video'
 }: ImageUploaderProps) {
-  const { zones, addMedia, uploading } = useImageZones();
+  const { uploadImageDirect, uploading } = useImageZones();
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlValue, setUrlValue] = useState('');
   const [dragOver, setDragOver] = useState(false);
@@ -32,19 +32,13 @@ export default function ImageUploader({
   const handleFileSelect = async (file: File) => {
     if (!file) return;
 
-    const galleryZone = zones.find((z) => z.zone_key === 'gallery');
-    if (!galleryZone) {
-      toast.error('Image upload zone not found');
-      return;
-    }
-
     // Instantly show local preview
     const objectUrl = URL.createObjectURL(file);
     setLocalPreview(objectUrl);
     setFeedback(null);
 
     try {
-      const result = await addMedia(galleryZone.id, file, 'image');
+      const result = await uploadImageDirect(file);
       if (result?.success && result.url) {
         onImageChange(result.url);
         setLocalPreview(null);

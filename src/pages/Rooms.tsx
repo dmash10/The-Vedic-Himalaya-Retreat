@@ -87,6 +87,7 @@ export default function Rooms() {
     if (!dbRooms || dbRooms.length === 0) return [];
     return dbRooms.filter((r: any) => r.is_visible !== false).map((r: any) => {
       const isPinewood = r.slug === 'pinewood-family-suite' || r.slug === 'pinewood-suite';
+      const dbImages = Array.isArray(r.images) ? r.images.filter(Boolean) : [];
       return {
         id: r.slug || r.id,
         title: r.name,
@@ -94,7 +95,7 @@ export default function Rooms() {
         price: r.real_price || 11500,
         fake_price: r.fake_price || 15000,
         description: r.description || "Himalayan luxury Suite wreathed in pines.",
-        images: [
+        images: dbImages.length > 0 ? dbImages : [
           r.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
           "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000",
           "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1000",
@@ -110,7 +111,9 @@ export default function Rooms() {
     });
   }, [dbRooms, cmsAmenities, cmsReviews]);
 
-  const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || rooms[0] || null;
+  const selectedRoom = selectedRoomId
+    ? (rooms.find((r) => r.id === selectedRoomId) || rooms[0] || null)
+    : (rooms.length === 1 ? rooms[0] : null);
   const [activeImage, setActiveImage] = useState("");
   const [currentReviewIdx, setCurrentReviewIdx] = useState(0);
   const [isReviewExpanded, setIsReviewExpanded] = useState(false);
@@ -257,13 +260,13 @@ export default function Rooms() {
               
               {/* Minimalistic Navigation Header */}
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-200/60">
-                <Link
-                  to="/"
-                  className="inline-flex items-center gap-2 text-xs tracking-widest uppercase font-bold text-pine-700 hover:text-pine-900 transition-colors duration-300 cursor-pointer group"
+                <button
+                  onClick={() => setSearchParams({})}
+                  className="inline-flex items-center gap-2 text-xs tracking-widest uppercase font-bold text-pine-700 hover:text-pine-900 transition-colors duration-300 cursor-pointer group bg-transparent border-none p-0 focus:outline-none"
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
                   Back to Overview
-                </Link>
+                </button>
 
                 <div className="hidden sm:flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
                   <span>Guptkashi Retreat</span>

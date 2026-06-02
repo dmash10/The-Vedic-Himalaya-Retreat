@@ -11,8 +11,8 @@ export interface Room {
   real_price: number | null;
   is_available: boolean;
   is_visible: boolean;
-  amenities: string[];
-  image_ids: string[] | null;
+  amenities?: string[];
+  images?: string[];
   card_image_url: string | null;
   display_order?: number;
 }
@@ -27,6 +27,7 @@ export const useRooms = () => {
       const { data, error } = await supabase
         .from('rooms')
         .select('*')
+        .order('display_order', { ascending: true })
         .order('created_at', { ascending: true });
 
       if (error) throw error;
@@ -76,6 +77,22 @@ export const useRooms = () => {
     }
   };
 
+  const deleteRoom = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setRooms((prev) => prev.filter((room) => room.id !== id));
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      return { success: false, error };
+    }
+  };
+
   useEffect(() => {
     fetchRooms();
   }, []);
@@ -85,6 +102,7 @@ export const useRooms = () => {
     loading,
     updateRoom,
     createRoom,
+    deleteRoom,
     refresh: fetchRooms,
   };
 };

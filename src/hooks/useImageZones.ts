@@ -257,12 +257,57 @@ export const useImageZones = () => {
     }
   };
 
+  const uploadImageDirect = async (file: File) => {
+    try {
+      setUploading(true);
+
+      let fileToUpload = file;
+      const options = {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: 'image/webp' as const,
+      };
+      const compressedBlob = await imageCompression(file, options);
+      fileToUpload = new File(
+        [compressedBlob],
+        file.name.replace(/\.[^/.]+$/, '.webp'),
+        { type: 'image/webp', lastModified: Date.now() }
+      );
+
+      const timestamp = Date.now();
+      const fileName = `the-green-hills-resort/uploads/${timestamp}.webp`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-images')
+        .upload(fileName, fileToUpload, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('site-images').getPublicUrl(fileName);
+
+      return { success: true, url: publicUrl };
+    } catch (error) {
+      console.error('Error in uploadImageDirect:', error);
+      toast.error('Failed to upload image from PC');
+      return { success: false, error };
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return {
     zones,
     loading,
     uploading,
     addMedia,
     addMediaLink,
+    uploadImageDirect,
     removeMedia,
     toggleZone,
     setPrimaryMedia,

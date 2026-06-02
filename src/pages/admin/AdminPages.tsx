@@ -20,7 +20,7 @@ const AVAILABLE_ICONS = [
 const PAGES_LIST = [
   { id: 'home', label: 'Home Page' },
   { id: 'about', label: 'About Us' },
-  { id: 'rooms', label: 'Rooms Intro' },
+  { id: 'rooms', label: 'Rooms Page Settings' },
   { id: 'dining', label: 'Dining / Rest' },
   { id: 'weddings', label: 'Weddings' },
   { id: 'experiences', label: 'Experiences' },
@@ -30,6 +30,386 @@ const PAGES_LIST = [
   { id: 'booking', label: 'Booking Page' },
   { id: 'privacy', label: 'Privacy Policy' },
   { id: 'terms', label: 'Terms of Stay' }
+];
+
+// Fallback Default Content Catalogs (Syncs Frontend Default Assets to CMS when DB is unpopulated)
+const DEFAULT_HOME_POLAROIDS = [
+  { title: "Double Pine Suite", desc: "ELEVATED ALPINE LIVING", image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800", is_visible: true },
+  { title: "Monastic Ease", desc: "COZY HEARTH COMPANIONSHIP", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", is_visible: true },
+  { title: "Chaukhamba Peak", desc: "MISTY GOLDEN RANGE VISTAS", image: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800", is_visible: true },
+  { title: "Hearthside Breads", desc: "ORGANIC BAKED SATTVIK SELECTIONS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true }
+];
+
+const DEFAULT_HOME_OFFERINGS = [
+  { num: "01", badge: "CELESTIAL MEMORIES", title: "Destination Weddings", description: "Exchange eternal vows on elegant stone cedar terraces wreathed in soft misty breeze and sacred Himalayan aesthetics.", image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#3A1412]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 10\" // E 79° 04' 40\"", icon: "Heart", is_visible: true },
+  { num: "02", badge: "RETREAT BASECAMP", title: "Kedarnath Yatra Stay", description: "Your premium high-altitude rest sanctuary base. Retreat to comfortable modern pine wood cabins nestled along the sacred pilgrimage route.", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#0f2822]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 12\" // E 79° 04' 45\"", icon: "Mountain", is_visible: true },
+  { num: "03", badge: "INNER WELLNESS", title: "Yoga & Prana Studio", description: "Tune your physical vessel with high-altitude breathing alignment, meditative pine forest morning walks, and sunset sound bowls.", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#EFEAE1]", textClass: "text-[#0B1714]", coords: "N 30° 16' 15\" // E 79° 04' 50\"", icon: "Wind", is_visible: true },
+  { num: "04", badge: "VILLAGE RETREAT", title: "Himalayan Village Life", description: "Uncover quiet mountain paths, pure riverbeds, organic farming cycles, and the timeless warmth of authentic local communities.", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#09100e]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 18\" // E 79° 04' 52\"", icon: "Compass", is_visible: true }
+];
+
+const DEFAULT_HOME_AMENITIES = [
+  { title: "Forest Yoga Shala", desc: "Sunrise Vaastu shala with sound therapy.", icon: "Wind", is_visible: true },
+  { title: "Claypot Sattvik Kitchen", desc: "No white sugars, unrefined regional grains.", icon: "Utensils", is_visible: true },
+  { title: "Electric Heated Bedding", desc: "Continuous internal warmth under pure heavy wool.", icon: "Bed", is_visible: true },
+  { title: "Supabase Fast WiFi", desc: "Continuous coverage for absolute digital ease.", icon: "Wifi", is_visible: true }
+];
+
+const DEFAULT_HOME_WHY_CHOOSE_ITEMS = [
+  { num: "01", category: "CALM SILENCE", title: "Out of the Chaos", desc: "Located high above the busy transit highway. Breathe in the pristine, quiet spruce-and-pine mountain slopes, completely free of diesel horns and traffic engines.", icon: "Compass", is_visible: true },
+  { num: "02", category: "ALPINE COMFORT", title: "Comfortable Cozy Cabins", desc: "Escape the freezing high-altitude winds. Unwind in draft-protected pine suites with private hot water geysers, mountain views, and thick premium winter duvets.", icon: "BedDouble", is_visible: true },
+  { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.", icon: "Wind", is_visible: true },
+  { num: "04", category: "CARING HOSPITALITY", title: "Devoted Himalayan Sewa", desc: "Genuine, humble local team serving selfless mountain devotion—brewing warming morning herbal teas & coordinating peaceful local pilgrimage routes like family.", icon: "Users", is_visible: true }
+];
+
+const DEFAULT_HOME_BENTO_GALLERY = [
+  { image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1000", title: "Dining" },
+  { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Wedding" },
+  { image: "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800", title: "Pines" },
+  { image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800", title: "Cafe" },
+  { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" }
+];
+
+const DEFAULT_SOCIAL_PROOF_REVIEWS = [
+  { name: "Harshvardhan Joshi", date: "May 2025", rating: 5, state: "Maharashtra", text: "Stayed here for 2 days during our pilgrimage. The gentle climb up to this high-altitude property is totally worth it. The view of Chaukhamba peaks in the golden morning light is absolutely stunning. The staff is incredibly helpful and arranged a smooth local transfer for our early departure.", approved: true },
+  { name: "Ramesh Gupta", date: "October 2024", rating: 4, state: "Gujarat", text: "Very peaceful place. It is far from the dust and traffic noise of Guptkashi bazaar. Clean rooms, hot water was regular which is rare in mountains. Best part is the pure veg food, super simple and tasty like home. Highly recommend.", approved: true },
+  { name: "Meenakshi Iyer", date: "December 2024", rating: 5, state: "Tamil Nadu", text: "We were traveling with our 70-year-old parents. The staff personally helped them with their heavy bags up the stairs. Rooms have proper wooden interiors which kept us warm. The kitchen staff prepared simple oil-free khichdi on request.", approved: true },
+  { name: "Kuldeep Singh", date: "June 2025", rating: 4, state: "Haryana", text: "Clean rooms, beautiful views of the valley. The property is very quiet. Only thing is Wi-Fi was bit slow in the night, but we didn't mind because the pine forest walk nearby was beautiful. Good value for money.", approved: true }
+];
+
+const DEFAULT_ABOUT_PILLARS = [
+  { id: '01', title: 'ORGANIC CUSTODIANSHIP', desc: 'Sustaining high-altitude terrain integrity with local terrace field grains.', icon: 'Trees', is_visible: true },
+  { id: '02', title: 'AYURVEDIC RESONANCE', desc: 'Constructing physical wellness around daily sun cycle menus and spring dew.', icon: 'Leaf', is_visible: true },
+  { id: '03', title: 'SACRED RESTORATION', desc: 'A peaceful pilgrimage base camp designed for genuine spiritual restoration.', icon: 'Sparkles', is_visible: true }
+];
+
+const DEFAULT_ROOMS_AMENITIES = [
+  { label: "Electric Heated Beds", icon: "Bed", desc: "Dual control electric temperature overlays.", is_visible: true },
+  { label: "Mountain View Balcony", icon: "Mountain", desc: "Private sit-out facing misty Chaukhamba peaks.", is_visible: true },
+  { label: "Organic Herb Brews", icon: "Coffee", desc: "Complimentary raw ginger tea upon arrival.", is_visible: true },
+  { label: "High-Speed Internet", icon: "Wifi", desc: "Sanctuary-wide continuous high bandwidth.", is_visible: true },
+  { label: "Slate Hot Baths", icon: "Droplets", desc: "Continuous mountain hot spring streams.", is_visible: true },
+  { label: "Monastic Lounge Desks", icon: "Briefcase", desc: "Hand-beaten local deodar wood work desks.", is_visible: true }
+];
+
+const DEFAULT_ROOMS_REVIEWS = [
+  { name: "Arjun Sharma", rating: 5, location: "New Delhi", date: "May 2026", text: "The Pinewood suite was an exceptional rest base before our Kedarnath trek. The electric bed heating made a huge difference in the mountain chill.", source: "google", is_visible: true },
+  { name: "Devika Rao", rating: 5, location: "Bangalore", date: "April 2026", text: "A truly restorative space. Waking up to the misty views of Chaukhamba peaks and hot ginger brews was unforgettable.", source: "tripadvisor", is_visible: true },
+  { name: "Rahul Verma", rating: 5, location: "Mumbai", date: "May 2026", text: "Pure organic Sattvik dining and serene forest surroundings. The staff coordinated our puja circuits beautifully.", source: "google", is_visible: true }
+];
+
+const DEFAULT_DINING_SPECIALTIES = [
+  { num: "01", title: "Vessel of Sacred Gehat (Garhwal Valley)", desc: "Slow-simmered medicinal black gehat beans prepared in heavy ironware, paired with unpolished red rice grown in the irrigated terrace fields of Triyuginarayan, topped with hand-churned mountain cow A2 ghee.", energy: "Sattvik Vitality", origin: "Local Ridge Farms", attribute: "Pilgrimage Restorative", category: "grains", is_visible: true },
+  { num: "02", title: "Hand-Rolled Mandua Flatbreads & Rhododendron Extract", desc: "Stone-ground alpine ragi crop griddle breads baked over open deodar woods on porous earthen plates. Served warm with raw wild mountain honey and salted organic walnut dust.", energy: "Prana Restoration", origin: "High Guptkashi Ridge", attribute: "Alkaline Fuel", category: "grains", is_visible: true },
+  { num: "03", title: "Templed Phaanu Claypot stew", desc: "An organic pureed stew of native hillside soybeans, slow-simmered for nine hours inside local earthen vessels, tempered with mountain celery root and active wild rock caraway.", energy: "Sacred Food", origin: "Kedarnath Foothills", attribute: "Cellular Digestion", category: "stews", is_visible: true },
+  { num: "04", title: "Infused Ginger-Tulsi Somras", desc: "A hot purifying wild herbal beverage brewed from hand-gathered holy basil stems, crushed mountain ginger roots, and crystallized forest honey, balanced to boost respiratory ease.", energy: "Meadow Tonic", origin: "Retreat Herbal Garden", attribute: "Active Peak Warmth", category: "elixirs", is_visible: true }
+];
+
+const DEFAULT_DINING_ALCHEMY = [
+  { id: "clay", title: "The Earthen Mudpot", tagline: "9-HOUR EMBERS & POROUS CLAY", desc: "Vessel walls shaped by hand from Mandakini riverbed silt. As the pots simmer slow over low heat for nine hours, the porous natural minerals bind with grain stars, locking in unrefined earth elements with zero synthetic reactions.", illustration: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800", vessel: "Traditional Himalayan Claypots", benefit: "Retains high soil mineral density", smoke: "Deodar log whispers", accentColor: "#1B4C44", is_visible: true },
+  { id: "iron", title: "The Heavy Ironware", tagline: "RAW CAST ROASTING", desc: "Pre-heated heavy black iron cauldrons, seasoned thoroughly for generations. Gehat beans and therapeutic wild celery roots are slow-cooked under high iron weights, infusing raw minerals and retaining dense nutrients.", illustration: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", vessel: "Hand-Beaten Mountain Ironware", benefit: "Supports micro-biological blood health", smoke: "Cedar timber glow", accentColor: "#A88C52", is_visible: true },
+  { id: "embers", title: "The Timber Hearth", tagline: "BAKED ABOVE SPECIATED ASHES", desc: "Our hearth uses clean fallen deodar timber logs. Flour is ground, kneaded in hand-beaten bronze pans, and slow-baked on hot regional flagstones using only the radiant warmth of embers.", illustration: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800", vessel: "Fallen Deodar Bark Hearth", benefit: "Purifies respiratory pathways naturally", smoke: "Pine essence atmosphere", accentColor: "#2E3438", is_visible: true }
+];
+
+const DEFAULT_DINING_POLAROIDS = [
+  { title: "Slate Pavilion Hearth", desc: "WOOD-FIRED EMBERS COOKING", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", is_visible: true },
+  { title: "Terrace Herbal Garden", desc: "DAILY FRESH SATTVIK INFUSIONS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true },
+  { title: "Pilgrim Bread Griddle", desc: "HAND-BEATEN ALKALI MANDUA", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800", is_visible: true }
+];
+
+const DEFAULT_DINING_RITUALS = [
+  { id: "morning", time: "06:00 - SUNRISE", title: "Dew Elixirs & Chants", desc: "Enjoy a warm ginger-basil infusion while viewing peak reflections. Our Pujari performs a Vaastu clearing chant on the terrace shala.", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800", stats: { warmth: "Moderate", focus: "Spiritual", herbs: "Basil Dew" }, is_visible: true },
+  { id: "noon", time: "12:00 - ZENITH", title: "The Valley Platter", desc: "Hyper-local terraced crops prepared inside heavy cast iron pots. Organic unpolished grains digest thoroughly to sustain high-altitude trekking.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", stats: { warmth: "Optimal", focus: "Physical", herbs: "Caraway Seeds" }, is_visible: true },
+  { id: "sunset", time: "18:00 - TWILIGHT", title: "Fireside Claypot Stew", desc: "Gather around the Slate fire bowl. Earthenware dishes are slow-simmered over deodar wood fires, promoting respiratory cellular ease.", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800", stats: { warmth: "High", focus: "Restorative", herbs: "Celery Root" }, is_visible: true }
+];
+
+const DEFAULT_DINING_VOWS = [
+  { id: "vow1", icon: "Leaf", title: "Hyper-Local Terraced Crops", desc: "No white sugars, no chemical salts.", expanded_desc: "We strictly coordinate our kitchen procurement directly with traditional terrace farm families in Triyuginarayan and high Guptkashi fields.", is_visible: true },
+  { id: "vow2", icon: "Flame", title: "Wood Hearth Embers", desc: "Cooking inside raw local clays and regional cast iron vessels.", expanded_desc: "We completely reject standard industrial pans, baking solely on ancestral heated flagstones and slow-simmering inside native clays.", is_visible: true }
+];
+
+const DEFAULT_WEDDINGS_POLAROIDS = [
+  { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Sacred Canopy", desc: "VOWS UNDER MAJESTIC SUMMITS", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800", title: "Candlelit Glass", desc: "GLOWING EVENING SALON RECEPTIONS", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800", title: "High Pine Lawn", desc: "ALFRESCO DEODAR BANQUETS", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Floral Mandap", desc: "TRADITIONAL GARHWALI HARMONY", is_visible: true }
+];
+
+const DEFAULT_WEDDINGS_VENUES = [
+  {
+    id: "canopy-lawn",
+    title: "Sacred Canopy Lawn",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
+    capacity: "Up to 20 guests",
+    location: "East Sanctuary Facing",
+    highlight: "Kedarnath peaks backdrop during golden sunset hours.",
+    vibe: "Intimate, Sacred Open Sky",
+    tags: ["Panoramic Vistas", "Open Wood Hearth", "Custom Carpets"],
+    is_visible: true
+  },
+  {
+    id: "glass-pavilion",
+    title: "The Glass Pavilion",
+    image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=600",
+    capacity: "Up to 20 guests",
+    location: "Sanctuary Center",
+    highlight: "Framed gorge viewline with cozy slate under-floor heat.",
+    vibe: "Editorial, Celestial",
+    tags: ["Pine Forest Views", "Heated Stone Slabs", "Ambient Chandeliers"],
+    is_visible: true
+  },
+  {
+    id: "chaukhamba-terrace",
+    title: "Chaukhamba Terrace",
+    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600",
+    capacity: "Up to 20 guests",
+    location: "High Ridge Level",
+    highlight: "Porous Himalayan flagstones optimal for fire havan mantras.",
+    vibe: "Vedic, Spiritual Purity",
+    tags: ["Altar Space", "Mandakini Breezes", "Copper Lamp Rails"],
+    is_visible: true
+  },
+  {
+    id: "deodar-garden",
+    title: "Deodar Forest Garden",
+    image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600",
+    capacity: "Up to 20 guests",
+    location: "West Sanctuary Ridge",
+    highlight: "Deep forest whispers, warm pathway fire cups, zero plastic.",
+    vibe: "Mystical, Eco-Luxury",
+    tags: ["Tall Pines Sieve", "Fallen Spruce Bark Path", "Candle Glow Only"],
+    is_visible: true
+  }
+];
+
+const DEFAULT_WEDDINGS_OFFERINGS = [
+  {
+    num: "01",
+    badge: "CAPACITY LIMITS",
+    title: "Up to 20 Guests",
+    description: "Exclusively limited to 20 guests for exquisite mountain buyouts. Host a deeply intimate, sacred micro-destination wedding with full retreat access.",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
+    bgClass: "bg-[#0f2822]",
+    textClass: "text-[#FAF9F5]",
+    coords: "N 30° 16' 10\" // E 79° 04' 40\"",
+    is_visible: true
+  },
+  {
+    num: "02",
+    badge: "CULINARY ARTISTRY",
+    title: "Bespoke Sattvik Menus",
+    description: "Pure vegetarian, regional organic ingredients curated carefully by our executive chefs for high physical vitality and ultimate sensory purity.",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200",
+    bgClass: "bg-[#3A1412]",
+    textClass: "text-[#FAF9F5]",
+    coords: "N 30° 16' 12\" // E 79° 04' 45\"",
+    is_visible: true
+  },
+  {
+    num: "03",
+    badge: "EXCLUSIVE ACCESS",
+    title: "Entire Retreat Buyouts",
+    description: "Complete private access to all of our local temperature-controlled luxury pinewood suites, private lawns, paths, and dedicated resort staff.",
+    image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
+    bgClass: "bg-[#FAF9F5]",
+    textClass: "text-[#0B1714]",
+    coords: "N 30° 16' 15\" // E 79° 04' 50\"",
+    is_visible: true
+  },
+  {
+    num: "04",
+    badge: "SACRED METRICS",
+    title: "Sacred Havan Canopy",
+    description: "Traditional cedarwood fire altars aligned with celestial astrologies, providing peaceful chanting vibrations under starlit Himalayan mountain skies.",
+    image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200",
+    bgClass: "bg-[#09100e]",
+    textClass: "text-[#FAF9F5]",
+    coords: "N 30° 16' 18\" // E 79° 04' 52\"",
+    is_visible: true
+  }
+];
+
+const DEFAULT_EXPERIENCES_SLIDES = [
+  {
+    id: "yatra",
+    category: "PILGRIMAGE LOGISTICS",
+    title: "Pilgrimage Support",
+    subtitle: "Sacred trails & custom local guiding",
+    description: "Acclimatize comfortably in the sacred atmosphere of Guptkashi. We coordinate custom guided trail mappings, curate historic local temple walks, and handle localized vehicle coordination.",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=2000",
+    icon: "Mountain",
+    is_visible: true
+  },
+  {
+    id: "yoga",
+    category: "WELLNESS",
+    title: "Yoga & Breathing",
+    subtitle: "Morning sessions for mountain high altitudes",
+    description: "Practice standard morning yoga and guided deep breathing with our instructors to help normalize breathing at high physical altitudes.",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=2000",
+    icon: "Wind",
+    is_visible: true
+  },
+  {
+    id: "weddings",
+    category: "EVENT VENUE",
+    title: "Mountain Weddings",
+    subtitle: "Custom local setups and catering",
+    description: "Host your wedding against the mountain backdrop. We provide pine wood decorations, native Garhwali folk instrumental music, and organic vegetarian dining.",
+    image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=2000",
+    icon: "Sparkles",
+    is_visible: true
+  },
+  {
+    id: "village",
+    category: "LOCAL TRIPS",
+    title: "Guided Village Hikes",
+    subtitle: "Local trails and pony excursions",
+    description: "Trek through surrounding forest routes with a local resident, explore nearby mountain viewpoints on sturdily trained ponies, or walk through the historic village lanes.",
+    image: "https://images.unsplash.com/photo-1566378268012-ea11aa6e7b46?auto=format&fit=crop&q=80&w=2000",
+    icon: "Compass",
+    is_visible: true
+  },
+  {
+    id: "bonfire",
+    category: "RECREATION",
+    title: "Evening Bonfire",
+    subtitle: "Outdoor seating around a real mountain fire",
+    description: "Relax in our open-air courtyard around a slow-burning pinewood fire. Drink hot ginger tea alongside fellow travelers under clear night vistas.",
+    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=2000",
+    icon: "Flame",
+    is_visible: true
+  }
+];
+
+const DEFAULT_EXPERIENCES_GALLERY = [
+  { url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200", caption: "Cozy Pinewood Cottage Bedroom", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", caption: "Misty Sunrise on Chaukhamba Peaks", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200", caption: "Hot House-Sourced Organic Sattvik Lunch", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", caption: "Outer Glamping Deck Encased in Pine Woods", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200", caption: "Panoramic Sunrise High Altitude Yoga Shala", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=1200", caption: "Private Cedar Walking Trails Surrounding Retreat", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=1200", caption: "Hand-Brewed Local Ginger and Basil Tea", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&q=80&w=1200", caption: "Cold Pinewood Clear Sky Stargazing", is_visible: true }
+];
+
+const DEFAULT_NEARBY_SLIDES = [
+  {
+    id: "tungnath",
+    category: "SACRED SUMMIT TREK",
+    title: "Tungnath & Chandrashila",
+    subtitle: "The highest shrine of Shiva at 3,680 meters",
+    description: "Climb past high alpine ridges and rhododendron groves. A beautiful stone path leads to the 1000-year-old Tungnath Temple. Push further to Chandrashila Peak (4,130m) for a complete 360-degree panorama of Trishul, Nanda Devi, and Chaukhamba snow peaks.",
+    image: "https://images.unsplash.com/photo-1626082896492-766af4fc6595?auto=format&fit=crop&q=80&w=2000",
+    icon: "Mountain",
+    altitude: "3,680m - 4,130m",
+    distance: "4 km from Chopta Base",
+    duration: "3-4 Hours",
+    is_visible: true
+  },
+  {
+    id: "triyuginarayan",
+    category: "CELESTIAL HERITAGE",
+    title: "Triyuginarayan Temple",
+    subtitle: "The wedding flame of Shiva & Goddess Parvati",
+    description: "A monumental temple of majestic dry grey slate. Built on sacred mythological alignments, it guards the 'Akhand Dhuni'—an eternal wedding fire that has burned continuously for cosmic epochs. Legend confirms pilgrims receive marital blessing by adding timber logs to the holy smoke.",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=2000",
+    icon: "Heart",
+    altitude: "1,980m",
+    distance: "1.5 Hours Drive from Retreat",
+    duration: "Half-Day Trip",
+    is_visible: true
+  },
+  {
+    id: "chopta",
+    category: "ALPINE MEADOW REFUGE",
+    title: "Chopta Valley",
+    subtitle: "The legendary mini switzerland of Uttarakhand",
+    description: "Nestled within Kedarnath Wild Forest Sanctuary, this scenic meadow is surrounded by dense, mossy pine, spruce, and pink cedar. Home to rare monal pheasants, Chopta offers pristine winds and clean stars.",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=2000",
+    icon: "Trees",
+    altitude: "2,680m",
+    distance: "1 Hour Scenic Drive from Retreat",
+    duration: "Full-Day Exploration",
+    is_visible: true
+  },
+  {
+    id: "kartikswami",
+    category: "RIDGE-TOP SHIELD",
+    title: "Kartik Swami Mandir",
+    subtitle: "A floating cliff haven on narrow vertical spires",
+    description: "Dramatically built on a sharp, vertical knife-edge ridge at 3,050 meters. Accessible via a scenic 3km trail from Kanakchauri village, the approach is wreathed by hundreds of ringing bell bells offered by travelers.",
+    image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=2000",
+    icon: "Mountain",
+    altitude: "3,050m",
+    distance: "1.5 Hours Scenic Trail Drive",
+    duration: "Half-Day Exploration",
+    is_visible: true
+  },
+  {
+    id: "deoriatal",
+    category: "GLACIAL REfLECTION",
+    title: "Deoria Tal Lake",
+    subtitle: "Mirror of the royal Chaukhamba peak summits",
+    description: "A magical mountain freshwater lake sheltered inside dense, green oak canopies. At quiet sunrises, the water turns glass-like, throwing an immaculate mirror image of the grand Chaukhamba glaciers.",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000",
+    icon: "Compass",
+    altitude: "2,438m",
+    distance: "45 Mins to Sari + 3km walk",
+    duration: "Half-Day Hike",
+    is_visible: true
+  },
+  {
+    id: "madmaheshwar",
+    category: "PANCH KEDAR MYSTERY",
+    title: "Madmaheshwar Meadows",
+    subtitle: "An isolated green valley under glaciers",
+    description: "A gorgeous trek alongside deep glacial canyons, mountain log bridges, and dense bamboo covers. The majestic ancient temple structure is framed within a vast green bugyal (meadow).",
+    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2000",
+    icon: "Mountain",
+    altitude: "3,490m",
+    distance: "Drive to Ransi + 16km trek",
+    duration: "1-2 Days Journey",
+    is_visible: true
+  },
+  {
+    id: "guptkashi",
+    category: "LOCAL CULTURAL CORE",
+    title: "Guptkashi Vishwanath",
+    subtitle: "Historic masonry shrines and Manikarnika Kund",
+    description: "The historical heart of our valley. Wreathed in centuries of legends, it houses the majestic stone Vishwanath Temple matching the design of Kashi.",
+    image: "https://images.unsplash.com/photo-1627855913251-512c1b2f0b78?auto=format&fit=crop&q=80&w=2000",
+    icon: "Compass",
+    altitude: "1,319m",
+    distance: "10 Mins from Retreat",
+    duration: "1-2 Hours Walk",
+    is_visible: true
+  }
+];
+
+const DEFAULT_NEARBY_TREKS = [
+  { title: "Chorabari Tal Lake", subtitle: "GLACIAL BASIN TRAIL", difficulty: "Moderate", altitude: "3,900m", distance: "14km from base", bestSeason: "May - Oct", duration: "6 Hours", highlight: "Stunning glacier views", description: "A gorgeous trek starting from the Kedarnath temple trail heading to the crystal clear glacial lake basin.", is_visible: true }
+];
+
+const DEFAULT_NEARBY_GALLERY = [
+  { url: "https://images.unsplash.com/photo-1626082896492-766af4fc6595?auto=format&fit=crop&q=80&w=1200", caption: "Sacred shrine bells framing snowbound peaks at Tungnath", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", caption: "Double golden mirroring of Chaukhamba Peaks in Deoria Tal Lake", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=1200", caption: "Ancient mountain ridges fading into twilight orange gradients", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&q=80&w=1200", caption: "Rich velvet meadow paths in Chopta valley wreathed in mist", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1598325492474-0fadd61a8685?auto=format&fit=crop&q=80&w=1200", caption: "Timeless brass bells hung in sacred cliff shrines", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1566378268012-ea11aa6e7b46?auto=format&fit=crop&q=80&w=1200", caption: "Climbing handcarved slate steps in high alpine hamlet walks", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200", caption: "Cosmic starlit night skies hovering over high range basecamps", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1533130061792-64b345e4e837?auto=format&fit=crop&q=80&w=1200", caption: "Deep emerald pine canopy and alpine fog surrounding our routes", is_visible: true }
+];
+
+const DEFAULT_GALLERY_IMAGES = [
+  { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Chaukhamba Summits", desc: "Glacial snow peaks overlooking our open sunrise yoga deck.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200", category: "Sanctuary Suites", title: "Luxury Mountain Suite", desc: "Cozy custom electric temperature beds lined with organic heavy wool blankets.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "The Slate Dining Pavilion", desc: "Pure organic thalis cooked over fresh timber and mountain logs.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "Himalayan Mandap Vows", desc: "Our cedar marriage lawns framed beautifully by pine forests and mountain fog.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Guptkashi Dawn Mist", desc: "Ethereal blue morning fog hanging gracefully over our cedar pine cliffs.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1580977276076-ac4ccbec0680?auto=format&fit=crop&q=80&w=1200", category: "Sanctuary Suites", title: "Aura Bath & Spa Suite", desc: "Continuous organic hot water flows with cold slate stone tiles.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "Restorative Herbal Sips", desc: "Hot immune-support ginger remedies upon custom arrival desks.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Sacred Temple Rays", desc: "Spiritual morning light pierces the traditional deodar woodwork in Guptkashi.", is_visible: true }
 ];
 
 // Helper components
@@ -92,6 +472,33 @@ function TextAreaGroup({ label, value, onChange, placeholder = '', rows = 3, dis
   );
 }
 
+interface SectionSaveButtonProps {
+  onSave: () => void;
+  isSaving: boolean;
+  label?: string;
+}
+
+function SectionSaveButton({ onSave, isSaving, label = "Save Section Changes" }: SectionSaveButtonProps) {
+  return (
+    <div className="flex justify-end pt-3 mt-4 border-t border-[#1C2E2A]/20">
+      <button
+        type="button"
+        onClick={onSave}
+        disabled={isSaving}
+        className="relative group overflow-hidden px-5 py-2.5 bg-gradient-to-r from-[#C4A665] to-[#E2C58A] hover:from-[#FAF9F5] hover:to-[#FAF9F5] text-black font-extrabold text-[10px] uppercase tracking-[0.2em] rounded-lg transition-all shadow-md active:scale-95 disabled:opacity-50 hover:shadow-xl hover:shadow-[#C4A665]/10 cursor-pointer flex items-center gap-2 border border-[#C4A665]/20"
+      >
+        {isSaving ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : (
+          <Save className="w-3.5 h-3.5" />
+        )}
+        <span>{isSaving ? 'SAVING CHANGES...' : label}</span>
+        <div className="absolute inset-0 border border-white/30 rounded-lg group-hover:scale-105 transition-transform duration-500 pointer-events-none" />
+      </button>
+    </div>
+  );
+}
+
 interface SectionToggleProps {
   label: string;
   checked: boolean;
@@ -130,6 +537,8 @@ interface ListEditorProps<T> {
   getItemLabel: (item: T, idx: number) => string;
   getItemImage?: (item: T) => string | undefined;
   renderItemEditor: (item: T, idx: number, updateField: (field: keyof T, value: any) => void) => React.ReactNode;
+  onSave?: () => void;
+  isSaving?: boolean;
 }
 
 function ListEditor<T>({
@@ -139,7 +548,9 @@ function ListEditor<T>({
   createDefaultItem,
   getItemLabel,
   getItemImage,
-  renderItemEditor
+  renderItemEditor,
+  onSave,
+  isSaving
 }: ListEditorProps<T>) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
@@ -205,10 +616,15 @@ function ListEditor<T>({
         {items.map((item: any, idx) => (
           <div
             key={idx}
-            className={`relative border rounded-xl overflow-hidden bg-[#060B0A]/40 p-2.5 cursor-pointer transition-colors flex flex-col justify-between min-h-[120px] ${
+            className={`relative group border rounded-xl overflow-hidden bg-[#060B0A]/40 p-2.5 cursor-pointer transition-colors flex flex-col justify-between min-h-[120px] ${
               activeIdx === idx ? 'border-[#C4A665]' : 'border-[#1C2E2A] hover:border-white/10'
             }`}
           >
+            {/* Gold Pencil Edit Icon Overlay */}
+            <div className="absolute top-2.5 right-2.5 bg-black/80 p-1.5 rounded-full text-[#C4A665] opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none z-10 border border-[#C4A665]/20 shadow-md">
+              <Edit3 className="w-3 h-3 text-[#C4A665]" strokeWidth={2.5} />
+            </div>
+
             <div onClick={() => setActiveIdx(activeIdx === idx ? null : idx)} className="flex-1">
               {getItemImage && getItemImage(item) ? (
                 <img src={getItemImage(item)} alt="" className="w-full aspect-[4/3] object-cover rounded-lg border border-[#1C2E2A] mb-2" />
@@ -264,7 +680,7 @@ function ListEditor<T>({
       </div>
 
       {activeIdx !== null && items[activeIdx] && (
-        <div className="mt-4 p-4 bg-[#060B0A]/30 border border-[#1C2E2A] rounded-xl relative">
+        <div className="mt-4 p-4 bg-[#060B0A]/30 border border-[#1C2E2A] rounded-xl relative animate-in fade-in slide-in-from-top-2 duration-300">
           <button
             type="button"
             onClick={() => setActiveIdx(null)}
@@ -272,6 +688,25 @@ function ListEditor<T>({
           >
             <X className="w-4 h-4" />
           </button>
+
+          {onSave && (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4 text-[10px] text-[#C4A665] font-bold bg-[#C4A665]/10 px-4 py-2.5 rounded-lg border border-[#C4A665]/20 shadow-inner">
+              <span className="uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665] animate-ping shrink-0" />
+                ⚠️ UNSAVED CHANGES: CLICK "SAVE CURRENT PAGE" TO WRITE PERMANENTLY
+              </span>
+              <button
+                type="button"
+                onClick={onSave}
+                disabled={isSaving}
+                className="w-full sm:w-auto flex items-center justify-center gap-1.5 bg-[#C4A665] text-black px-3.5 py-1.5 rounded-md text-[9px] font-extrabold uppercase tracking-[0.1em] hover:bg-[#FAF9F5] active:scale-95 disabled:opacity-50 cursor-pointer transition-all shadow-md"
+              >
+                {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                <span>{isSaving ? 'SAVING...' : 'SAVE CURRENT PAGE'}</span>
+              </button>
+            </div>
+          )}
+
           <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-3">
             Editing Item #{activeIdx + 1}
           </div>
@@ -284,7 +719,7 @@ function ListEditor<T>({
 
 export default function AdminPages() {
   const { content, loading: contentLoading, getValue, updateContent, updateMultipleContent } = useContent();
-  const { zones, loading: zonesLoading } = useImageZones();
+  const { zones, loading: zonesLoading, uploadImageDirect } = useImageZones();
 
   const [activePageId, setActivePageId] = useState('home');
   const [showPageMenuMobile, setShowPageMenuMobile] = useState(false);
@@ -316,6 +751,9 @@ export default function AdminPages() {
   const [nearbyPhotos, setNearbyPhotos] = useState<any[]>([]);
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [marqueeSlogans, setMarqueeSlogans] = useState<string[]>([]);
+  const [whyChooseItems, setWhyChooseItems] = useState<any[]>([]);
+  const [bentoGalleryItems, setBentoGalleryItems] = useState<any[]>([]);
+  const [socialProofReviews, setSocialProofReviews] = useState<any[]>([]);
 
   // Load effect
   useEffect(() => {
@@ -327,6 +765,7 @@ export default function AdminPages() {
     // Visibilities
     const sectionVisKeys = [
       'hero_visible', 'marquee_visible', 'story_visible', 'offerings_visible', 'amenities_visible',
+      'why_choose_visible', 'home_gallery_visible', 'home_cta_visible', 'social_proof_visible',
       'about_story_visible', 'pillars_visible', 'notice_visible', 'hours_visible', 'dietary_visible',
       'specialty_visible', 'alchemy_visible', 'dining_polaroids_visible', 'weddings_hero_visible',
       'weddings_story_visible', 'weddings_polaroids_visible', 'weddings_venues_visible', 'weddings_offerings_visible',
@@ -354,6 +793,22 @@ export default function AdminPages() {
         story_desc: getValue('home', 'story_desc', 'Inspired by our pristine cedar forest surroundings...'),
         story_btn_name: getValue('home', 'story_btn_name', 'VIEW ALL ROOMS & SUITES'),
         story_btn_link: getValue('home', 'story_btn_link', '/rooms'),
+        why_choose_tagline: getValue('home', 'why_choose_tagline', 'THE VEDIC HIMALAYA DIFFERENCE'),
+        why_choose_heading: getValue('home', 'why_choose_heading', 'Why Guests Choose'),
+        why_choose_heading_italic: getValue('home', 'why_choose_heading_italic', 'Our Sanctuary'),
+        why_choose_desc1: getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.'),
+        why_choose_desc2: getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps."),
+        home_gallery_badge: getValue('home', 'home_gallery_badge', 'Gallery'),
+        home_gallery_heading: getValue('home', 'home_gallery_heading', 'Our Visual Journal'),
+        home_gallery_desc: getValue('home', 'home_gallery_desc', 'Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.'),
+        home_cta_badge: getValue('home', 'home_cta_badge', 'Your Himalayan Haven Awaits'),
+        home_cta_heading: getValue('home', 'home_cta_heading', 'Ready to Experience the'),
+        home_cta_heading_italic: getValue('home', 'home_cta_heading_italic', 'Pinewood Calm?'),
+        home_cta_desc: getValue('home', 'home_cta_desc', 'Secure your sanctuary space high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.'),
+        home_cta_btn_text: getValue('home', 'home_cta_btn_text', 'Book Your Stay Today'),
+        home_cta_btn_link: getValue('home', 'home_cta_btn_link', '/rooms'),
+        social_proof_tagline: getValue('home', 'social_proof_tagline', 'GUEST TESTIMONIALS'),
+        social_proof_heading: getValue('home', 'social_proof_heading', 'EXCELLENT'),
       });
       
       const slogansStr = getValue('home', 'marquee_slogans', '');
@@ -368,9 +823,42 @@ export default function AdminPages() {
       }
       setMarqueeSlogans(parsedSlogans);
 
-      try { setPolaroids(JSON.parse(getValue('home', 'polaroids', '[]'))); } catch { setPolaroids([]); }
-      try { setOfferings(JSON.parse(getValue('home', 'offerings', '[]'))); } catch { setOfferings([]); }
-      try { setAmenities(JSON.parse(getValue('home', 'amenities', '[]'))); } catch { setAmenities([]); }
+      try {
+        const val = JSON.parse(getValue('home', 'polaroids', '[]'));
+        setPolaroids(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_POLAROIDS);
+      } catch {
+        setPolaroids(DEFAULT_HOME_POLAROIDS);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'offerings', '[]'));
+        setOfferings(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_OFFERINGS);
+      } catch {
+        setOfferings(DEFAULT_HOME_OFFERINGS);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'amenities', '[]'));
+        setAmenities(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_AMENITIES);
+      } catch {
+        setAmenities(DEFAULT_HOME_AMENITIES);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'why_choose_items', '[]'));
+        setWhyChooseItems(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_WHY_CHOOSE_ITEMS);
+      } catch {
+        setWhyChooseItems(DEFAULT_HOME_WHY_CHOOSE_ITEMS);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'bento_gallery_items', '[]'));
+        setBentoGalleryItems(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_BENTO_GALLERY);
+      } catch {
+        setBentoGalleryItems(DEFAULT_HOME_BENTO_GALLERY);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'social_proof_reviews', '[]'));
+        setSocialProofReviews(Array.isArray(val) && val.length > 0 ? val : DEFAULT_SOCIAL_PROOF_REVIEWS);
+      } catch {
+        setSocialProofReviews(DEFAULT_SOCIAL_PROOF_REVIEWS);
+      }
     } else if (activePageId === 'about') {
       setFormFields({
         about_heading: getValue('about', 'about_heading', 'Our Story'),
@@ -379,7 +867,12 @@ export default function AdminPages() {
         about_highlights: getValue('about', 'about_highlights', ''),
         about_image: getValue('about', 'about_image', ''),
       });
-      try { setPillars(JSON.parse(getValue('about', 'pillars', '[]'))); } catch { setPillars([]); }
+      try {
+        const val = JSON.parse(getValue('about', 'pillars', '[]'));
+        setPillars(Array.isArray(val) && val.length > 0 ? val : DEFAULT_ABOUT_PILLARS);
+      } catch {
+        setPillars(DEFAULT_ABOUT_PILLARS);
+      }
     } else if (activePageId === 'rooms') {
       setFormFields({
         rooms_heading: getValue('rooms', 'rooms_heading', 'Sanctuary Suites'),
@@ -387,8 +880,18 @@ export default function AdminPages() {
         rooms_image: getValue('rooms', 'rooms_image', ''),
         rooms_notice: getValue('rooms', 'rooms_notice', 'Important Booking Notice...'),
       });
-      try { setRoomsAmenities(JSON.parse(getValue('rooms', 'rooms_amenities', '[]'))); } catch { setRoomsAmenities([]); }
-      try { setRoomsReviews(JSON.parse(getValue('rooms', 'rooms_reviews', '[]'))); } catch { setRoomsReviews([]); }
+      try {
+        const val = JSON.parse(getValue('rooms', 'rooms_amenities', '[]'));
+        setRoomsAmenities(Array.isArray(val) && val.length > 0 ? val : DEFAULT_ROOMS_AMENITIES);
+      } catch {
+        setRoomsAmenities(DEFAULT_ROOMS_AMENITIES);
+      }
+      try {
+        const val = JSON.parse(getValue('rooms', 'rooms_reviews', '[]'));
+        setRoomsReviews(Array.isArray(val) && val.length > 0 ? val : DEFAULT_ROOMS_REVIEWS);
+      } catch {
+        setRoomsReviews(DEFAULT_ROOMS_REVIEWS);
+      }
     } else if (activePageId === 'dining') {
       setFormFields({
         dining_heading: getValue('dining', 'dining_heading', 'Pure Sattvik Dining'),
@@ -430,11 +933,36 @@ export default function AdminPages() {
         dining_menu_desc: getValue('dining', 'dining_menu_desc', 'Carefully curated items available for order. All dishes are prepared from seasonal ridge-grown crops and organic valley spices.'),
         dining_footer_warning: getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify your table captain 2 hours in advance for specific allergy or custom diets.'),
       });
-      try { setSpecialtyDishes(JSON.parse(getValue('dining', 'specialty_dishes', '[]'))); } catch { setSpecialtyDishes([]); }
-      try { setAlchemies(JSON.parse(getValue('dining', 'kitchen_alchemies', '[]'))); } catch { setAlchemies([]); }
-      try { setDiningPolaroids(JSON.parse(getValue('dining', 'dining_polaroids', '[]'))); } catch { setDiningPolaroids([]); }
-      try { setDailyRituals(JSON.parse(getValue('dining', 'daily_rituals', '[]'))); } catch { setDailyRituals([]); }
-      try { setDiningVows(JSON.parse(getValue('dining', 'dining_vows', '[]'))); } catch { setDiningVows([]); }
+      try {
+        const val = JSON.parse(getValue('dining', 'specialty_dishes', '[]'));
+        setSpecialtyDishes(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_SPECIALTIES);
+      } catch {
+        setSpecialtyDishes(DEFAULT_DINING_SPECIALTIES);
+      }
+      try {
+        const val = JSON.parse(getValue('dining', 'kitchen_alchemies', '[]'));
+        setAlchemies(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_ALCHEMY);
+      } catch {
+        setAlchemies(DEFAULT_DINING_ALCHEMY);
+      }
+      try {
+        const val = JSON.parse(getValue('dining', 'dining_polaroids', '[]'));
+        setDiningPolaroids(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_POLAROIDS);
+      } catch {
+        setDiningPolaroids(DEFAULT_DINING_POLAROIDS);
+      }
+      try {
+        const val = JSON.parse(getValue('dining', 'daily_rituals', '[]'));
+        setDailyRituals(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_RITUALS);
+      } catch {
+        setDailyRituals(DEFAULT_DINING_RITUALS);
+      }
+      try {
+        const val = JSON.parse(getValue('dining', 'dining_vows', '[]'));
+        setDiningVows(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_VOWS);
+      } catch {
+        setDiningVows(DEFAULT_DINING_VOWS);
+      }
     } else if (activePageId === 'weddings') {
       setFormFields({
         weddings_heading: getValue('weddings', 'weddings_heading', 'Destination Weddings'),
@@ -466,9 +994,24 @@ export default function AdminPages() {
         weddings_cta_btn_link: getValue('weddings', 'weddings_cta_btn_link', '/contact'),
         weddings_cta_footnote: getValue('weddings', 'weddings_cta_footnote', 'Booking open for 2026/2027 Himalayan Seasons'),
       });
-      try { setWeddingPolaroids(JSON.parse(getValue('weddings', 'weddings_polaroids', '[]'))); } catch { setWeddingPolaroids([]); }
-      try { setVenues(JSON.parse(getValue('weddings', 'venue_cards', '[]'))); } catch { setVenues([]); }
-      try { setWeddingOfferings(JSON.parse(getValue('weddings', 'wedding_offerings', '[]'))); } catch { setWeddingOfferings([]); }
+      try {
+        const val = JSON.parse(getValue('weddings', 'weddings_polaroids', '[]'));
+        setWeddingPolaroids(Array.isArray(val) && val.length > 0 ? val : DEFAULT_WEDDINGS_POLAROIDS);
+      } catch {
+        setWeddingPolaroids(DEFAULT_WEDDINGS_POLAROIDS);
+      }
+      try {
+        const val = JSON.parse(getValue('weddings', 'venue_cards', '[]'));
+        setVenues(Array.isArray(val) && val.length > 0 ? val : DEFAULT_WEDDINGS_VENUES);
+      } catch {
+        setVenues(DEFAULT_WEDDINGS_VENUES);
+      }
+      try {
+        const val = JSON.parse(getValue('weddings', 'wedding_offerings', '[]'));
+        setWeddingOfferings(Array.isArray(val) && val.length > 0 ? val : DEFAULT_WEDDINGS_OFFERINGS);
+      } catch {
+        setWeddingOfferings(DEFAULT_WEDDINGS_OFFERINGS);
+      }
     } else if (activePageId === 'experiences') {
       setFormFields({
         experiences_heading: getValue('experiences', 'experiences_heading', 'Curated Journeys'),
@@ -489,8 +1032,18 @@ export default function AdminPages() {
         experiences_cta_btn_text: getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation'),
         experiences_cta_btn_link: getValue('experiences', 'experiences_cta_btn_link', '/rooms'),
       });
-      try { setExperienceSlides(JSON.parse(getValue('experiences', 'experience_slides', '[]'))); } catch { setExperienceSlides([]); }
-      try { setExperiencePhotos(JSON.parse(getValue('experiences', 'experience_gallery', '[]'))); } catch { setExperiencePhotos([]); }
+      try {
+        const val = JSON.parse(getValue('experiences', 'experience_slides', '[]'));
+        setExperienceSlides(Array.isArray(val) && val.length > 0 ? val : DEFAULT_EXPERIENCES_SLIDES);
+      } catch {
+        setExperienceSlides(DEFAULT_EXPERIENCES_SLIDES);
+      }
+      try {
+        const val = JSON.parse(getValue('experiences', 'experience_gallery', '[]'));
+        setExperiencePhotos(Array.isArray(val) && val.length > 0 ? val : DEFAULT_EXPERIENCES_GALLERY);
+      } catch {
+        setExperiencePhotos(DEFAULT_EXPERIENCES_GALLERY);
+      }
     } else if (activePageId === 'nearby') {
       setFormFields({
         nearby_heading: getValue('nearby', 'nearby_heading', 'Himalayan Travel Guide'),
@@ -515,9 +1068,24 @@ export default function AdminPages() {
         nearby_cta_btn_text: getValue('nearby', 'nearby_cta_btn_text', 'Contact For Coordination'),
         nearby_cta_btn_link: getValue('nearby', 'nearby_cta_btn_link', '/contact'),
       });
-      try { setNearbySlides(JSON.parse(getValue('nearby', 'nearby_slides', '[]'))); } catch { setNearbySlides([]); }
-      try { setTreksDirectory(JSON.parse(getValue('nearby', 'treks_directory', '[]'))); } catch { setTreksDirectory([]); }
-      try { setNearbyPhotos(JSON.parse(getValue('nearby', 'nearby_gallery', '[]'))); } catch { setNearbyPhotos([]); }
+      try {
+        const val = JSON.parse(getValue('nearby', 'nearby_slides', '[]'));
+        setNearbySlides(Array.isArray(val) && val.length > 0 ? val : DEFAULT_NEARBY_SLIDES);
+      } catch {
+        setNearbySlides(DEFAULT_NEARBY_SLIDES);
+      }
+      try {
+        const val = JSON.parse(getValue('nearby', 'treks_directory', '[]'));
+        setTreksDirectory(Array.isArray(val) && val.length > 0 ? val : DEFAULT_NEARBY_TREKS);
+      } catch {
+        setTreksDirectory(DEFAULT_NEARBY_TREKS);
+      }
+      try {
+        const val = JSON.parse(getValue('nearby', 'nearby_gallery', '[]'));
+        setNearbyPhotos(Array.isArray(val) && val.length > 0 ? val : DEFAULT_NEARBY_GALLERY);
+      } catch {
+        setNearbyPhotos(DEFAULT_NEARBY_GALLERY);
+      }
     } else if (activePageId === 'gallery') {
       setFormFields({
         gallery_heading: getValue('gallery', 'gallery_heading', 'Captured Stillness'),
@@ -527,7 +1095,12 @@ export default function AdminPages() {
         gallery_hero_desc: getValue('gallery', 'gallery_hero_desc', ''),
         gallery_categories: getValue('gallery', 'gallery_categories', 'Peaks & Vibe, Sanctuary Suites, Spiritual Life'),
       });
-      try { setGalleryImages(JSON.parse(getValue('gallery', 'gallery_images', '[]'))); } catch { setGalleryImages([]); }
+      try {
+        const val = JSON.parse(getValue('gallery', 'gallery_images', '[]'));
+        setGalleryImages(Array.isArray(val) && val.length > 0 ? val : DEFAULT_GALLERY_IMAGES);
+      } catch {
+        setGalleryImages(DEFAULT_GALLERY_IMAGES);
+      }
     } else if (activePageId === 'contact') {
       setFormFields({
         contact_heading: getValue('contact', 'contact_heading', 'Reach Out'),
@@ -563,12 +1136,6 @@ export default function AdminPages() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const galleryZone = zones.find((z: any) => z.zone_key === 'gallery');
-    if (!galleryZone) {
-      toast.error('Image upload zone not found');
-      return;
-    }
-
     setIsBulkUploading(targetList);
     let successCount = 0;
 
@@ -578,7 +1145,7 @@ export default function AdminPages() {
         const file = files[i];
         if (!file.type.startsWith('image/')) continue;
         try {
-          const result = await addMedia(galleryZone.id, file, 'image');
+          const result = await uploadImageDirect(file);
           if (result?.success && result.url) {
             newImages.push({
               src: result.url,
@@ -600,7 +1167,7 @@ export default function AdminPages() {
         const file = files[i];
         if (!file.type.startsWith('image/')) continue;
         try {
-          const result = await addMedia(galleryZone.id, file, 'image');
+          const result = await uploadImageDirect(file);
           if (result?.success && result.url) {
             newPhotos.push({
               url: result.url,
@@ -620,7 +1187,7 @@ export default function AdminPages() {
         const file = files[i];
         if (!file.type.startsWith('image/')) continue;
         try {
-          const result = await addMedia(galleryZone.id, file, 'image');
+          const result = await uploadImageDirect(file);
           if (result?.success && result.url) {
             newPhotos.push({
               url: result.url,
@@ -661,6 +1228,20 @@ export default function AdminPages() {
       updates.push({ section: 'home', key: 'polaroids', value: JSON.stringify(polaroids) });
       updates.push({ section: 'home', key: 'offerings', value: JSON.stringify(offerings) });
       updates.push({ section: 'home', key: 'amenities', value: JSON.stringify(amenities) });
+      updates.push({ section: 'home', key: 'why_choose_items', value: JSON.stringify(whyChooseItems) });
+      updates.push({ section: 'home', key: 'bento_gallery_items', value: JSON.stringify(bentoGalleryItems) });
+      updates.push({ section: 'home', key: 'social_proof_reviews', value: JSON.stringify(socialProofReviews) });
+      // Synchronize with localstorage reviews v2.1 for frontend SocialProofSection
+      try {
+        const seeded = socialProofReviews.map((r, idx) => ({
+          ...r,
+          id: r.id || `REV-${1000 + idx}`,
+          approved: r.approved !== false
+        }));
+        localStorage.setItem("adminReviews_v2_1", JSON.stringify(seeded));
+      } catch (e) {
+        console.error("Localstorage sync error: ", e);
+      }
     } else if (activePageId === 'rooms') {
       updates.push({ section: 'rooms', key: 'rooms_amenities', value: JSON.stringify(roomsAmenities) });
       updates.push({ section: 'rooms', key: 'rooms_reviews', value: JSON.stringify(roomsReviews) });
@@ -924,6 +1505,8 @@ export default function AdminPages() {
                           <ImageUploader label="Card Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
                         </div>
                       )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
                     />
 
                     <SectionToggle label="Offerings Section" checked={visibilities.offerings_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, offerings_visible: v }))} />
@@ -953,7 +1536,65 @@ export default function AdminPages() {
                             <ImageUploader label="Cover Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                           </div>
                         )}
+                        onSave={handleSavePage}
+                        isSaving={isSaving !== null}
                       />
+                    )}
+                    {/* Live Preview: Offerings Stack Cards */}
+                    {visibilities.offerings_visible && (
+                      <div className="mt-4 p-6 bg-[#0A0F0E] border border-[#1C2E2A] rounded-2xl space-y-4">
+                        <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665]" />
+                          Live Preview: Stack Cards
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                          {offerings.filter(o => o.is_visible !== false).map((off, idx) => {
+                            return (
+                              <div
+                                key={idx}
+                                className={`relative p-5 rounded-[1.6rem] border border-[#D8CBB8]/30 shadow-xl flex flex-col md:flex-row gap-5 min-h-[260px] transition-all hover:scale-[1.01] duration-300 ${
+                                  off.bgClass || 'bg-[#0f2822]'
+                                } ${off.textClass || 'text-[#FAF9F5]'}`}
+                              >
+                                {/* Left Details column */}
+                                <div className="flex-1 flex flex-col justify-between text-left font-sans">
+                                  <div>
+                                    <div className="flex justify-between items-start">
+                                      <span className="text-3xl font-serif font-extrabold opacity-20 block leading-none">
+                                        {off.num || `0${idx + 1}`}
+                                      </span>
+                                      <span className="text-[8px] tracking-[0.2em] font-mono uppercase font-bold mt-1 opacity-65 bg-white/10 px-2 py-0.5 rounded block">
+                                        {off.badge || 'OFFERING'}
+                                      </span>
+                                    </div>
+                                    <div className="mt-4 space-y-2">
+                                      <h3 className="text-lg sm:text-xl font-serif font-normal tracking-wide leading-tight">
+                                        {off.title || 'New Offering'}
+                                      </h3>
+                                      <p className="text-xs opacity-90 leading-relaxed font-sans font-light line-clamp-3">
+                                        {off.description}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="border-t border-current/10 pt-3 mt-3 text-[9px] font-mono opacity-60">
+                                    <span>{off.coords || 'N 30° 16\' // E 79° 04\''}</span>
+                                  </div>
+                                </div>
+
+                                {/* Right Visual nesting layout (card inside a card) */}
+                                {off.image && (
+                                  <div className="flex-1 md:w-1/2 p-1.5 bg-white/10 rounded-[1.2rem] border border-white/10 overflow-hidden relative min-h-[140px] md:min-h-0">
+                                    <div className="w-full h-full rounded-[0.9rem] overflow-hidden relative">
+                                      <img src={off.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     )}
 
                     <SectionToggle label="Amenities Section" checked={visibilities.amenities_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, amenities_visible: v }))} />
@@ -976,8 +1617,157 @@ export default function AdminPages() {
                             </div>
                           </div>
                         )}
+                        onSave={handleSavePage}
+                        isSaving={isSaving !== null}
                       />
                     )}
+
+                    {/* Why Choose Us Section */}
+                    <SectionToggle
+                      label="Why Choose Us Section"
+                      checked={visibilities.why_choose_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, why_choose_visible: v }))}
+                      description="Toggle why choose us section on Home page"
+                    />
+                    {visibilities.why_choose_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <TextInputGroup label="Section Tagline" icon={Type} value={formFields.why_choose_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, why_choose_tagline: v }))} />
+                          <TextInputGroup label="Heading Line 1" icon={Type} value={formFields.why_choose_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, why_choose_heading: v }))} />
+                          <TextInputGroup label="Heading Line 2 (Italic)" icon={Type} value={formFields.why_choose_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, why_choose_heading_italic: v }))} />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <TextAreaGroup label="Paragraph 1 Description" value={formFields.why_choose_desc1} onChange={(v) => setFormFields((prev: any) => ({ ...prev, why_choose_desc1: v }))} rows={3} />
+                          <TextAreaGroup label="Paragraph 2 Description" value={formFields.why_choose_desc2} onChange={(v) => setFormFields((prev: any) => ({ ...prev, why_choose_desc2: v }))} rows={3} />
+                        </div>
+                        
+                        <ListEditor
+                          title="Difference Value Cards"
+                          items={whyChooseItems}
+                          onChange={setWhyChooseItems}
+                          createDefaultItem={() => ({ num: '01', category: 'CATEGORY', title: 'Title', desc: 'Description...', icon: 'Compass', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-left">
+                              <TextInputGroup label="Number" icon={Tag} value={item.num} onChange={(v) => updateField('num', v)} />
+                              <TextInputGroup label="Category Label" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
+                              <TextInputGroup label="Card Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                              <TextInputGroup label="Description" icon={Type} value={item.desc} onChange={(v) => updateField('desc', v)} />
+                              <div className="text-left w-full col-span-2">
+                                <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Icon</label>
+                                <select value={item.icon || 'Compass'} onChange={(e) => updateField('icon', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                  {AVAILABLE_ICONS.map(i => <option key={i} value={i} className="bg-[#0D1412]">{i}</option>)}
+                                </select>
+                              </div>
+                            </div>
+                          )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
+                        />
+                      </div>
+                    )}
+
+                    {/* Bento Masonry Gallery Section */}
+                    <SectionToggle
+                      label="Bento Masonry Gallery Section"
+                      checked={visibilities.home_gallery_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, home_gallery_visible: v }))}
+                      description="Toggle bento visual grid gallery on Home page"
+                    />
+                    {visibilities.home_gallery_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <TextInputGroup label="Gallery Badge Tag" icon={Type} value={formFields.home_gallery_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_gallery_badge: v }))} />
+                          <TextInputGroup label="Gallery Heading" icon={Type} value={formFields.home_gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_gallery_heading: v }))} />
+                          <TextInputGroup label="Gallery Description" icon={Type} value={formFields.home_gallery_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_gallery_desc: v }))} />
+                        </div>
+
+                        <ListEditor
+                          title="Bento Grid Images (Exactly 5 items)"
+                          items={bentoGalleryItems}
+                          onChange={setBentoGalleryItems}
+                          createDefaultItem={() => ({ image: '', title: 'Visual Photo', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <TextInputGroup label="Photo Description/Caption" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                              <ImageUploader label="Visual Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
+                            </div>
+                          )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
+                        />
+                      </div>
+                    )}
+
+                    {/* Serene CTA Section */}
+                    <SectionToggle
+                      label="Serene Booking CTA Section"
+                      checked={visibilities.home_cta_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, home_cta_visible: v }))}
+                      description="Toggle footer green serene CTA box on Home page"
+                    />
+                    {visibilities.home_cta_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <TextInputGroup label="CTA Upper Tagline" icon={Type} value={formFields.home_cta_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_badge: v }))} />
+                          <TextInputGroup label="CTA Heading" icon={Type} value={formFields.home_cta_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_heading: v }))} />
+                          <TextInputGroup label="CTA Italic Heading" icon={Type} value={formFields.home_cta_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_heading_italic: v }))} />
+                        </div>
+                        <TextAreaGroup label="CTA Description text" value={formFields.home_cta_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_desc: v }))} rows={2} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <TextInputGroup label="CTA Button Text" icon={Edit3} value={formFields.home_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_btn_text: v }))} />
+                          <TextInputGroup label="CTA Button Link" icon={LinkIcon} value={formFields.home_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, home_cta_btn_link: v }))} />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Social Proof Testimonials Section */}
+                    <SectionToggle
+                      label="Social Proof Reviews Slider Section"
+                      checked={visibilities.social_proof_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, social_proof_visible: v }))}
+                      description="Toggle traveler verified reviews slide uploader"
+                    />
+                    {visibilities.social_proof_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <TextInputGroup label="Slider Tagline badge" icon={Type} value={formFields.social_proof_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, social_proof_tagline: v }))} />
+                          <TextInputGroup label="Slider Heading summary" icon={Type} value={formFields.social_proof_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, social_proof_heading: v }))} />
+                        </div>
+
+                        <ListEditor
+                          title="Verified Guest Testimonials Catalogue"
+                          items={socialProofReviews}
+                          onChange={setSocialProofReviews}
+                          createDefaultItem={() => ({ name: 'New Pilgrim', date: 'May 2026', rating: 5, state: 'State', text: 'Stunning pine sanctuary...', approved: true })}
+                          getItemLabel={(item) => `${item.name} (${item.state})`}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="Pilgrim Guest Name" icon={Type} value={item.name} onChange={(v) => updateField('name', v)} />
+                                <TextInputGroup label="Date of Stay" icon={Clock} value={item.date} onChange={(v) => updateField('date', v)} />
+                                <TextInputGroup label="Guest Origin State" icon={MapPin} value={item.state} onChange={(v) => updateField('state', v)} />
+                                <TextInputGroup label="Rating index (1 to 5)" icon={Tag} value={String(item.rating)} onChange={(v) => updateField('rating', parseInt(v) || 5)} />
+                                <div className="text-left w-full">
+                                  <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Approval Status</label>
+                                  <select value={item.approved !== false ? 'true' : 'false'} onChange={(e) => updateField('approved', e.target.value === 'true')} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                    <option value="true" className="bg-[#0D1412]">Approved & Visible</option>
+                                    <option value="false" className="bg-[#0D1412]">Hidden / Private</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <TextAreaGroup label="Detailed Review Text" value={item.text} onChange={(v) => updateField('text', v)} rows={6} />
+                            </div>
+                          )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
+                        />
+                      </div>
+                    )}
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Home Page Changes" />
                   </div>
                 )}
 
@@ -1007,7 +1797,7 @@ export default function AdminPages() {
                         getItemLabel={(item) => item.title}
                         renderItemEditor={(item, idx, updateField) => (
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                            <TextInputGroup label="Pillar ID (e.g. 01)" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
+                            <TextInputGroup label="Pillar ID" icon={Tag} value={item.id} onChange={(v) => updateField('id', v)} />
                             <TextInputGroup label="Pillar Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
                             <TextInputGroup label="Pillar Description" icon={Type} value={item.desc} onChange={(v) => updateField('desc', v)} />
                             <div className="text-left w-full">
@@ -1018,8 +1808,12 @@ export default function AdminPages() {
                             </div>
                           </div>
                         )}
+                        onSave={handleSavePage}
+                        isSaving={isSaving !== null}
                       />
                     )}
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save About Us Changes" />
                   </div>
                 )}
 
@@ -1060,6 +1854,8 @@ export default function AdminPages() {
                           </div>
                         </div>
                       )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
                     />
 
                     <ListEditor
@@ -1086,7 +1882,11 @@ export default function AdminPages() {
                           <TextAreaGroup label="Review Text" value={item.text} onChange={(v) => updateField('text', v)} rows={4} />
                         </div>
                       )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
                     />
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Rooms Changes" />
                   </div>
                 )}
 
@@ -1154,6 +1954,8 @@ export default function AdminPages() {
                               <ImageUploader label="Illustration Image" currentImage={item.illustration} onImageChange={(p) => updateField('illustration', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1182,7 +1984,39 @@ export default function AdminPages() {
                               <ImageUploader label="Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
+
+                        {/* Live Preview: Dining Polaroid stack */}
+                        {visibilities.dining_polaroids_visible && (
+                          <div className="mt-4 p-6 bg-[#0A0F0E] border border-[#1C2E2A] rounded-2xl space-y-4">
+                            <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665]" />
+                              Live Preview: Dining Polaroid Cards
+                            </div>
+                            <div className="flex flex-wrap gap-6 pt-2">
+                              {diningPolaroids.filter(p => p.is_visible !== false).map((p, idx) => {
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="w-full sm:w-[220px] bg-[#FAF9F5] p-3.5 pb-6 border border-stone-sand/30 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.15)] rounded-md rotate-[-1deg] hover:rotate-0 transition-transform duration-300 flex flex-col justify-between"
+                                  >
+                                    {p.image ? (
+                                      <img src={p.image} alt="" className="w-full aspect-[4/3.5] object-cover rounded border border-stone-sand/20 mb-3" />
+                                    ) : (
+                                      <div className="w-full aspect-[4/3.5] bg-[#0A0F0E] rounded border border-[#1C2E2A] mb-3 flex items-center justify-center text-[#C4A665] text-[10px] uppercase font-mono">No Image</div>
+                                    )}
+                                    <div className="text-left font-serif text-slate-charcoal">
+                                      <span className="text-[9px] uppercase tracking-[0.2em] font-mono font-extrabold text-[#1B4C44] block mb-1">{p.desc || 'GASTRONOMY'}</span>
+                                      <h4 className="text-sm font-medium leading-tight font-serif text-[#2E3438]">{p.title || 'Untitled Card'}</h4>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1222,6 +2056,8 @@ export default function AdminPages() {
                               <ImageUploader label="Ritual Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1295,6 +2131,8 @@ export default function AdminPages() {
                               <TextAreaGroup label="Detailed Expanded Description" value={item.expanded_desc} onChange={(v) => updateField('expanded_desc', v)} rows={3} />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1329,6 +2167,8 @@ export default function AdminPages() {
                               <TextInputGroup label="Category (grains/stews/elixirs)" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1347,6 +2187,8 @@ export default function AdminPages() {
                       <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Footer Notice Warning</div>
                       <TextAreaGroup label="Warning notice content text" value={formFields.dining_footer_warning} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_footer_warning: v }))} rows={2} />
                     </div>
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Dining Changes" />
                   </div>
                 )}
 
@@ -1403,6 +2245,8 @@ export default function AdminPages() {
                             <ImageUploader label="Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
                           </div>
                         )}
+                        onSave={handleSavePage}
+                        isSaving={isSaving !== null}
                       />
                       </div>
                     )}
@@ -1439,6 +2283,8 @@ export default function AdminPages() {
                               <ImageUploader label="Venue Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1475,7 +2321,66 @@ export default function AdminPages() {
                               <ImageUploader label="Offering Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
+
+                        {/* Live Preview: Wedding Offering Stack Cards */}
+                        {visibilities.weddings_offerings_visible && (
+                          <div className="mt-4 p-6 bg-[#0A0F0E] border border-[#1C2E2A] rounded-2xl space-y-4">
+                            <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665]" />
+                              Live Preview: Weddings Stack Cards
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                              {weddingOfferings.filter(o => o.is_visible !== false).map((off, idx) => {
+                                return (
+                                  <div
+                                    key={idx}
+                                    className={`relative p-5 rounded-[1.6rem] border border-[#D8CBB8]/30 shadow-xl flex flex-col md:flex-row gap-5 min-h-[260px] transition-all hover:scale-[1.01] duration-300 ${
+                                      off.bgClass || 'bg-[#0f2822]'
+                                    } ${off.textClass || 'text-[#FAF9F5]'}`}
+                                  >
+                                    {/* Left Details column */}
+                                    <div className="flex-1 flex flex-col justify-between text-left font-sans">
+                                      <div>
+                                        <div className="flex justify-between items-start">
+                                          <span className="text-3xl font-serif font-extrabold opacity-20 block leading-none">
+                                            {off.num || `0${idx + 1}`}
+                                          </span>
+                                          <span className="text-[8px] tracking-[0.2em] font-mono uppercase font-bold mt-1 opacity-65 bg-white/10 px-2 py-0.5 rounded block">
+                                            {off.badge || 'SPECIFICATION'}
+                                          </span>
+                                        </div>
+                                        <div className="mt-4 space-y-2">
+                                          <h3 className="text-lg sm:text-xl font-serif font-normal tracking-wide leading-tight">
+                                            {off.title || 'New Spec'}
+                                          </h3>
+                                          <p className="text-xs opacity-90 leading-relaxed font-sans font-light line-clamp-3">
+                                            {off.description}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="border-t border-current/10 pt-3 mt-3 text-[9px] font-mono opacity-60">
+                                        <span>{off.coords || 'Triyuginarayan Style'}</span>
+                                      </div>
+                                    </div>
+
+                                    {/* Right Visual nesting layout (card inside a card) */}
+                                    {off.image && (
+                                      <div className="flex-1 md:w-1/2 p-1.5 bg-white/10 rounded-[1.2rem] border border-white/10 overflow-hidden relative min-h-[140px] md:min-h-0">
+                                        <div className="w-full h-full rounded-[0.9rem] overflow-hidden relative">
+                                          <img src={off.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1497,6 +2402,8 @@ export default function AdminPages() {
                       </div>
                       <TextInputGroup label="Footnote Text" icon={Type} value={formFields.weddings_cta_footnote} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_footnote: v }))} />
                     </div>
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Weddings Changes" />
                   </div>
                 )}
 
@@ -1542,7 +2449,53 @@ export default function AdminPages() {
                               <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
+
+                        {/* Live Preview: Experience Tour Slides */}
+                        {visibilities.experiences_tour_visible && (
+                          <div className="mt-4 p-6 bg-[#0A0F0E] border border-[#1C2E2A] rounded-2xl space-y-4">
+                            <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665]" />
+                              Live Preview: Experience Tour Slides
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                              {experienceSlides.filter(s => s.is_visible !== false).map((slide, idx) => {
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="relative rounded-2xl overflow-hidden border border-[#1C2E2A]/20 shadow-xl min-h-[360px] flex flex-col justify-end p-6 bg-[#060B0A]"
+                                  >
+                                    {slide.image && (
+                                      <div className="absolute inset-0 z-0">
+                                        <img src={slide.image} alt="" className="w-full h-full object-cover opacity-40" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                                      </div>
+                                    )}
+                                    <div className="relative z-10 space-y-3 text-left">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[9px] font-bold text-[#C4A665] uppercase tracking-widest bg-[#C4A665]/10 border border-[#C4A665]/20 px-2 py-0.5 rounded-md">
+                                          {slide.category || 'WELLNESS'}
+                                        </span>
+                                        {slide.icon && (
+                                          <span className="text-[9px] text-[#FAF9F5]/60 font-mono tracking-widest uppercase">
+                                            // {slide.icon}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div>
+                                        <span className="text-[10px] font-mono text-[#C4A665] tracking-widest block uppercase mb-1">{slide.subtitle}</span>
+                                        <h3 className="text-2xl font-serif font-light text-[#FAF9F5] leading-tight">{slide.title || 'New Activity'}</h3>
+                                      </div>
+                                      <p className="text-xs text-[#FAF9F5]/70 font-sans leading-relaxed line-clamp-4">{slide.description}</p>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1593,6 +2546,8 @@ export default function AdminPages() {
                               <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1610,6 +2565,8 @@ export default function AdminPages() {
                         <TextInputGroup label="Button Link" icon={LinkIcon} value={formFields.experiences_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, experiences_cta_btn_link: v }))} />
                       </div>
                     </div>
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Experiences Changes" />
                   </div>
                 )}
 
@@ -1660,7 +2617,67 @@ export default function AdminPages() {
                               <ImageUploader label="Slide Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
+
+                        {/* Live Preview: Nearby destinations slides */}
+                        {visibilities.nearby_tour_visible && (
+                          <div className="mt-4 p-6 bg-[#0A0F0E] border border-[#1C2E2A] rounded-2xl space-y-4">
+                            <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665]" />
+                              Live Preview: Destination Slides
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                              {nearbySlides.filter(s => s.is_visible !== false).map((slide, idx) => {
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="relative rounded-2xl overflow-hidden border border-[#1C2E2A]/20 shadow-xl min-h-[360px] flex flex-col justify-end p-6 bg-[#060B0A]"
+                                  >
+                                    {slide.image && (
+                                      <div className="absolute inset-0 z-0">
+                                        <img src={slide.image} alt="" className="w-full h-full object-cover opacity-40" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                                      </div>
+                                    )}
+                                    <div className="relative z-10 space-y-3 text-left">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[9px] font-bold text-[#C4A665] uppercase tracking-widest bg-[#C4A665]/10 border border-[#C4A665]/20 px-2 py-0.5 rounded-md">
+                                          {slide.category || 'TREK'}
+                                        </span>
+                                        {slide.icon && (
+                                          <span className="text-[9px] text-[#FAF9F5]/60 font-mono tracking-widest uppercase">
+                                            // {slide.icon}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div>
+                                        <span className="text-[10px] font-mono text-[#C4A665] tracking-widest block uppercase mb-1">{slide.subtitle}</span>
+                                        <h3 className="text-2xl font-serif font-light text-[#FAF9F5] leading-tight">{slide.title || 'New Destination'}</h3>
+                                      </div>
+                                      <p className="text-xs text-[#FAF9F5]/70 font-sans leading-relaxed line-clamp-3 mb-2">{slide.description}</p>
+                                      <div className="grid grid-cols-3 gap-2 border-t border-[#1C2E2A] pt-3 text-[9px] font-mono uppercase text-[#C4A665]/80">
+                                        <div>
+                                          <span className="text-[8px] text-[#FAF9F5]/40 block font-sans">ALTITUDE</span>
+                                          {slide.altitude || 'N/A'}
+                                        </div>
+                                        <div>
+                                          <span className="text-[8px] text-[#FAF9F5]/40 block font-sans">DISTANCE</span>
+                                          {slide.distance || 'N/A'}
+                                        </div>
+                                        <div>
+                                          <span className="text-[8px] text-[#FAF9F5]/40 block font-sans">DURATION</span>
+                                          {slide.duration || 'N/A'}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1711,6 +2728,8 @@ export default function AdminPages() {
                               <TextAreaGroup label="Description" value={item.description} onChange={(v) => updateField('description', v)} />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1753,6 +2772,8 @@ export default function AdminPages() {
                               <ImageUploader label="Scene Image" currentImage={item.url} onImageChange={(p) => updateField('url', p)} aspectRatio="aspect-[4/3] w-full" />
                             </div>
                           )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
                         />
                       </div>
                     )}
@@ -1770,6 +2791,8 @@ export default function AdminPages() {
                         <TextInputGroup label="Button Link" icon={LinkIcon} value={formFields.nearby_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, nearby_cta_btn_link: v }))} />
                       </div>
                     </div>
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Nearby Guide Changes" />
                   </div>
                 )}
 
@@ -1834,7 +2857,11 @@ export default function AdminPages() {
                           <ImageUploader label="Gallery Image" currentImage={item.src} onImageChange={(p) => updateField('src', p)} aspectRatio="aspect-[4/3] w-full" />
                         </div>
                       )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
                     />
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Gallery Changes" />
                   </div>
                 )}
 
@@ -1870,6 +2897,8 @@ export default function AdminPages() {
                         <TextInputGroup label="Inquiry Form Section Title" icon={Type} value={formFields.contact_form_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_form_title: v }))} />
                       </div>
                     )}
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Contact Details" />
                   </div>
                 )}
 
@@ -1890,6 +2919,8 @@ export default function AdminPages() {
                       <TextInputGroup label="Badge Text" icon={Tag} value={formFields.booking_badge} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_badge: v }))} />
                       <TextAreaGroup label="Subheading" value={formFields.booking_subheading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, booking_subheading: v }))} rows={2} />
                     </div>
+
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Booking Settings" />
                   </div>
                 )}
 
@@ -1898,6 +2929,7 @@ export default function AdminPages() {
                   <div className="space-y-4">
                     <TextInputGroup label="Document Title" icon={Type} value={formFields.title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, title: v }))} />
                     <TextAreaGroup label="Document Content Body" value={formFields.content} onChange={(v) => setFormFields((prev: any) => ({ ...prev, content: v }))} rows={18} />
+                    <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Policy Document" />
                   </div>
                 )}
               </div>

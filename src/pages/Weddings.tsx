@@ -13,51 +13,134 @@ interface WeddingOfferingCardProps {
   scrollYProgress: any;
 }
 
-const getWeddingTransformParams = (idx: number) => {
-  if (idx === 0) {
+const getWeddingTransformParams = (idx: number, total: number) => {
+  if (total <= 1) {
     return {
-      inputs:  [0.0, 0.10, 0.33, 1.0],
-      scale:   [1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0],
-      rotate:  [-3.5, -3.5, -12, -12]
+      inputs: [0, 1],
+      scale: [1, 1],
+      y: ["0vh", "0vh"],
+      opacity: [1, 1],
+      rotate: [0, 0],
+      rotateX: [0, 0],
+      z: [0, 0]
     };
   }
-  if (idx === 1) {
-    return {
-      inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 1.0],
-      scale:   [0.93, 0.93, 1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-      rotate:  [3.5, 3.5, 1.0, 1.0, 12, 12]
-    };
+
+  const step = 1.0 / (total - 1);
+  const inputs: number[] = [];
+  const scale: number[] = [];
+  const y: string[] = [];
+  const opacity: number[] = [];
+  const rotate: number[] = [];
+  const rotateX: number[] = [];
+  const z: number[] = [];
+
+  const initialScale = 1.0 - idx * 0.07;
+  const baseRotate = idx % 2 === 0 ? -3.5 - (idx * 0.5) : 3.5 + (idx * 0.5);
+
+  for (let k = 0; k < total - 1; k++) {
+    const start = k * step;
+    inputs.push(start);
+    inputs.push(start + step * 0.3);
+    inputs.push(start + step * 0.9);
   }
-  if (idx === 2) {
-    return {
-      inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 0.70, 0.93, 1.0],
-      scale:   [0.86, 0.86, 0.93, 0.93, 1.0, 1.0, 1.08, 1.08],
-      y:       ["0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "-120vh", "-120vh"],
-      opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-      rotate:  [-4.5, -4.5, -3.5, -3.5, -1.0, -1.0, -12, -12]
-    };
-  }
-  // For idx === 3
+  inputs.push(1.0);
+
+  const uniqueInputs = Array.from(new Set(inputs)).sort((a, b) => a - b);
+  const clampedInputs = uniqueInputs.map(v => Math.max(0, Math.min(1, v)));
+
+  clampedInputs.forEach(progress => {
+    let currentY = "0vh";
+    let currentScale = initialScale;
+    let currentRotate = baseRotate;
+    let currentOpacity = 1.0;
+    let currentRotateX = 0;
+    let currentZ = 0;
+
+    if (idx < total - 1) {
+      const activeStart = idx * step;
+      const slideStart = activeStart + step * 0.3;
+      const slideEnd = activeStart + step * 0.9;
+
+      if (progress <= slideStart) {
+        currentY = "0vh";
+        currentRotate = baseRotate;
+        currentRotateX = 0;
+        currentZ = 0;
+      } else if (progress >= slideEnd) {
+        currentY = "-120vh";
+        currentRotate = idx % 2 === 0 ? -12 : 12;
+        currentRotateX = 25;
+        currentZ = -80;
+      } else {
+        const threshold = slideStart + (slideEnd - slideStart) / 2;
+        currentY = progress <= threshold ? "0vh" : "-120vh";
+        currentRotate = progress <= threshold ? baseRotate : (idx % 2 === 0 ? -12 : 12);
+        const ratio = (progress - slideStart) / (slideEnd - slideStart);
+        currentRotateX = ratio * 25;
+        currentZ = ratio * -80;
+      }
+    } else {
+      currentY = "0vh";
+      currentRotate = baseRotate;
+      currentRotateX = 0;
+      currentZ = 0;
+    }
+
+    let activeOffsetCount = 0;
+    for (let k = 0; k < idx; k++) {
+      const cardSlideEnd = k * step + step * 0.9;
+      if (progress >= cardSlideEnd) {
+        activeOffsetCount++;
+      }
+    }
+    currentScale = initialScale + activeOffsetCount * 0.07;
+
+    if (idx < total - 1) {
+      const activeStart = idx * step;
+      const slideStart = activeStart + step * 0.3;
+      if (progress >= slideStart) {
+        currentScale = 1.08;
+      }
+    }
+
+    // Adjust rotation for underlying cards as top cards fly away
+    if (progress < idx * step) {
+      const currentActiveStep = Math.floor(progress / step);
+      const stepProgress = (progress - currentActiveStep * step) / step;
+      if (stepProgress > 0.3 && stepProgress < 0.9) {
+        currentRotate = baseRotate - (idx - currentActiveStep) * 0.5;
+      }
+    }
+
+    y.push(currentY);
+    scale.push(currentScale);
+    rotate.push(currentRotate);
+    opacity.push(currentOpacity);
+    rotateX.push(currentRotateX);
+    z.push(currentZ);
+  });
+
   return {
-    inputs:  [0.0, 0.10, 0.33, 0.40, 0.63, 0.70, 0.93, 1.0],
-    scale:   [0.79, 0.79, 0.86, 0.86, 0.93, 0.93, 1.0, 1.0],
-    y:       ["0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "0vh", "0vh"],
-    opacity: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-    rotate:  [5.5, 5.5, 4.5, 4.5, 3.0, 3.0, 1.0, 1.0]
+    inputs: clampedInputs,
+    scale,
+    y,
+    opacity,
+    rotate,
+    rotateX,
+    z
   };
 };
 
 function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOfferingCardProps) {
-  const params = getWeddingTransformParams(idx);
+  const params = getWeddingTransformParams(idx, total);
   
   const scale = useTransform(scrollYProgress, params.inputs, params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotate = useTransform(scrollYProgress, params.inputs, params.rotate);
+  const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
+  const z = useTransform(scrollYProgress, params.inputs, params.z);
   
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.0]);
 
@@ -68,6 +151,9 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOffe
         y,
         opacity,
         rotate,
+        rotateX,
+        z,
+        transformOrigin: "bottom center",
         zIndex: total - idx,
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
@@ -129,9 +215,6 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress }: WeddingOffe
 export default function Weddings() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
   const { getValue, loading, content } = useContent();
-
-  // Prevent flash of fallback text while CMS content loads
-  if (loading && content.length === 0) return <PageLoader />;
 
   const weddingsHeading = getValue('weddings', 'weddings_heading', 'Destination Weddings');
   const weddingsSubheading = getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas');
@@ -322,6 +405,7 @@ export default function Weddings() {
 
   return (
     <div className="bg-[#FAF9F5] text-slate-charcoal pb-24 min-h-screen font-sans antialiased">
+      {loading && content.length === 0 && <PageLoader />}
       
       {/* 1. EDITORIAL HERO PANEL */}
       {heroVisible && (
@@ -640,7 +724,11 @@ export default function Weddings() {
 
       {/* 5. Scroll Stack Specifications Section */}
       {offeringsVisible && visibleOfferings.length > 0 && (
-        <section ref={weddingSpecsRef} className="relative h-[380vh] bg-[#FAF9F5]">
+        <section 
+          ref={weddingSpecsRef} 
+          className="relative bg-[#FAF9F5]"
+          style={{ height: `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
+        >
           <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
             <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
               
@@ -656,7 +744,7 @@ export default function Weddings() {
                 </p>
               </div>
 
-              <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]">
+              <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
                 {visibleOfferings.map((offer, idx) => (
                   <WeddingOfferingCard 
                     key={offer.num} 
