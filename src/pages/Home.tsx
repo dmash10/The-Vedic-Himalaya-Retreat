@@ -47,13 +47,10 @@ const getTransformParams = (idx: number, total: number) => {
 
   const initialScale = 1.0 - idx * 0.07;
 
-  for (let k = 0; k < total - 1; k++) {
-    const start = k * step;
-    inputs.push(start);
-    inputs.push(start + step * 0.3);
-    inputs.push(start + step * 0.9);
+  // Align keyframe inputs directly on active step boundaries (eliminating empty gap scroll zones)
+  for (let k = 0; k <= total - 1; k++) {
+    inputs.push(k * step);
   }
-  inputs.push(1.0);
 
   const uniqueInputs = Array.from(new Set(inputs)).sort((a, b) => a - b);
   const clampedInputs = uniqueInputs.map(v => Math.max(0, Math.min(1, v)));
@@ -65,11 +62,10 @@ const getTransformParams = (idx: number, total: number) => {
     let currentRotateX = 0;
     let currentZ = 0;
 
-    // Smoothly calculate Y translation, 3D rotation, and 3D Z translation
+    // Y, rotateX, and Z translate scroll calculations
     if (idx < total - 1) {
-      const activeStart = idx * step;
-      const slideStart = activeStart + step * 0.3;
-      const slideEnd = activeStart + step * 0.9;
+      const slideStart = idx * step;
+      const slideEnd = (idx + 1) * step;
 
       if (progress <= slideStart) {
         currentY = "0vh";
@@ -94,8 +90,8 @@ const getTransformParams = (idx: number, total: number) => {
     // Smoothly calculate scale changes from behind cards sliding away
     let activeOffsetScale = 0;
     for (let k = 0; k < idx; k++) {
-      const cardSlideStart = k * step + step * 0.3;
-      const cardSlideEnd = k * step + step * 0.9;
+      const cardSlideStart = k * step;
+      const cardSlideEnd = (k + 1) * step;
       if (progress <= cardSlideStart) {
         // no contribution
       } else if (progress >= cardSlideEnd) {
@@ -109,9 +105,8 @@ const getTransformParams = (idx: number, total: number) => {
 
     // Smoothly calculate scale change when this card itself slides away
     if (idx < total - 1) {
-      const activeStart = idx * step;
-      const slideStart = activeStart + step * 0.3;
-      const slideEnd = activeStart + step * 0.9;
+      const slideStart = idx * step;
+      const slideEnd = (idx + 1) * step;
       if (progress > slideStart && progress < slideEnd) {
         const ratio = (progress - slideStart) / (slideEnd - slideStart);
         currentScale = 1.0 + ratio * 0.08;
@@ -143,8 +138,8 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
   const scale = useTransform(scrollYProgress, params.inputs, isMobile ? params.scale.map(() => 1.0 - idx * 0.04) : params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
-  const rotateX = useTransform(scrollYProgress, params.inputs, isMobile ? params.rotateX.map(() => 0) : params.rotateX);
-  const z = useTransform(scrollYProgress, params.inputs, isMobile ? params.z.map(() => 0) : params.z);
+  const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
+  const z = useTransform(scrollYProgress, params.inputs, params.z);
   
   const imageScale = useTransform(scrollYProgress, [0, 1], isMobile ? [1.0, 1.0] : [1.1, 1.0]);
 
@@ -160,8 +155,8 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
         zIndex: total - idx,
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
-        transformStyle: isMobile ? "flat" : "preserve-3d",
-        WebkitTransformStyle: isMobile ? "flat" : "preserve-3d",
+        transformStyle: "preserve-3d",
+        WebkitTransformStyle: "preserve-3d",
         willChange: "transform, opacity"
       }}
       className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
@@ -687,7 +682,7 @@ export default function Home() {
                {/* Inline declared data list representing top-tier experience metrics */}
               {(() => {
                 return (
-                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: isMobile ? undefined : "800px" }}>
+                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
                     {visibleOfferings.map((offer, idx) => (
                       <OfferingCard 
                         key={offer.num} 
