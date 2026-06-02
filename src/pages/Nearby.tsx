@@ -556,7 +556,7 @@ export default function Nearby() {
 
             {/* Curated Bento Grid of Destinations identical to Experience design */}
             {slides.length > 0 && (() => {
-              const bentoOrder = [0, 2, 3, 5, 4];
+              const bentoOrder = [0, 2, 3, 5, 4, 1];
               const mappedBentoItems = bentoOrder.map((slideIdx) => {
                 const slide = slides[slideIdx];
                 if (!slide) return null;

@@ -39,7 +39,7 @@ export default function About() {
     aboutPillars = [
       { id: "01", title: "NATURE INTEGRATION", desc: "Surrounded by aromatic cedar and organic farms.", icon: "Trees", is_visible: true },
       { id: "02", title: "SACRED COMFORT", desc: "Vaastu-aligned pinewood master log cabins.", icon: "Compass", is_visible: true },
-      { id: "03", title: "GARHWALI FOOD", desc: "Timely served authentic organic sattvik cuisine.", icon: "Utensils", is_visible: true },
+      { id: "03", title: "GARHWALI FOOD", desc: "Timely served authentic organic vegetarian cuisine.", icon: "Utensils", is_visible: true },
       { id: "04", title: "YATRA SHELTER", desc: "Premium basecamp for your sacred Kedarnath pilgrimage.", icon: "Mountain", is_visible: true }
     ];
   }
@@ -147,7 +147,7 @@ export default function About() {
           />
           <div className="absolute inset-0 bg-[#0B1714]/20 mix-blend-overlay pointer-events-none" />
           <div className="absolute bottom-0 inset-x-0 p-6 md:p-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
-            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">Semi Guptkashi, Uttarakhand</span>
+            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">Village Dewar, Guptkashi, Uttarakhand</span>
             <h4 className="text-xl md:text-2xl font-heading font-medium tracking-tight">Facing the Divine Peaks of Chaukhamba</h4>
           </div>
         </div>

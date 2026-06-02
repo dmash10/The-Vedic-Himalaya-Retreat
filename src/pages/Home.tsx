@@ -7,6 +7,7 @@ import { ArrowRight, Maximize2, BedDouble, Bath, Mountain, Flame, Sparkles, Comp
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useRooms } from "@/hooks/useRooms";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import PageLoader from "@/components/PageLoader";
 import BentoGallery from "@/components/BentoGallery";
 
@@ -26,11 +27,12 @@ interface OfferingCardProps {
 }
 
 // Custom scroll-based scale-up and slide transform keyframe generator (freestyle, zero tilt, zero opacity fade)
-const getTransformParams = (idx: number, total: number) => {
+const getTransformParams = (idx: number, total: number, isMobile: boolean) => {
   if (total <= 1) {
     return {
       inputs: [0, 1],
       scale: [1, 1],
+      x: ["0vw", "0vw"],
       y: ["0vh", "0vh"],
       opacity: [1, 1],
       rotateX: [0, 0],
@@ -42,13 +44,14 @@ const getTransformParams = (idx: number, total: number) => {
   const step = 1.0 / (total - 1);
   const inputs: number[] = [];
   const scale: number[] = [];
+  const x: string[] = [];
   const y: string[] = [];
   const opacity: number[] = [];
   const rotateX: number[] = [];
   const z: number[] = [];
   const visibility: string[] = [];
 
-  const initialScale = 1.0 - idx * 0.07;
+  const initialScale = isMobile ? 1.0 - idx * 0.03 : 1.0 - idx * 0.07;
 
   // Align keyframe inputs directly on active step boundaries and include intermediate points for opacity fade
   for (let k = 0; k <= total - 1; k++) {
@@ -62,6 +65,7 @@ const getTransformParams = (idx: number, total: number) => {
   const clampedInputs = uniqueInputs.map(v => Math.max(0, Math.min(1, v)));
 
   clampedInputs.forEach(progress => {
+    let currentX = "0vw";
     let currentY = "0vh";
     let currentScale = initialScale;
     let currentOpacity = 1.0;
@@ -69,77 +73,71 @@ const getTransformParams = (idx: number, total: number) => {
     let currentZ = 0;
     let currentVisibility = "visible";
 
-    // Y, rotateX, and Z translate scroll calculations
-    if (idx < total - 1) {
-      const slideStart = idx * step;
-      const slideEnd = (idx + 1) * step;
+    if (isMobile) {
+      // Layout side-by-side in a horizontal row and translate the track dynamically with vertical scroll progress
+      currentX = `${(idx - progress * (total - 1)) * 105}%`;
+      currentY = "0vh";
+      currentScale = 1.0;
+      currentOpacity = 1.0;
+      currentRotateX = 0;
+      currentZ = 0;
+      currentVisibility = "visible";
+    } else {
+      // Keep scale at 1.0 at all times on desktop to prevent texture scaling blur
+      currentScale = 1.0;
 
-      if (progress <= slideStart) {
-        currentY = "0vh";
+      // Desktop Y, rotateX, and Z translate scroll calculations
+      if (idx < total - 1) {
+        const slideStart = idx * step;
+        const slideEnd = (idx + 1) * step;
+
+        if (progress <= slideStart) {
+          // Flat 2D stacked position: stays perfectly static and stable, shifting downwards to keep header clear
+          currentX = "0vw";
+          currentY = `${idx * 2.2}vh`;
+          currentRotateX = 0;
+          currentZ = 0;
+          currentOpacity = 1.0;
+          currentVisibility = "visible";
+        } else if (progress >= slideEnd) {
+          currentX = "0vw";
+          currentY = "-120vh";
+          currentRotateX = 25;
+          currentZ = -80;
+          currentOpacity = 0.0;
+          currentVisibility = "hidden";
+        } else {
+          // Active slide-away transition: slides away smoothly starting directly from its downward stack position
+          const ratio = (progress - slideStart) / (slideEnd - slideStart);
+          const startY = idx * 2.2;
+          currentX = "0vw";
+          currentY = `${startY + ratio * (-120 - startY)}vh`;
+          currentRotateX = ratio * 25;
+          currentZ = ratio * -80;
+          
+          // Keep card fully visible while moving, fade out only at the very end of transition
+          if (ratio < 0.85) {
+            currentOpacity = 1.0;
+            currentVisibility = "visible";
+          } else {
+            currentOpacity = 1.0 - (ratio - 0.85) / 0.15;
+            currentVisibility = "visible";
+          }
+        }
+      } else {
+        // Last card in the stack stays perfectly static at its downward stack position
+        currentX = "0vw";
+        currentY = `${idx * 2.2}vh`;
         currentRotateX = 0;
         currentZ = 0;
         currentOpacity = 1.0;
         currentVisibility = "visible";
-      } else if (progress >= slideEnd) {
-        currentY = "-120vh";
-        currentRotateX = 25;
-        currentZ = -80;
-        currentOpacity = 0.0;
-        currentVisibility = "hidden";
-      } else {
-        const ratio = (progress - slideStart) / (slideEnd - slideStart);
-        currentY = `${ratio * -120}vh`;
-        currentRotateX = ratio * 25;
-        currentZ = ratio * -80;
-        
-        // Keep card fully visible while moving, fade out only at the very end of transition
-        if (ratio < 0.85) {
-          currentOpacity = 1.0;
-          currentVisibility = "visible";
-        } else {
-          // Linear transition from 1.0 to 0.0 in the last 15% of progress
-          currentOpacity = 1.0 - (ratio - 0.85) / 0.15;
-          currentVisibility = "visible";
-        }
-      }
-    } else {
-      currentY = "0vh";
-      currentRotateX = 0;
-      currentZ = 0;
-      currentOpacity = 1.0;
-      currentVisibility = "visible";
-    }
-
-    // Smoothly calculate scale changes from behind cards sliding away
-    let activeOffsetScale = 0;
-    for (let k = 0; k < idx; k++) {
-      const cardSlideStart = k * step;
-      const cardSlideEnd = (k + 1) * step;
-      if (progress <= cardSlideStart) {
-        // no contribution
-      } else if (progress >= cardSlideEnd) {
-        activeOffsetScale += 0.07;
-      } else {
-        const ratio = (progress - cardSlideStart) / (cardSlideEnd - cardSlideStart);
-        activeOffsetScale += ratio * 0.07;
-      }
-    }
-    currentScale = initialScale + activeOffsetScale;
-
-    // Smoothly calculate scale change when this card itself slides away
-    if (idx < total - 1) {
-      const slideStart = idx * step;
-      const slideEnd = (idx + 1) * step;
-      if (progress > slideStart && progress < slideEnd) {
-        const ratio = (progress - slideStart) / (slideEnd - slideStart);
-        currentScale = 1.0 + ratio * 0.08;
-      } else if (progress >= slideEnd) {
-        currentScale = 1.08;
       }
     }
 
-    y.push(currentY);
     scale.push(currentScale);
+    x.push(currentX);
+    y.push(currentY);
     opacity.push(currentOpacity);
     rotateX.push(currentRotateX);
     z.push(currentZ);
@@ -149,6 +147,7 @@ const getTransformParams = (idx: number, total: number) => {
   return {
     inputs: clampedInputs,
     scale,
+    x,
     y,
     opacity,
     rotateX,
@@ -158,9 +157,10 @@ const getTransformParams = (idx: number, total: number) => {
 };
 
 function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: OfferingCardProps) {
-  const params = getTransformParams(idx, total);
+  const params = getTransformParams(idx, total, isMobile);
   
-  const scale = useTransform(scrollYProgress, params.inputs, isMobile ? params.scale.map(() => 1.0 - idx * 0.04) : params.scale);
+  const scale = useTransform(scrollYProgress, params.inputs, params.scale);
+  const x = useTransform(scrollYProgress, params.inputs, params.x);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotateX = useTransform(scrollYProgress, params.inputs, params.rotateX);
@@ -171,6 +171,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
     <motion.div 
       style={{ 
         scale, 
+        x,
         y,
         opacity,
         rotateX,
@@ -178,16 +179,19 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
         visibility,
         transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
-        backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden",
-        transformStyle: "preserve-3d",
-        WebkitTransformStyle: "preserve-3d",
-        willChange: "transform, opacity"
+        // Desktop-specific anti-blur optimizations
+        willChange: isMobile ? "transform, opacity" : "auto",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+        WebkitBackfaceVisibility: isMobile ? "visible" : "hidden",
+        backfaceVisibility: isMobile ? "visible" : "hidden",
+        WebkitFontSmoothing: isMobile ? "antialiased" : "subpixel-antialiased",
+        MozOsxFontSmoothing: isMobile ? "grayscale" : "auto",
+        outline: "1px solid transparent",
       }}
-      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
+      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
     >
-      {/* Subtle glamorous glint texture overlay for light ray highlights */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
+      {/* Subtle glamorous glint texture overlay for light ray highlights - rounded corners added to match clipping */}
+      <div className="absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
 
       {/* Left Details column with big design aesthetics and reduced, readable, high-end copy */}
       <div className="flex-1 md:w-1/2 flex flex-col justify-between py-1 xs:py-2 md:py-3 px-1 md:px-3 z-10 text-left">
@@ -210,7 +214,7 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
               {offer.title}
             </h3>
           </div>
-          <p className="text-[11px] sm:text-sm opacity-90 leading-relaxed font-sans font-light max-w-sm">
+          <p className="text-[11px] sm:text-sm leading-relaxed font-sans font-normal max-w-sm">
             {offer.description}
           </p>
         </div>
@@ -291,12 +295,13 @@ export default function Home() {
 
   const { content, loading, getValue } = useContent();
   const { rooms } = useRooms();
+  const { settings } = useSiteSettings();
 
 
   const heroTitleLine1 = getValue('home', 'hero_line1', 'Peace in the');
   const heroTitleLine2 = getValue('home', 'hero_line2', 'Pines');
-  const heroSubtitle = getValue('home', 'hero_subtitle', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi');
-  const heroImage = getValue('home', 'hero_image', 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=2000');
+  const heroSubtitle = getValue('home', 'hero_subtitle', 'Village Dewar, Guptkashi, Kedarnath Route');
+  const heroImage = getValue('home', 'hero_image', '');
   const heroCta = getValue('home', 'hero_cta', 'Reserve Your Stay');
   const heroCtaLink = getValue('home', 'hero_cta_link', '/rooms');
 
@@ -341,9 +346,9 @@ export default function Home() {
   if (homePolaroids.length === 0) {
     homePolaroids = [
       { id: 0, image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800", title: "Double Pine Suite", desc: "ELEVATED ALPINE LIVING", is_visible: true },
-      { id: 1, image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", title: "Monastic Ease", desc: "COZY HEARTH COMPANIONSHIP", is_visible: true },
+      { id: 1, image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", title: "Sanctuary Comforts", desc: "COZY HEARTH COMPANIONSHIP", is_visible: true },
       { id: 2, image: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800", title: "Chaukhamba Peak", desc: "MISTY GOLDEN RANGE VISTAS", is_visible: true },
-      { id: 3, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", title: "Hearthside Breads", desc: "ORGANIC BAKED SATTVIK SELECTIONS", is_visible: true }
+      { id: 3, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", title: "Hearthside Breads", desc: "ORGANIC FRESH BREADS", is_visible: true }
     ];
   }
   const visiblePolaroids = homePolaroids.filter(item => item.is_visible !== false);
@@ -392,7 +397,7 @@ export default function Home() {
   const whyChooseHeading = getValue('home', 'why_choose_heading', 'Why Guests Choose');
   const whyChooseHeadingItalic = getValue('home', 'why_choose_heading_italic', 'Our Sanctuary');
   const whyChooseDesc1 = getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.');
-  const whyChooseDesc2 = getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.");
+  const whyChooseDesc2 = getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Village Dewar, Guptkashi, Kedarnath Route. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.");
 
   const whyChooseItemsStr = getValue('home', 'why_choose_items', '');
   let whyChooseItems: any[] = [];
@@ -405,7 +410,7 @@ export default function Home() {
     whyChooseItems = [
       { num: "01", category: "CALM SILENCE", title: "Out of the Chaos", desc: "Located high above the busy transit highway. Breathe in the pristine, quiet spruce-and-pine mountain slopes, completely free of diesel horns and traffic engines.", icon: "Compass" },
       { num: "02", category: "ALPINE COMFORT", title: "Comfortable Cozy Cabins", desc: "Escape the freezing high-altitude winds. Unwind in draft-protected pine suites with private hot water geysers, mountain views, and thick premium winter duvets.", icon: "BedDouble" },
-      { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.", icon: "Wind" },
+      { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Village Dewar's scenic ridge.", icon: "Wind" },
       { num: "04", category: "CARING HOSPITALITY", title: "Devoted Himalayan Sewa", desc: "Genuine, humble local team serving selfless mountain devotion—brewing warming morning herbal teas & coordinating peaceful local pilgrimage routes like family.", icon: "Users" }
     ];
   }
@@ -428,7 +433,8 @@ export default function Home() {
       { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Wedding" },
       { image: "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800", title: "Pines" },
       { image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800", title: "Cafe" },
-      { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" }
+      { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" },
+      { image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=800", title: "Lounge" }
     ];
   }
 
@@ -477,14 +483,16 @@ export default function Home() {
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
           <motion.div 
             style={{ y: y1 }}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full bg-[#1E2229]"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#1E2229] via-black/15 to-[#1E2229]/40 z-10" />
-            <img 
-              src={heroImage} 
-              alt="Foggy Himalayan Mountains" 
-              className="w-full h-full object-cover object-center scale-105"
-            />
+            {heroImage && (
+              <img 
+                src={heroImage} 
+                alt="Foggy Himalayan Mountains" 
+                className="w-full h-full object-cover object-center scale-105"
+              />
+            )}
           </motion.div>
           
           <motion.div 
@@ -518,25 +526,24 @@ export default function Home() {
           <div className="absolute inset-y-0 left-0 w-24 md:w-32 bg-gradient-to-r from-[#FAF9F5] to-transparent z-10 pointer-events-none opacity-80" />
           <div className="absolute inset-y-0 right-0 w-24 md:w-32 bg-gradient-to-l from-[#FAF9F5] to-transparent z-10 pointer-events-none opacity-80" />
           
-          <div className="flex w-max">
-            <motion.div 
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: 32 }}
-              className="flex whitespace-nowrap gap-12 md:gap-16 font-heading uppercase tracking-[0.1em] text-lg md:text-2xl text-[#2D3E35] font-medium items-center pr-12 md:pr-16 select-none"
-            >
+          <div className="overflow-hidden w-full select-none relative">
+            <div className="animate-marquee gap-12 md:gap-16 items-center">
               {Array(2).fill(null).map((_, groupIndex) => (
-                <span key={groupIndex} className="flex items-center gap-12 md:gap-16">
+                <div 
+                  key={groupIndex} 
+                  className="flex items-center gap-12 md:gap-16 font-heading uppercase tracking-[0.1em] text-lg md:text-2xl text-[#2D3E35] font-medium"
+                >
                   {marqueeItems.map((item, i) => (
-                    <span key={i} className="flex items-center gap-12 md:gap-16">
+                    <div key={i} className="flex items-center gap-12 md:gap-16">
                       <span>{item}</span>
                       <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-8 md:h-8 fill-[#B32D2D] text-[#B32D2D] shrink-0" stroke="none">
                         <path d="M12 2L15.3 8.7L22 12L15.3 15.3L12 22L8.7 15.3L2 12L8.7 8.7Z" />
                       </svg>
-                    </span>
+                    </div>
                   ))}
-                </span>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
       )}
@@ -701,48 +708,125 @@ export default function Home() {
         <section 
           ref={offeringsSectionRef} 
           className="relative bg-[#FAF9F5]"
-          style={{ height: `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
+          style={{ height: isMobile ? "auto" : `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
         >
-          <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
-            <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
-              
-              <div className="text-center pt-20 xs:pt-24 sm:pt-28 md:pt-2 mb-6 md:mb-12 max-w-2xl mx-auto space-y-2.5 shrink-0">
+          {isMobile ? (
+            // Mobile Native Horizontal Carousel
+            <div className="pt-16 pb-8 px-6 relative z-10 w-full overflow-hidden">
+              <div className="text-center mb-8 max-w-2xl mx-auto space-y-2 shrink-0">
                 <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
                   Curated Himalayan Paths
                 </span>
-                <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading text-slate-charcoal tracking-tight font-light leading-none">
+                <h2 className="text-3xl sm:text-4xl font-heading text-slate-charcoal tracking-tight font-light leading-none">
                   Signature <span className="italic font-serif text-[#1B4C44] font-normal">Offerings</span>
                 </h2>
-                <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
+                <p className="text-[10px] text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
                   Sacred Retreats & High-Altitude Sanctuary Bases
                 </p>
               </div>
 
-               {/* Inline declared data list representing top-tier experience metrics */}
-              {(() => {
-                return (
-                  <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
-                    {visibleOfferings.map((offer, idx) => (
-                      <OfferingCard 
-                        key={offer.num} 
-                        offer={offer} 
-                        idx={idx} 
-                        total={visibleOfferings.length} 
-                        scrollYProgress={offeringsScroll}
-                        isMobile={isMobile}
-                      />
-                    ))}
-                  </div>
-                );
-              })()}
+              {/* Native Horizontal Scroll Row */}
+              <div className="flex flex-row overflow-x-auto gap-4 snap-x snap-mandatory no-scrollbar px-6 -mx-6 pb-6 pt-2 select-none -webkit-overflow-scrolling-touch">
+                {visibleOfferings.map((offer) => (
+                  <div
+                    key={offer.num}
+                    className={`relative w-[85vw] max-w-[340px] h-[380px] xs:h-[350px] shrink-0 snap-center rounded-[1.6rem] border border-[#D8CBB8]/30 shadow-md overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col p-4.5 gap-3.5`}
+                  >
+                    {/* Subtle glamorous glint texture overlay for light ray highlights */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
 
+                    {/* Top row with number and badge */}
+                    <div className="flex justify-between items-start z-10">
+                      <span className="text-2xl font-serif font-extrabold tracking-tight opacity-20 block leading-none">
+                        {offer.num}
+                      </span>
+                      <span className="text-[8px] tracking-[0.2em] font-mono uppercase font-bold opacity-65 block mt-0.5">
+                        {offer.badge}
+                      </span>
+                    </div>
+
+                    {/* Middle title and description */}
+                    <div className="space-y-1.5 z-10 text-left py-1">
+                      <div className="flex items-center gap-2">
+                        {offer.icon && (
+                          <DynamicIcon name={offer.icon} className="h-4.5 w-4.5 text-[#A88C52] shrink-0" />
+                        )}
+                        <h3 className="text-base font-serif font-normal tracking-wide leading-tight">
+                          {offer.title}
+                        </h3>
+                      </div>
+                      <p className="text-[10.5px] opacity-90 leading-relaxed font-sans font-light">
+                        {offer.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom image illustration */}
+                    <div className="flex-1 p-1 bg-white/10 rounded-[1.1rem] border border-white/10 overflow-hidden relative w-full">
+                      <div className="w-full h-full rounded-[0.8rem] overflow-hidden relative">
+                        <img 
+                          src={offer.image} 
+                          alt={offer.title} 
+                          className="absolute inset-0 w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Swipe Indication */}
+              <div className="flex items-center justify-center gap-2 mt-5 text-[11px] font-bold tracking-[0.25em] text-[#1B4C44] font-heading select-none">
+                <span className="uppercase opacity-90">Swipe to explore</span>
+                <motion.div 
+                  animate={{ x: [0, 8, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                  className="flex items-center text-[#A88C52]"
+                >
+                  <ChevronRight size={14} className="stroke-[3]" />
+                  <ChevronRight size={14} className="-ml-2 stroke-[3] opacity-60" />
+                </motion.div>
+              </div>
             </div>
-          </div>
+          ) : (
+            // Desktop Sticky Interactive Vertical Stack Section
+            <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
+              <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
+                
+                <div className="text-center pt-20 xs:pt-24 sm:pt-28 md:pt-2 mb-6 md:mb-12 max-w-2xl mx-auto space-y-2.5 shrink-0">
+                  <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
+                    Curated Himalayan Paths
+                  </span>
+                  <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading text-slate-charcoal tracking-tight font-light leading-none">
+                    Signature <span className="italic font-serif text-[#1B4C44] font-normal">Offerings</span>
+                  </h2>
+                  <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
+                    Sacred Retreats & High-Altitude Sanctuary Bases
+                  </p>
+                </div>
+
+                <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
+                  {visibleOfferings.map((offer, idx) => (
+                    <OfferingCard 
+                      key={offer.num} 
+                      offer={offer} 
+                      idx={idx} 
+                      total={visibleOfferings.length} 
+                      scrollYProgress={offeringsScroll}
+                      isMobile={isMobile}
+                    />
+                  ))}
+                </div>
+
+              </div>
+            </div>
+          )}
         </section>
       )}
 
       {/* Aesthetic Center CTA Link - Scrolls up naturally right after the signature offerings card stack completes */}
-      <div className="bg-[#FAF9F5] py-16 border-b border-[#D8CBB8]/15 flex flex-col items-center justify-center text-center px-6 relative z-10">
+      <div className="bg-[#FAF9F5] py-8 md:py-16 border-b border-[#D8CBB8]/15 flex flex-col items-center justify-center text-center px-6 relative z-10">
         <p className="text-[9px] uppercase tracking-[0.2em] text-[#A88C52] font-mono mb-4">Experience More of Our Sacred Sanctuary</p>
         <Link 
           to="/experiences" 
@@ -755,10 +839,10 @@ export default function Home() {
 
       {/* Premium Resort Aesthetic Amenities Section (Simple, compact 4-column balanced grid) */}
       {amenitiesVisible && (
-        <section className="py-20 bg-[#FAF9F5] border-b border-[#D8CBB8]/20 overflow-hidden">
+        <section className="py-12 md:py-20 bg-[#FAF9F5] border-b border-[#D8CBB8]/20 overflow-hidden">
           <div className="container mx-auto px-6 max-w-6xl">
             
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <div className="text-center max-w-2xl mx-auto mb-10 md:mb-16 space-y-3">
               <span className="text-[10px] uppercase tracking-[0.25em] font-extrabold text-[#A88C52] bg-[#FAF9F5] border border-[#D8CBB8]/40 px-4 py-1.5 rounded-full inline-block">
                 Amenities
               </span>
@@ -893,8 +977,14 @@ export default function Home() {
                 <div className="flex flex-col">
                   <span className="text-[7.5px] sm:text-[9px] uppercase tracking-wider font-bold text-slate-charcoal/55 leading-none mb-0.5">Rate</span>
                   <span className="font-heading font-medium text-base sm:text-2xl text-slate-charcoal flex items-baseline gap-0.5 sm:gap-1">
-                    ₹{roomData.real_price?.toLocaleString('en-IN') || '11,500'}
-                    <span className="text-[10px] sm:text-xs text-slate-charcoal/50 font-sans font-normal italic">/night</span>
+                    {settings.show_prices ? (
+                      <>
+                        ₹{roomData.real_price?.toLocaleString('en-IN') || '11,500'}
+                        <span className="text-[10px] sm:text-xs text-slate-charcoal/50 font-sans font-normal italic">/night</span>
+                      </>
+                    ) : (
+                      <span className="text-xs sm:text-sm font-heading font-bold text-deep-teal uppercase tracking-wider">Pricing on Request</span>
+                    )}
                   </span>
                 </div>
                 <Link to="/rooms">

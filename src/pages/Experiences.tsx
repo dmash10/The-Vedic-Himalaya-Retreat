@@ -40,11 +40,11 @@ export default function Experiences() {
   const experiencesScenesTagline = getValue('experiences', 'experiences_scenes_tagline', 'RETREAT ARCHIVE');
   const experiencesScenesHeading = getValue('experiences', 'experiences_scenes_heading', 'Retreat');
   const experiencesScenesHeadingItalic = getValue('experiences', 'experiences_scenes_heading_italic', 'Scenes');
-  const experiencesScenesDesc = getValue('experiences', 'experiences_scenes_desc', 'Real photographic glances of our pinewood interiors, high-altitude yoga shala, Sattvik mountain dining, and misty cedar surroundings. Click any image to expand.');
+  const experiencesScenesDesc = getValue('experiences', 'experiences_scenes_desc', 'Real photographic glances of our pinewood interiors, high-altitude yoga shala, healthy vegetarian dining, and misty cedar surroundings. Click any image to expand.');
 
   const experiencesCtaBadge = getValue('experiences', 'experiences_cta_badge', 'Plan Your Trip');
   const experiencesCtaHeading = getValue('experiences', 'experiences_cta_heading', 'Book Your');
-  const experiencesCtaHeadingItalic = getValue('experiences', 'experiences_cta_heading_italic', 'Vedic Stay');
+  const experiencesCtaHeadingItalic = getValue('experiences', 'experiences_cta_heading_italic', 'Sanctuary Stay');
   const experiencesCtaDesc = getValue('experiences', 'experiences_cta_desc', 'Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.');
   const experiencesCtaBtnText = getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation');
   const experiencesCtaBtnLink = getValue('experiences', 'experiences_cta_btn_link', '/rooms');
@@ -102,6 +102,15 @@ export default function Experiences() {
         description: "Relax in our open-air courtyard around a slow-burning pinewood fire. Drink hot ginger tea alongside fellow travelers under clear night vistas.",
         image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=2000",
         icon: "Flame",
+      },
+      {
+        id: "cooking",
+        category: "CULINARY",
+        title: "Traditional Cooking Class",
+        subtitle: "Learn local food preparation",
+        description: "Discover the principles of Ayurvedic nutrition and healthy cooking. Learn how to cook with clay pots, ironware, and locally-sourced terraced ingredients.",
+        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=2000",
+        icon: "Utensils",
       }
     ];
   }
@@ -123,7 +132,7 @@ export default function Experiences() {
       },
       {
         url: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200",
-        caption: "Hot House-Sourced Organic Sattvik Lunch"
+        caption: "Hot House-Sourced Organic Vegetarian Lunch"
       },
       {
         url: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
@@ -359,7 +368,7 @@ export default function Experiences() {
 
             {/* Premium Bento Masonry Grid matching Home exactly */}
             {visibleSlides.length > 0 && (() => {
-              const bentoOrder = [0, 1, 2, 4, 3];
+              const bentoOrder = [0, 1, 2, 4, 3, 5];
               const mappedBentoItems = bentoOrder.map((slideIdx) => {
                 const slide = visibleSlides[slideIdx];
                 if (!slide) return null;

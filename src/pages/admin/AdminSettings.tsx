@@ -123,7 +123,7 @@ export default function AdminSettings() {
               icon={Globe}
               value={localSettings.hotel_name}
               onChange={(val) => handleChange('hotel_name', val)}
-              placeholder="The Green Hills Resort"
+              placeholder="The Vedic Himalaya Retreat"
               required
             />
             <SettingInput
@@ -173,7 +173,7 @@ export default function AdminSettings() {
               type="email"
               value={localSettings.email}
               onChange={(val) => handleChange('email', val)}
-              placeholder="info@thegreenhillsresort.com"
+              placeholder="stay@vedichimalaya.com"
               required
             />
           </div>
@@ -203,7 +203,7 @@ export default function AdminSettings() {
                 value={localSettings.whatsapp_default_message}
                 onChange={(e) => handleChange('whatsapp_default_message', e.target.value)}
                 rows={3}
-                placeholder="Hi, I want to book a room at The Green Hills Resort..."
+                placeholder="Hi, I want to book a room at The Vedic Himalaya Retreat..."
                 className="w-full px-4 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665] transition-all resize-none leading-relaxed font-medium"
               />
             </div>
@@ -223,7 +223,7 @@ export default function AdminSettings() {
                 value={localSettings.address}
                 onChange={(e) => handleChange('address', e.target.value)}
                 rows={2}
-                placeholder="SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495"
+                placeholder="Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246495"
                 className="w-full px-4 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665] transition-all resize-none leading-relaxed font-medium"
                 required
               />

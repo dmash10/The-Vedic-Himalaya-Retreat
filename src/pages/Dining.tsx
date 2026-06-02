@@ -21,11 +21,11 @@ export default function Dining() {
   if (loading && content.length === 0) return <PageLoader />;
 
 
-  const diningHeading = getValue('dining', 'dining_heading', 'Pure Sattvik Dining');
+  const diningHeading = getValue('dining', 'dining_heading', 'Traditional Mountain Dining');
   const diningSubheading = getValue('dining', 'dining_subheading', 'Nourishment for Body & Soul');
   const diningImage = getValue('dining', 'dining_image', '');
   const diningHours = getValue('dining', 'dining_hours', '7:30 AM - 10:00 PM');
-  const diningDietary = getValue('dining', 'dining_dietary', 'Pure Vegetarian Sattvik Cuisine');
+  const diningDietary = getValue('dining', 'dining_dietary', 'Pure Vegetarian Cuisine');
 
   const hoursVisible = getValue('dining', 'hours_visible', 'true') !== 'false';
   const dietaryVisible = getValue('dining', 'dietary_visible', 'true') !== 'false';
@@ -44,28 +44,28 @@ export default function Dining() {
   const diningHeroSubtitle = getValue('dining', 'dining_hero_subtitle', 'Dine at the Sanctuary');
   const diningPhilosophyTagline = getValue('dining', 'dining_philosophy_tagline', 'Alpine Harvest Dining');
   const diningPhilosophyHeading = getValue('dining', 'dining_philosophy_heading', 'Nourished by the High Valley Peaks');
-  const diningPhilosophyDesc = getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, certified Sattvik recipes. Every grain of red millet and every cup of fresh spring dew has been collected by family handmills in the tiny terrace properties clinging high above the valley dust.");
+  const diningPhilosophyDesc = getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, traditional vegetarian recipes. Every grain of red millet has been collected by family handmills in the tiny terrace properties clinging high above the valley dust.");
   
-  const diningAlchemyTagline = getValue('dining', 'dining_alchemy_tagline', 'ANCIENT CULINARY VESSELED ALCHEMY');
+  const diningAlchemyTagline = getValue('dining', 'dining_alchemy_tagline', 'TRADITIONAL COOKING METHODS');
   const diningAlchemyHeading = getValue('dining', 'dining_alchemy_heading', 'Raw Vessels, Living Nourishment');
-  const diningAlchemyDesc = getValue('dining', 'dining_alchemy_desc', 'We reject modern industrial metals, baking on ancestral stone and slow-simmering inside native clays and seasoned hand-beaten mountain irons.');
+  const diningAlchemyDesc = getValue('dining', 'dining_alchemy_desc', 'We cook on ancestral stone and slow-simmer inside native clays and seasoned hand-beaten mountain irons.');
   
-  const diningPolaroidsTagline = getValue('dining', 'dining_polaroids_tagline', 'SATTVIK VISUAL JOURNAL');
+  const diningPolaroidsTagline = getValue('dining', 'dining_polaroids_tagline', 'DINING PICTURES');
   const diningPolaroidsHeading = getValue('dining', 'dining_polaroids_heading', 'A Taste of Pure Harvests');
-  const diningPolaroidsDesc = getValue('dining', 'dining_polaroids_desc', "Take a visual journey through our kitchen's daily bread, herbal infusions, and fireside seating configurations designed for pilgrims.");
+  const diningPolaroidsDesc = getValue('dining', 'dining_polaroids_desc', "Take a visual journey through our kitchen's daily bread, herbal infusions, and fireside seating configurations.");
   
   const diningRitualsTagline = getValue('dining', 'dining_rituals_tagline', 'THE NOURISHMENT CYCLE');
-  const diningRitualsHeading = getValue('dining', 'dining_rituals_heading', 'A Day of Aromatic Rituals');
-  const diningRitualsDesc = getValue('dining', 'dining_rituals_desc', 'Ayurvedic nutrition follows the sun. Click through our daily cycles to view how we structure nourishment throughout your stay.');
+  const diningRitualsHeading = getValue('dining', 'dining_rituals_heading', 'Daily Meal Cycles');
+  const diningRitualsDesc = getValue('dining', 'dining_rituals_desc', 'Our meals follow the rhythm of the mountain day. View how we structure dining throughout your stay.');
   
   const diningPavilionTagline = getValue('dining', 'dining_pavilion_tagline', 'THE MAIN SALON');
   const diningPavilionHeading = getValue('dining', 'dining_pavilion_heading', 'The Slate Pavilion');
   const diningPavilionDesc1 = getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Sit inside a secure warm sanctuary with uninterrupted views of the majestic snowline of Chaukhamba peaks.');
   const diningPavilionDesc2 = getValue('dining', 'dining_pavilion_desc2', 'Guests gather around cold-slab slate fireplace tables while foods are slow-cooked using traditional wood fuel. We avoid processed white sugars, chemical vegetable oils, and commercial steel pans—cooking inside clay pots and raw regional iron vessels.');
   const diningPavilionImage = getValue('dining', 'dining_pavilion_image', '');
-  const diningPavilionDresscode = getValue('dining', 'dining_pavilion_dresscode', 'Monastic Ease');
+  const diningPavilionDresscode = getValue('dining', 'dining_pavilion_dresscode', 'Casual Resort Comfort');
   
-  const diningVowsTagline = getValue('dining', 'dining_vows_tagline', 'SATTVIK NUTRIMENT');
+  const diningVowsTagline = getValue('dining', 'dining_vows_tagline', 'OUR DINING PHILOSOPHY');
   const diningVowsHeading1 = getValue('dining', 'dining_vows_heading1', 'Earth to Soul');
   const diningVowsHeading2 = getValue('dining', 'dining_vows_heading2', 'Purity Vows');
   const diningVowsDesc1 = getValue('dining', 'dining_vows_desc1', 'True physical restoration lies in complete resonance with the terrain. High high-altitude hiking requires provisions that digest lightly, hydrate cells thoroughly, and calm mental distraction.');
@@ -76,13 +76,13 @@ export default function Dining() {
   const diningSpecialtyHeading2 = getValue('dining', 'dining_specialty_heading2', 'Harvest Communion');
   const diningSpecialtyDesc = getValue('dining', 'dining_specialty_desc', 'Slowly constructed dishes prepared fresh each sunrise and twilight, complementary to all resident guests of our hillside valleys.');
   
-  const diningMenuTagline = getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING CODES');
+  const diningMenuTagline = getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING');
   const diningMenuHeading1 = getValue('dining', 'dining_menu_heading1', 'The Restaurant');
   const diningMenuHeading2 = getValue('dining', 'dining_menu_heading2', 'A la Carte');
   const diningMenuDesc = getValue('dining', 'dining_menu_desc', 'Carefully curated items available for order. All dishes are prepared from seasonal ridge-grown crops and organic valley spices.');
   
-  const diningFooterWarning = getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify your table captain 2 hours in advance for specific allergy or custom diets.');
-
+  const diningFooterWarning = getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify our dining team 2 hours in advance for specific allergy or custom diets.');
+ 
   let specialtyDishes = [];
   try {
     specialtyDishes = JSON.parse(getValue('dining', 'specialty_dishes', '[]'));
@@ -91,36 +91,36 @@ export default function Dining() {
     specialtyDishes = [
       {
         num: "01",
-        title: "Vessel of Sacred Gehat (Garhwal Valley)",
-        desc: "Slow-simmered medicinal black gehat beans prepared in heavy ironware, paired with unpolished red rice grown in the irrigated terrace fields of Triyuginarayan, topped with hand-churned mountain cow A2 ghee.",
-        energy: "Sattvik Vitality",
+        title: "Traditional Gehat Dal & Red Rice",
+        desc: "Slow-simmered regional black gehat beans prepared in traditional heavy ironware, paired with local red rice grown in high-altitude terrace fields, topped with hand-churned mountain cow A2 ghee.",
+        energy: "Healthy & Nutritious",
         origin: "Local Ridge Farms",
-        attribute: "Pilgrimage Restorative",
+        attribute: "Organic Restorative",
         category: "grains"
       },
       {
         num: "02",
-        title: "Hand-Rolled Mandua Flatbreads & Rhododendron Extract",
-        desc: "Stone-ground alpine ragi crop griddle breads baked over open deodar woods on porous earthen plates. Served warm with raw wild mountain honey and salted organic walnut dust.",
-        energy: "Prana Restoration",
+        title: "Hand-Rolled Mandua Flatbreads & Wild Honey",
+        desc: "Stone-ground alpine ragi crop griddle breads baked over open deodar woods on porous earthen plates. Served warm with raw wild mountain honey and organic walnut dust.",
+        energy: "Traditional Energy",
         origin: "High Guptkashi Ridge",
-        attribute: "Alkaline Fuel",
+        attribute: "Organic Grain Fuel",
         category: "grains"
       },
       {
         num: "03",
-        title: "Templed Phaanu Claypot stew",
-        desc: "An organic pureed stew of native hillside soybeans, slow-simmered for nine hours inside local earthen vessels, tempered with mountain celery root and active wild rock caraway.",
-        energy: "Sacred Food",
+        title: "Traditional Phaanu Stew",
+        desc: "A hearty organic pureed stew of native hillside soybeans, slow-cooked inside local earthen vessels, tempered with mountain celery root and wild caraway.",
+        energy: "Nutrient Rich",
         origin: "Kedarnath Foothills",
-        attribute: "Cellular Digestion",
+        attribute: "Light Digestion",
         category: "stews"
       },
       {
         num: "04",
-        title: "Infused Ginger-Tulsi Somras",
-        desc: "A hot purifying wild herbal beverage brewed from hand-gathered holy basil stems, crushed mountain mountain ginger roots, and crystallized forest honey, balanced to boost respiratory ease.",
-        energy: "Meadow Tonic",
+        title: "Organic Ginger-Tulsi Herbal Brew",
+        desc: "A warm and soothing herbal beverage brewed from fresh-gathered holy basil stems, crushed mountain ginger roots, and pure forest honey.",
+        energy: "Restorative Brew",
         origin: "Retreat Herbal Garden",
         attribute: "Active Peak Warmth",
         category: "elixirs"

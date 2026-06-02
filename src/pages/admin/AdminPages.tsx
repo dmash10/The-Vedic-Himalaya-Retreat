@@ -18,26 +18,26 @@ const AVAILABLE_ICONS = [
 ];
 
 const PAGES_LIST = [
-  { id: 'home', label: 'Home Page' },
-  { id: 'about', label: 'About Us' },
-  { id: 'rooms', label: 'Rooms Page Settings' },
-  { id: 'dining', label: 'Dining / Rest' },
+  { id: 'home', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'rooms', label: 'Rooms' },
+  { id: 'dining', label: 'Dining' },
   { id: 'weddings', label: 'Weddings' },
   { id: 'experiences', label: 'Experiences' },
-  { id: 'nearby', label: 'Nearby Places' },
-  { id: 'gallery', label: 'Gallery Page' },
-  { id: 'contact', label: 'Contact Us' },
-  { id: 'booking', label: 'Booking Page' },
-  { id: 'privacy', label: 'Privacy Policy' },
-  { id: 'terms', label: 'Terms of Stay' }
+  { id: 'nearby', label: 'Nearby' },
+  { id: 'gallery', label: 'Gallery' },
+  { id: 'contact', label: 'Contact' },
+  { id: 'booking', label: 'Booking' },
+  { id: 'privacy', label: 'Privacy' },
+  { id: 'terms', label: 'Terms' }
 ];
 
 // Fallback Default Content Catalogs (Syncs Frontend Default Assets to CMS when DB is unpopulated)
 const DEFAULT_HOME_POLAROIDS = [
   { title: "Double Pine Suite", desc: "ELEVATED ALPINE LIVING", image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800", is_visible: true },
-  { title: "Monastic Ease", desc: "COZY HEARTH COMPANIONSHIP", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", is_visible: true },
+  { title: "Sanctuary Comforts", desc: "COZY HEARTH COMPANIONSHIP", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", is_visible: true },
   { title: "Chaukhamba Peak", desc: "MISTY GOLDEN RANGE VISTAS", image: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800", is_visible: true },
-  { title: "Hearthside Breads", desc: "ORGANIC BAKED SATTVIK SELECTIONS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true }
+  { title: "Hearthside Breads", desc: "ORGANIC FRESH BREADS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true }
 ];
 
 const DEFAULT_HOME_OFFERINGS = [
@@ -57,7 +57,7 @@ const DEFAULT_HOME_AMENITIES = [
 const DEFAULT_HOME_WHY_CHOOSE_ITEMS = [
   { num: "01", category: "CALM SILENCE", title: "Out of the Chaos", desc: "Located high above the busy transit highway. Breathe in the pristine, quiet spruce-and-pine mountain slopes, completely free of diesel horns and traffic engines.", icon: "Compass", is_visible: true },
   { num: "02", category: "ALPINE COMFORT", title: "Comfortable Cozy Cabins", desc: "Escape the freezing high-altitude winds. Unwind in draft-protected pine suites with private hot water geysers, mountain views, and thick premium winter duvets.", icon: "BedDouble", is_visible: true },
-  { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Semi Guptkashi's scenic ridge.", icon: "Wind", is_visible: true },
+  { num: "03", category: "UNTOUCHED BREATH", title: "Pure Clean Air", desc: "Wake up energized. Crisp mountain currents blow straight off the high snowy peak glaciers, naturally filtered by dense evergreens before climbing Village Dewar's scenic ridge.", icon: "Wind", is_visible: true },
   { num: "04", category: "CARING HOSPITALITY", title: "Devoted Himalayan Sewa", desc: "Genuine, humble local team serving selfless mountain devotion—brewing warming morning herbal teas & coordinating peaceful local pilgrimage routes like family.", icon: "Users", is_visible: true }
 ];
 
@@ -66,7 +66,8 @@ const DEFAULT_HOME_BENTO_GALLERY = [
   { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Wedding" },
   { image: "https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=800", title: "Pines" },
   { image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800", title: "Cafe" },
-  { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" }
+  { image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", title: "Glamping" },
+  { image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=800", title: "Lounge" }
 ];
 
 const DEFAULT_SOCIAL_PROOF_REVIEWS = [
@@ -78,7 +79,7 @@ const DEFAULT_SOCIAL_PROOF_REVIEWS = [
 
 const DEFAULT_ABOUT_PILLARS = [
   { id: '01', title: 'ORGANIC CUSTODIANSHIP', desc: 'Sustaining high-altitude terrain integrity with local terrace field grains.', icon: 'Trees', is_visible: true },
-  { id: '02', title: 'AYURVEDIC RESONANCE', desc: 'Constructing physical wellness around daily sun cycle menus and spring dew.', icon: 'Leaf', is_visible: true },
+  { id: '02', title: 'HEALTHY VEGETARIAN', desc: 'Providing nutritious, fresh local vegetarian meals made from regional crops.', icon: 'Leaf', is_visible: true },
   { id: '03', title: 'SACRED RESTORATION', desc: 'A peaceful pilgrimage base camp designed for genuine spiritual restoration.', icon: 'Sparkles', is_visible: true }
 ];
 
@@ -88,32 +89,32 @@ const DEFAULT_ROOMS_AMENITIES = [
   { label: "Organic Herb Brews", icon: "Coffee", desc: "Complimentary raw ginger tea upon arrival.", is_visible: true },
   { label: "High-Speed Internet", icon: "Wifi", desc: "Sanctuary-wide continuous high bandwidth.", is_visible: true },
   { label: "Slate Hot Baths", icon: "Droplets", desc: "Continuous mountain hot spring streams.", is_visible: true },
-  { label: "Monastic Lounge Desks", icon: "Briefcase", desc: "Hand-beaten local deodar wood work desks.", is_visible: true }
+  { label: "Wooden Work Desks", icon: "Briefcase", desc: "Hand-crafted mountain deodar wood desks.", is_visible: true }
 ];
 
 const DEFAULT_ROOMS_REVIEWS = [
   { name: "Arjun Sharma", rating: 5, location: "New Delhi", date: "May 2026", text: "The Pinewood suite was an exceptional rest base before our Kedarnath trek. The electric bed heating made a huge difference in the mountain chill.", source: "google", is_visible: true },
   { name: "Devika Rao", rating: 5, location: "Bangalore", date: "April 2026", text: "A truly restorative space. Waking up to the misty views of Chaukhamba peaks and hot ginger brews was unforgettable.", source: "tripadvisor", is_visible: true },
-  { name: "Rahul Verma", rating: 5, location: "Mumbai", date: "May 2026", text: "Pure organic Sattvik dining and serene forest surroundings. The staff coordinated our puja circuits beautifully.", source: "google", is_visible: true }
+  { name: "Rahul Verma", rating: 5, location: "Mumbai", date: "May 2026", text: "Pure organic vegetarian dining and serene forest surroundings. The staff coordinated our puja circuits beautifully.", source: "google", is_visible: true }
 ];
 
 const DEFAULT_DINING_SPECIALTIES = [
-  { num: "01", title: "Vessel of Sacred Gehat (Garhwal Valley)", desc: "Slow-simmered medicinal black gehat beans prepared in heavy ironware, paired with unpolished red rice grown in the irrigated terrace fields of Triyuginarayan, topped with hand-churned mountain cow A2 ghee.", energy: "Sattvik Vitality", origin: "Local Ridge Farms", attribute: "Pilgrimage Restorative", category: "grains", is_visible: true },
-  { num: "02", title: "Hand-Rolled Mandua Flatbreads & Rhododendron Extract", desc: "Stone-ground alpine ragi crop griddle breads baked over open deodar woods on porous earthen plates. Served warm with raw wild mountain honey and salted organic walnut dust.", energy: "Prana Restoration", origin: "High Guptkashi Ridge", attribute: "Alkaline Fuel", category: "grains", is_visible: true },
-  { num: "03", title: "Templed Phaanu Claypot stew", desc: "An organic pureed stew of native hillside soybeans, slow-simmered for nine hours inside local earthen vessels, tempered with mountain celery root and active wild rock caraway.", energy: "Sacred Food", origin: "Kedarnath Foothills", attribute: "Cellular Digestion", category: "stews", is_visible: true },
-  { num: "04", title: "Infused Ginger-Tulsi Somras", desc: "A hot purifying wild herbal beverage brewed from hand-gathered holy basil stems, crushed mountain ginger roots, and crystallized forest honey, balanced to boost respiratory ease.", energy: "Meadow Tonic", origin: "Retreat Herbal Garden", attribute: "Active Peak Warmth", category: "elixirs", is_visible: true }
+  { num: "01", title: "Traditional Gehat Dal & Red Rice", desc: "Slow-simmered regional black gehat beans prepared in traditional heavy ironware, paired with local red rice grown in high-altitude terrace fields, topped with hand-churned mountain cow A2 ghee.", energy: "Healthy & Nutritious", origin: "Local Ridge Farms", attribute: "Organic Restorative", category: "grains", is_visible: true },
+  { num: "02", title: "Hand-Rolled Mandua Flatbreads & Wild Honey", desc: "Stone-ground alpine ragi crop griddle breads baked over open deodar woods on porous earthen plates. Served warm with raw wild mountain honey and salted organic walnut dust.", energy: "Traditional Energy", origin: "High Guptkashi Ridge", attribute: "Organic Grain Fuel", category: "grains", is_visible: true },
+  { num: "03", title: "Traditional Phaanu Stew", desc: "A hearty organic pureed stew of native hillside soybeans, slow-cooked inside local earthen vessels, tempered with mountain celery root and wild caraway.", energy: "Nutrient Rich", origin: "Kedarnath Foothills", attribute: "Light Digestion", category: "stews", is_visible: true },
+  { num: "04", title: "Organic Ginger-Tulsi Herbal Brew", desc: "A warm and soothing herbal beverage brewed from fresh-gathered holy basil stems, crushed mountain ginger roots, and pure forest honey.", energy: "Restorative Brew", origin: "Retreat Herbal Garden", attribute: "Active Peak Warmth", category: "elixirs", is_visible: true }
 ];
 
 const DEFAULT_DINING_ALCHEMY = [
   { id: "clay", title: "The Earthen Mudpot", tagline: "9-HOUR EMBERS & POROUS CLAY", desc: "Vessel walls shaped by hand from Mandakini riverbed silt. As the pots simmer slow over low heat for nine hours, the porous natural minerals bind with grain stars, locking in unrefined earth elements with zero synthetic reactions.", illustration: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800", vessel: "Traditional Himalayan Claypots", benefit: "Retains high soil mineral density", smoke: "Deodar log whispers", accentColor: "#1B4C44", is_visible: true },
   { id: "iron", title: "The Heavy Ironware", tagline: "RAW CAST ROASTING", desc: "Pre-heated heavy black iron cauldrons, seasoned thoroughly for generations. Gehat beans and therapeutic wild celery roots are slow-cooked under high iron weights, infusing raw minerals and retaining dense nutrients.", illustration: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", vessel: "Hand-Beaten Mountain Ironware", benefit: "Supports micro-biological blood health", smoke: "Cedar timber glow", accentColor: "#A88C52", is_visible: true },
-  { id: "embers", title: "The Timber Hearth", tagline: "BAKED ABOVE SPECIATED ASHES", desc: "Our hearth uses clean fallen deodar timber logs. Flour is ground, kneaded in hand-beaten bronze pans, and slow-baked on hot regional flagstones using only the radiant warmth of embers.", illustration: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800", vessel: "Fallen Deodar Bark Hearth", benefit: "Purifies respiratory pathways naturally", smoke: "Pine essence atmosphere", accentColor: "#2E3438", is_visible: true }
+  { id: "embers", title: "The Timber Hearth", tagline: "BAKED ABOVE WOOD EMBERS", desc: "Our hearth uses clean fallen deodar timber logs. Flour is ground, kneaded in hand-beaten bronze pans, and slow-baked on hot regional flagstones using only the radiant warmth of embers.", illustration: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800", vessel: "Fallen Deodar Bark Hearth", benefit: "Purifies respiratory pathways naturally", smoke: "Pine essence atmosphere", accentColor: "#2E3438", is_visible: true }
 ];
 
 const DEFAULT_DINING_POLAROIDS = [
   { title: "Slate Pavilion Hearth", desc: "WOOD-FIRED EMBERS COOKING", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", is_visible: true },
-  { title: "Terrace Herbal Garden", desc: "DAILY FRESH SATTVIK INFUSIONS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true },
-  { title: "Pilgrim Bread Griddle", desc: "HAND-BEATEN ALKALI MANDUA", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800", is_visible: true }
+  { title: "Terrace Herbal Garden", desc: "DAILY FRESH HERBAL INFUSIONS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true },
+  { title: "Pilgrim Bread Griddle", desc: "HAND-BEATEN MANDUA BREADS", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800", is_visible: true }
 ];
 
 const DEFAULT_DINING_RITUALS = [
@@ -196,7 +197,7 @@ const DEFAULT_WEDDINGS_OFFERINGS = [
   {
     num: "02",
     badge: "CULINARY ARTISTRY",
-    title: "Bespoke Sattvik Menus",
+    title: "Bespoke Vegetarian Menus",
     description: "Pure vegetarian, regional organic ingredients curated carefully by our executive chefs for high physical vitality and ultimate sensory purity.",
     image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200",
     bgClass: "bg-[#3A1412]",
@@ -278,13 +279,23 @@ const DEFAULT_EXPERIENCES_SLIDES = [
     image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=2000",
     icon: "Flame",
     is_visible: true
+  },
+  {
+    id: "cooking",
+    category: "CULINARY",
+    title: "Traditional Cooking Class",
+    subtitle: "Learn local food preparation",
+    description: "Discover the principles of Ayurvedic nutrition and healthy cooking. Learn how to cook with clay pots, ironware, and locally-sourced terraced ingredients.",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=2000",
+    icon: "Utensils",
+    is_visible: true
   }
 ];
 
 const DEFAULT_EXPERIENCES_GALLERY = [
   { url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200", caption: "Cozy Pinewood Cottage Bedroom", is_visible: true },
   { url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", caption: "Misty Sunrise on Chaukhamba Peaks", is_visible: true },
-  { url: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200", caption: "Hot House-Sourced Organic Sattvik Lunch", is_visible: true },
+  { url: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200", caption: "Hot House-Sourced Organic Vegetarian Lunch", is_visible: true },
   { url: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", caption: "Outer Glamping Deck Encased in Pine Woods", is_visible: true },
   { url: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200", caption: "Panoramic Sunrise High Altitude Yoga Shala", is_visible: true },
   { url: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=1200", caption: "Private Cedar Walking Trails Surrounding Retreat", is_visible: true },
@@ -402,14 +413,14 @@ const DEFAULT_NEARBY_GALLERY = [
 ];
 
 const DEFAULT_GALLERY_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Chaukhamba Summits", desc: "Glacial snow peaks overlooking our open sunrise yoga deck.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200", category: "Sanctuary Suites", title: "Luxury Mountain Suite", desc: "Cozy custom electric temperature beds lined with organic heavy wool blankets.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "The Slate Dining Pavilion", desc: "Pure organic thalis cooked over fresh timber and mountain logs.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "Himalayan Mandap Vows", desc: "Our cedar marriage lawns framed beautifully by pine forests and mountain fog.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Guptkashi Dawn Mist", desc: "Ethereal blue morning fog hanging gracefully over our cedar pine cliffs.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1580977276076-ac4ccbec0680?auto=format&fit=crop&q=80&w=1200", category: "Sanctuary Suites", title: "Aura Bath & Spa Suite", desc: "Continuous organic hot water flows with cold slate stone tiles.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=1200", category: "Spiritual Life", title: "Restorative Herbal Sips", desc: "Hot immune-support ginger remedies upon custom arrival desks.", is_visible: true },
-  { src: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", category: "Peaks & Vibe", title: "Sacred Temple Rays", desc: "Spiritual morning light pierces the traditional deodar woodwork in Guptkashi.", is_visible: true }
+  { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", category: "Mountain Views", title: "Chaukhamba Summits", desc: "Glacial snow peaks overlooking our open sunrise yoga deck.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200", category: "Rooms & Suites", title: "Luxury Mountain Suite", desc: "Cozy custom electric temperature beds lined with organic heavy wool blankets.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1200", category: "Food & Dining", title: "The Slate Dining Pavilion", desc: "Pure organic thalis cooked over fresh timber and mountain logs.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", category: "Sacred Spaces", title: "Himalayan Mandap Vows", desc: "Our cedar marriage lawns framed beautifully by pine forests and mountain fog.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1200", category: "Mist & Ridges", title: "Guptkashi Dawn Mist", desc: "Ethereal blue morning fog hanging gracefully over our cedar pine cliffs.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1580977276076-ac4ccbec0680?auto=format&fit=crop&q=80&w=1200", category: "Rooms & Suites", title: "Aura Bath & Spa Suite", desc: "Continuous organic hot water flows with cold slate stone tiles.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=1200", category: "Food & Dining", title: "Restorative Herbal Sips", desc: "Hot immune-support ginger remedies upon custom arrival desks.", is_visible: true },
+  { src: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200", category: "Sacred Spaces", title: "Sacred Temple Rays", desc: "Spiritual morning light pierces the traditional deodar woodwork in Guptkashi.", is_visible: true }
 ];
 
 // Helper components
@@ -677,40 +688,68 @@ function ListEditor<T>({
             </div>
           </div>
         ))}
+
+        {/* ADD ITEM grid card placeholder */}
+        <div
+          onClick={handleAdd}
+          className="border-2 border-dashed border-[#1C2E2A] hover:border-[#C4A665]/40 hover:bg-[#C4A665]/5 rounded-xl flex flex-col items-center justify-center min-h-[120px] p-4 group cursor-pointer transition-all duration-300"
+          title="Add a new item"
+        >
+          <div className="bg-[#1C2E2A]/30 group-hover:bg-[#C4A665]/10 group-hover:scale-105 p-3 rounded-full text-[#C4A665]/50 group-hover:text-[#C4A665] transition-all duration-300 border border-transparent group-hover:border-[#C4A665]/10 shadow-sm">
+            <Plus className="w-5 h-5" strokeWidth={2.5} />
+          </div>
+          <span className="text-[10px] font-bold text-white/30 group-hover:text-[#C4A665] uppercase tracking-widest mt-2.5 transition-colors">Add Item</span>
+        </div>
       </div>
 
       {activeIdx !== null && items[activeIdx] && (
-        <div className="mt-4 p-4 bg-[#060B0A]/30 border border-[#1C2E2A] rounded-xl relative animate-in fade-in slide-in-from-top-2 duration-300">
-          <button
-            type="button"
-            onClick={() => setActiveIdx(null)}
-            className="absolute top-3 right-3 text-white/40 hover:text-white cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto relative shadow-2xl animate-in zoom-in-95 duration-200 text-left">
+            <button
+              type="button"
+              onClick={() => setActiveIdx(null)}
+              className="absolute top-4 right-4 text-white/40 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+              title="Close editor"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-          {onSave && (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4 text-[10px] text-[#C4A665] font-bold bg-[#C4A665]/10 px-4 py-2.5 rounded-lg border border-[#C4A665]/20 shadow-inner">
-              <span className="uppercase tracking-wider flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665] animate-ping shrink-0" />
-                ⚠️ UNSAVED CHANGES: CLICK "SAVE CURRENT PAGE" TO WRITE PERMANENTLY
-              </span>
+            {onSave && (
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4 text-[9px] text-[#C4A665] font-bold bg-[#C4A665]/10 px-4 py-2.5 rounded-lg border border-[#C4A665]/20 shadow-inner">
+                <span className="uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C4A665] animate-ping shrink-0" />
+                  ⚠️ UNSAVED CHANGES: CLICK "SAVE CURRENT PAGE" TO WRITE PERMANENTLY
+                </span>
+                <button
+                  type="button"
+                  onClick={onSave}
+                  disabled={isSaving}
+                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 bg-[#C4A665] text-black px-3.5 py-1.5 rounded-md text-[9px] font-extrabold uppercase tracking-[0.1em] hover:bg-[#FAF9F5] active:scale-95 disabled:opacity-50 cursor-pointer transition-all shadow-md"
+                >
+                  {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                  <span>{isSaving ? 'SAVING...' : 'SAVE CURRENT PAGE'}</span>
+                </button>
+              </div>
+            )}
+
+            <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-4 border-b border-[#1C2E2A] pb-2">
+              Editing Item #{activeIdx + 1}
+            </div>
+
+            <div className="space-y-4">
+              {renderItemEditor(items[activeIdx], activeIdx, (field, value) => handleUpdate(activeIdx, field, value))}
+            </div>
+
+            <div className="flex justify-end pt-4 mt-6 border-t border-[#1C2E2A] gap-3">
               <button
                 type="button"
-                onClick={onSave}
-                disabled={isSaving}
-                className="w-full sm:w-auto flex items-center justify-center gap-1.5 bg-[#C4A665] text-black px-3.5 py-1.5 rounded-md text-[9px] font-extrabold uppercase tracking-[0.1em] hover:bg-[#FAF9F5] active:scale-95 disabled:opacity-50 cursor-pointer transition-all shadow-md"
+                onClick={() => setActiveIdx(null)}
+                className="px-5 py-2 rounded bg-gradient-to-r from-[#C4A665] to-[#E2C58A] hover:from-[#FAF9F5] hover:to-[#FAF9F5] text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5 border border-[#C4A665]/20"
               >
-                {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                <span>{isSaving ? 'SAVING...' : 'SAVE CURRENT PAGE'}</span>
+                SAVE
               </button>
             </div>
-          )}
-
-          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-3">
-            Editing Item #{activeIdx + 1}
           </div>
-          {renderItemEditor(items[activeIdx], activeIdx, (field, value) => handleUpdate(activeIdx, field, value))}
         </div>
       )}
     </div>
@@ -722,7 +761,6 @@ export default function AdminPages() {
   const { zones, loading: zonesLoading, uploadImageDirect } = useImageZones();
 
   const [activePageId, setActivePageId] = useState('home');
-  const [showPageMenuMobile, setShowPageMenuMobile] = useState(false);
   const [isSaving, setIsSaving] = useState<string | null>(null);
 
   // States
@@ -784,7 +822,7 @@ export default function AdminPages() {
       setFormFields({
         hero_line1: getValue('home', 'hero_line1', 'Peace in the'),
         hero_line2: getValue('home', 'hero_line2', 'Pines'),
-        hero_subtitle: getValue('home', 'hero_subtitle', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi'),
+        hero_subtitle: getValue('home', 'hero_subtitle', 'Village Dewar, Guptkashi, Kedarnath Route'),
         hero_image: getValue('home', 'hero_image', ''),
         hero_cta: getValue('home', 'hero_cta', 'EXPLORE ROOMS'),
         hero_cta_link: getValue('home', 'hero_cta_link', '/rooms'),
@@ -797,7 +835,7 @@ export default function AdminPages() {
         why_choose_heading: getValue('home', 'why_choose_heading', 'Why Guests Choose'),
         why_choose_heading_italic: getValue('home', 'why_choose_heading_italic', 'Our Sanctuary'),
         why_choose_desc1: getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.'),
-        why_choose_desc2: getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Semi Village, Kund, Guptkashi. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps."),
+        why_choose_desc2: getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Village Dewar, Guptkashi, Kedarnath Route. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps."),
         home_gallery_badge: getValue('home', 'home_gallery_badge', 'Gallery'),
         home_gallery_heading: getValue('home', 'home_gallery_heading', 'Our Visual Journal'),
         home_gallery_desc: getValue('home', 'home_gallery_desc', 'Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.'),
@@ -894,31 +932,31 @@ export default function AdminPages() {
       }
     } else if (activePageId === 'dining') {
       setFormFields({
-        dining_heading: getValue('dining', 'dining_heading', 'Pure Sattvik Dining'),
+        dining_heading: getValue('dining', 'dining_heading', 'Traditional Mountain Dining'),
         dining_subheading: getValue('dining', 'dining_subheading', 'Nourishment for Body & Soul'),
         dining_image: getValue('dining', 'dining_image', ''),
         dining_hours: getValue('dining', 'dining_hours', '7:30 AM - 10:00 PM'),
-        dining_dietary: getValue('dining', 'dining_dietary', 'Pure Vegetarian Sattvik Cuisine'),
+        dining_dietary: getValue('dining', 'dining_dietary', 'Pure Vegetarian Cuisine'),
         dining_hero_subtitle: getValue('dining', 'dining_hero_subtitle', 'Dine at the Sanctuary'),
         dining_philosophy_tagline: getValue('dining', 'dining_philosophy_tagline', 'Alpine Harvest Dining'),
         dining_philosophy_heading: getValue('dining', 'dining_philosophy_heading', 'Nourished by the High Valley Peaks'),
-        dining_philosophy_desc: getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, certified Sattvik recipes. Every grain of red millet and every cup of fresh spring dew has been collected by family handmills in the tiny terrace properties clinging high above the valley dust."),
-        dining_alchemy_tagline: getValue('dining', 'dining_alchemy_tagline', 'ANCIENT CULINARY VESSELED ALCHEMY'),
+        dining_philosophy_desc: getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, traditional vegetarian recipes. Every grain of red millet has been collected by family handmills in the tiny terrace properties clinging high above the valley dust."),
+        dining_alchemy_tagline: getValue('dining', 'dining_alchemy_tagline', 'TRADITIONAL COOKING METHODS'),
         dining_alchemy_heading: getValue('dining', 'dining_alchemy_heading', 'Raw Vessels, Living Nourishment'),
-        dining_alchemy_desc: getValue('dining', 'dining_alchemy_desc', 'We reject modern industrial metals, baking on ancestral stone and slow-simmering inside native clays and seasoned hand-beaten mountain irons.'),
-        dining_polaroids_tagline: getValue('dining', 'dining_polaroids_tagline', 'SATTVIK VISUAL JOURNAL'),
+        dining_alchemy_desc: getValue('dining', 'dining_alchemy_desc', 'We cook on ancestral stone and slow-simmer inside native clays and seasoned hand-beaten mountain irons.'),
+        dining_polaroids_tagline: getValue('dining', 'dining_polaroids_tagline', 'DINING PICTURES'),
         dining_polaroids_heading: getValue('dining', 'dining_polaroids_heading', 'A Taste of Pure Harvests'),
-        dining_polaroids_desc: getValue('dining', 'dining_polaroids_desc', "Take a visual journey through our kitchen's daily bread, herbal infusions, and fireside seating configurations designed for pilgrims."),
+        dining_polaroids_desc: getValue('dining', 'dining_polaroids_desc', "Take a visual journey through our kitchen's daily bread, herbal infusions, and fireside seating configurations."),
         dining_rituals_tagline: getValue('dining', 'dining_rituals_tagline', 'THE NOURISHMENT CYCLE'),
-        dining_rituals_heading: getValue('dining', 'dining_rituals_heading', 'A Day of Aromatic Rituals'),
-        dining_rituals_desc: getValue('dining', 'dining_rituals_desc', 'Ayurvedic nutrition follows the sun. Click through our daily cycles to view how we structure nourishment throughout your stay.'),
+        dining_rituals_heading: getValue('dining', 'dining_rituals_heading', 'Daily Meal Cycles'),
+        dining_rituals_desc: getValue('dining', 'dining_rituals_desc', 'Our meals follow the rhythm of the mountain day. View how we structure dining throughout your stay.'),
         dining_pavilion_tagline: getValue('dining', 'dining_pavilion_tagline', 'THE MAIN SALON'),
         dining_pavilion_heading: getValue('dining', 'dining_pavilion_heading', 'The Slate Pavilion'),
         dining_pavilion_desc1: getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Sit inside a secure warm sanctuary with uninterrupted views of the majestic snowline of Chaukhamba peaks.'),
         dining_pavilion_desc2: getValue('dining', 'dining_pavilion_desc2', 'Guests gather around cold-slab slate fireplace tables while foods are slow-cooked using traditional wood fuel. We avoid processed white sugars, chemical vegetable oils, and commercial steel pans—cooking inside clay pots and raw regional iron vessels.'),
         dining_pavilion_image: getValue('dining', 'dining_pavilion_image', ''),
-        dining_pavilion_dresscode: getValue('dining', 'dining_pavilion_dresscode', 'Monastic Ease'),
-        dining_vows_tagline: getValue('dining', 'dining_vows_tagline', 'SATTVIK NUTRIMENT'),
+        dining_pavilion_dresscode: getValue('dining', 'dining_pavilion_dresscode', 'Casual Resort Comfort'),
+        dining_vows_tagline: getValue('dining', 'dining_vows_tagline', 'OUR DINING PHILOSOPHY'),
         dining_vows_heading1: getValue('dining', 'dining_vows_heading1', 'Earth to Soul'),
         dining_vows_heading2: getValue('dining', 'dining_vows_heading2', 'Purity Vows'),
         dining_vows_desc1: getValue('dining', 'dining_vows_desc1', 'True physical restoration lies in complete resonance with the terrain. High high-altitude hiking requires provisions that digest lightly, hydrate cells thoroughly, and calm mental distraction.'),
@@ -927,11 +965,11 @@ export default function AdminPages() {
         dining_specialty_heading1: getValue('dining', 'dining_specialty_heading1', 'The Daily'),
         dining_specialty_heading2: getValue('dining', 'dining_specialty_heading2', 'Harvest Communion'),
         dining_specialty_desc: getValue('dining', 'dining_specialty_desc', 'Slowly constructed dishes prepared fresh each sunrise and twilight, complementary to all resident guests of our hillside valleys.'),
-        dining_menu_tagline: getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING CODES'),
+        dining_menu_tagline: getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING'),
         dining_menu_heading1: getValue('dining', 'dining_menu_heading1', 'The Restaurant'),
         dining_menu_heading2: getValue('dining', 'dining_menu_heading2', 'A la Carte'),
         dining_menu_desc: getValue('dining', 'dining_menu_desc', 'Carefully curated items available for order. All dishes are prepared from seasonal ridge-grown crops and organic valley spices.'),
-        dining_footer_warning: getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify your table captain 2 hours in advance for specific allergy or custom diets.'),
+        dining_footer_warning: getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify our dining team 2 hours in advance for specific allergy or custom diets.'),
       });
       try {
         const val = JSON.parse(getValue('dining', 'specialty_dishes', '[]'));
@@ -1093,13 +1131,19 @@ export default function AdminPages() {
         gallery_image: getValue('gallery', 'gallery_image', ''),
         gallery_hero_badge: getValue('gallery', 'gallery_hero_badge', 'OUR VISUAL STORY'),
         gallery_hero_desc: getValue('gallery', 'gallery_hero_desc', ''),
-        gallery_categories: getValue('gallery', 'gallery_categories', 'Peaks & Vibe, Sanctuary Suites, Spiritual Life'),
+        gallery_categories: getValue('gallery', 'gallery_categories', 'Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges'),
       });
       try {
         const val = JSON.parse(getValue('gallery', 'gallery_images', '[]'));
-        setGalleryImages(Array.isArray(val) && val.length > 0 ? val : DEFAULT_GALLERY_IMAGES);
+        setGalleryImages(Array.isArray(val) ? val : []);
       } catch {
-        setGalleryImages(DEFAULT_GALLERY_IMAGES);
+        setGalleryImages([]);
+      }
+      try {
+        const val = JSON.parse(getValue('home', 'bento_gallery_items', '[]'));
+        setBentoGalleryItems(Array.isArray(val) && val.length > 0 ? val : DEFAULT_HOME_BENTO_GALLERY);
+      } catch {
+        setBentoGalleryItems(DEFAULT_HOME_BENTO_GALLERY);
       }
     } else if (activePageId === 'contact') {
       setFormFields({
@@ -1107,7 +1151,7 @@ export default function AdminPages() {
         contact_subheading: getValue('contact', 'contact_subheading', 'Reservations & coordinates'),
         contact_image: getValue('contact', 'contact_image', ''),
         contact_email: getValue('contact', 'contact_email', 'stay@vedichimalayaretreat.com'),
-        contact_map_pin: getValue('contact', 'contact_map_pin', 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495'),
+        contact_map_pin: getValue('contact', 'contact_map_pin', 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246495'),
         contact_badge: getValue('contact', 'contact_badge', 'REACH OUT TO US'),
         contact_italic_text: getValue('contact', 'contact_italic_text', 'Sacred Arrival'),
         contact_instagram: getValue('contact', 'contact_instagram', '@thevedichimalayaretreat'),
@@ -1266,6 +1310,7 @@ export default function AdminPages() {
       updates.push({ section: 'nearby', key: 'nearby_gallery', value: JSON.stringify(nearbyPhotos) });
     } else if (activePageId === 'gallery') {
       updates.push({ section: 'gallery', key: 'gallery_images', value: JSON.stringify(galleryImages) });
+      updates.push({ section: 'home', key: 'bento_gallery_items', value: JSON.stringify(bentoGalleryItems) });
     }
 
     const r = await updateMultipleContent(updates);
@@ -1280,7 +1325,35 @@ export default function AdminPages() {
   const isLoading = contentLoading || zonesLoading;
 
   return (
-    <div className="space-y-6 text-[#E2E8F0] min-h-screen">
+    <div className="space-y-6 text-[#E2E8F0] min-h-screen relative">
+      {/* Fixed Top-Level Navigation Bar */}
+      <div className="fixed top-14 lg:top-0 left-0 lg:left-[260px] right-0 z-45 bg-[#060B0A]/95 backdrop-blur-md border-b border-[#1C2E2A]/50 py-4 px-6 shadow-md transition-all duration-300">
+        <div className="grid grid-cols-6 gap-x-2 sm:gap-x-4 gap-y-3.5 max-w-6xl mx-auto text-center justify-items-center">
+          {PAGES_LIST.map((page) => {
+            const isActive = activePageId === page.id;
+            return (
+              <button
+                key={page.id}
+                onClick={() => setActivePageId(page.id)}
+                className={`relative whitespace-nowrap text-[11px] uppercase font-bold tracking-widest transition-all duration-300 cursor-pointer pb-1.5 ${
+                  isActive
+                    ? 'text-[#C4A665] scale-105 font-extrabold'
+                    : 'text-[#8E9F96] hover:text-[#FAF9F5] active:scale-95'
+                }`}
+              >
+                {page.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C4A665] rounded-full shadow-sm shadow-[#C4A665]/50" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Spacer to push down content so it's not hidden under the fixed nav bar */}
+      <div className="h-[120px] sm:h-[110px] lg:h-[100px] w-full" />
+
       <div className="border-l-4 border-[#C4A665] pl-5 py-0.5 text-left">
         <h1 className="text-2xl md:text-3xl font-heading font-medium text-[#F8FAFC]">PAGE EDITOR</h1>
         <p className="text-[#8E9F96] text-xs mt-1">Refine each section layout, cards, and copy to match the user journey.</p>
@@ -1291,63 +1364,8 @@ export default function AdminPages() {
           <Loader2 className="h-8 w-8 animate-spin text-[#C4A665]" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-          {/* ===== SIDEBAR PICKER ===== */}
-          <div className="hidden lg:flex flex-col bg-[#0D1412] border border-[#1C2E2A] rounded-xl overflow-hidden shadow-none">
-            <div className="px-4 py-3 border-b border-[#1C2E2A] bg-[#0A0F0E] text-left">
-              <span className="text-xs uppercase font-bold tracking-wider text-[#8E9F96]">Select Page</span>
-            </div>
-            <nav className="p-2 space-y-1">
-              {PAGES_LIST.map((page) => (
-                <button
-                  key={page.id}
-                  onClick={() => setActivePageId(page.id)}
-                  className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-colors cursor-pointer border ${
-                    activePageId === page.id
-                      ? 'bg-[#1C2E2A] text-[#C4A665] border-[#C4A665]/20'
-                      : 'text-[#8E9F96] hover:text-[#E2E8F0] hover:bg-[#1C2E2A]/40 border-transparent'
-                  }`}
-                >
-                  {page.label.toUpperCase()}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Mobile page picker */}
-          <div className="lg:hidden relative">
-            <button
-              onClick={() => setShowPageMenuMobile(!showPageMenuMobile)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-[#0D1412] border border-[#1C2E2A] rounded-xl text-sm font-medium text-[#C4A665]"
-            >
-              <span>{PAGES_LIST.find(p => p.id === activePageId)?.label.toUpperCase()}</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            {showPageMenuMobile && (
-              <div className="absolute top-[105%] left-0 right-0 z-30 bg-[#0D1412] border border-[#1C2E2A] rounded-xl overflow-hidden max-h-[300px] overflow-y-auto">
-                {PAGES_LIST.map((page) => (
-                  <button
-                    key={page.id}
-                    onClick={() => {
-                      setActivePageId(page.id);
-                      setShowPageMenuMobile(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-xs font-bold border-b border-[#1C2E2A]/30 transition-colors ${
-                      activePageId === page.id
-                        ? 'bg-[#1C2E2A] text-[#C4A665]'
-                        : 'text-[#8E9F96]'
-                    }`}
-                  >
-                    {page.label.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* ===== DYNAMIC EDITOR PORTAL ===== */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl overflow-hidden shadow-none">
+        <div className="w-full space-y-6">
+          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl overflow-hidden shadow-none">
               <div className="p-5 border-b border-[#1C2E2A] flex items-center justify-between bg-[#0D1412]/50">
                 <h2 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
                   {PAGES_LIST.find(p => p.id === activePageId)?.label} Contents
@@ -1445,25 +1463,24 @@ export default function AdminPages() {
                             <div className="absolute inset-y-0 left-0 w-24 md:w-32 bg-gradient-to-r from-[#FAF9F5] to-transparent z-10 pointer-events-none opacity-80" />
                             <div className="absolute inset-y-0 right-0 w-24 md:w-32 bg-gradient-to-l from-[#FAF9F5] to-transparent z-10 pointer-events-none opacity-80" />
                             
-                            <div className="flex w-max">
-                              <motion.div 
-                                animate={{ x: ["0%", "-50%"] }}
-                                transition={{ repeat: Infinity, ease: "linear", duration: 32 }}
-                                className="flex whitespace-nowrap gap-12 md:gap-16 font-heading uppercase tracking-[0.1em] text-lg md:text-2xl text-[#2D3E35] font-medium items-center pr-12 md:pr-16 select-none"
-                              >
+                            <div className="overflow-hidden w-full select-none relative">
+                              <div className="animate-marquee gap-12 md:gap-16 items-center">
                                 {Array(2).fill(null).map((_, groupIndex) => (
-                                  <span key={groupIndex} className="flex items-center gap-12 md:gap-16">
+                                  <div 
+                                    key={groupIndex} 
+                                    className="flex items-center gap-12 md:gap-16 font-heading uppercase tracking-[0.1em] text-lg md:text-2xl text-[#2D3E35] font-medium"
+                                  >
                                     {marqueeSlogans.map((item, i) => (
-                                      <span key={i} className="flex items-center gap-12 md:gap-16">
+                                      <div key={i} className="flex items-center gap-12 md:gap-16">
                                         <span>{item}</span>
                                         <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-8 md:h-8 fill-[#B32D2D] text-[#B32D2D] shrink-0" stroke="none">
                                           <path d="M12 2L15.3 8.7L22 12L15.3 15.3L12 22L8.7 15.3L2 12L8.7 8.7Z" />
                                         </svg>
-                                      </span>
+                                      </div>
                                     ))}
-                                  </span>
+                                  </div>
                                 ))}
-                              </motion.div>
+                              </div>
                             </div>
                           </section>
                         </div>
@@ -1683,15 +1700,28 @@ export default function AdminPages() {
                         </div>
 
                         <ListEditor
-                          title="Bento Grid Images (Exactly 5 items)"
+                          title="Bento Grid Images (Exactly 6 items)"
                           items={bentoGalleryItems}
                           onChange={setBentoGalleryItems}
-                          createDefaultItem={() => ({ image: '', title: 'Visual Photo', is_visible: true })}
+                          createDefaultItem={() => ({ image: '', title: 'Visual Photo', category: 'Mountain Views', is_visible: true })}
                           getItemLabel={(item) => item.title}
                           getItemImage={(item) => item.image}
                           renderItemEditor={(item, idx, updateField) => (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                              <TextInputGroup label="Photo Description/Caption" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                              <div className="space-y-4">
+                                <TextInputGroup label="Photo Description/Caption" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <div className="text-left w-full">
+                                  <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
+                                  <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                    <option value="Mountain Views" className="bg-[#0D1412]">Mountain Views</option>
+                                    <option value="Rooms & Suites" className="bg-[#0D1412]">Rooms & Suites</option>
+                                    <option value="Sacred Spaces" className="bg-[#0D1412]">Sacred Spaces</option>
+                                    <option value="Food & Dining" className="bg-[#0D1412]">Food & Dining</option>
+                                    <option value="Forest Trails" className="bg-[#0D1412]">Forest Trails</option>
+                                    <option value="Mist & Ridges" className="bg-[#0D1412]">Mist & Ridges</option>
+                                  </select>
+                                </div>
+                              </div>
                               <ImageUploader label="Visual Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                             </div>
                           )}
@@ -2837,7 +2867,7 @@ export default function AdminPages() {
                       title="Bento Masonry Gallery Images"
                       items={galleryImages}
                       onChange={setGalleryImages}
-                      createDefaultItem={() => ({ src: '', category: 'Peaks & Vibe', title: 'New Photo', desc: 'Description...', is_visible: true })}
+                      createDefaultItem={() => ({ src: '', category: 'Mountain Views', title: 'New Photo', desc: 'Description...', is_visible: true })}
                       getItemLabel={(item) => item.title}
                       getItemImage={(item) => item.src}
                       renderItemEditor={(item, idx, updateField) => (
@@ -2847,14 +2877,44 @@ export default function AdminPages() {
                             <TextInputGroup label="Description" icon={Type} value={item.desc} onChange={(v) => updateField('desc', v)} />
                             <div className="text-left w-full">
                               <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
-                              <select value={item.category || 'Peaks & Vibe'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                {(formFields.gallery_categories || "Peaks & Vibe, Sanctuary Suites, Spiritual Life").split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
+                              <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                {(formFields.gallery_categories || "Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges").split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
                                   <option key={c} value={c} className="bg-[#0D1412]">{c}</option>
                                 ))}
                               </select>
                             </div>
                           </div>
                           <ImageUploader label="Gallery Image" currentImage={item.src} onImageChange={(p) => updateField('src', p)} aspectRatio="aspect-[4/3] w-full" />
+                        </div>
+                      )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
+                    />
+
+                    <ListEditor
+                      title="Synced Home Page Bento Images"
+                      items={bentoGalleryItems}
+                      onChange={setBentoGalleryItems}
+                      createDefaultItem={() => ({ image: '', title: 'Visual Photo', category: 'Mountain Views', is_visible: true })}
+                      getItemLabel={(item) => item.title}
+                      getItemImage={(item) => item.image}
+                      renderItemEditor={(item, idx, updateField) => (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                          <div className="space-y-4">
+                            <TextInputGroup label="Photo Description/Caption" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                            <div className="text-left w-full">
+                              <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
+                              <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                <option value="Mountain Views" className="bg-[#0D1412]">Mountain Views</option>
+                                <option value="Rooms & Suites" className="bg-[#0D1412]">Rooms & Suites</option>
+                                <option value="Sacred Spaces" className="bg-[#0D1412]">Sacred Spaces</option>
+                                <option value="Food & Dining" className="bg-[#0D1412]">Food & Dining</option>
+                                <option value="Forest Trails" className="bg-[#0D1412]">Forest Trails</option>
+                                <option value="Mist & Ridges" className="bg-[#0D1412]">Mist & Ridges</option>
+                              </select>
+                            </div>
+                          </div>
+                          <ImageUploader label="Visual Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-video w-full" />
                         </div>
                       )}
                       onSave={handleSavePage}
@@ -2935,8 +2995,7 @@ export default function AdminPages() {
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
   );
 }

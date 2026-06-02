@@ -20,17 +20,19 @@ interface BentoGalleryProps {
 }
 
 const defaultGetItemSpan = (index: number) => {
-  const mod = index % 5;
-  if (mod === 0) return "col-span-2 row-span-2";
-  if (mod === 3) return "col-span-1 row-span-2";
-  if (mod === 4) return "col-span-1 md:col-span-2 row-span-1";
-  return "col-span-1 row-span-1";
+  const mod = index % 6;
+  if (mod === 0) return "col-span-1 row-span-2 md:col-span-1 md:row-span-2";
+  if (mod === 1) return "col-span-1 row-span-1 md:col-span-2 md:row-span-1";
+  if (mod === 2) return "col-span-1 row-span-1 md:col-span-1 md:row-span-1";
+  if (mod === 3) return "col-span-1 row-span-1 md:col-span-1 md:row-span-1";
+  if (mod === 4) return "col-span-2 row-span-1 md:col-span-3 md:row-span-1";
+  return "col-span-1 row-span-1 md:col-span-1 md:row-span-1";
 };
 
 export default function BentoGallery({
   items,
   gap = 4, // gap in tailwind spacing or custom gaps
-  borderRadiusClass = "rounded-2xl",
+  borderRadiusClass = "rounded-xl",
   onItemClick,
   getItemSpan = defaultGetItemSpan,
   theme = "dark",
@@ -81,10 +83,9 @@ export default function BentoGallery({
   return (
     <>
       <div 
-        className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[120px] md:auto-rows-[250px] w-full"
+        className="flex flex-wrap gap-2 w-full justify-center"
       >
         {items.map((item, index) => {
-          const itemSpan = getItemSpan(index);
           const isDarkTheme = theme === "dark";
 
           return (
@@ -96,33 +97,46 @@ export default function BentoGallery({
               transition={{ duration: 0.8, delay: index * 0.05 }}
               key={item.image + index}
               onClick={() => handleCardClick(index)}
-              className={`group relative overflow-hidden bg-stone-sand/20 border border-[#D8CBB8]/30 cursor-pointer select-none ${borderRadiusClass} ${itemSpan}`}
+              className={`h-[180px] xs:h-[220px] md:h-[260px] flex-grow relative overflow-hidden bg-stone-sand/20 cursor-pointer select-none ${borderRadiusClass} group`}
+              style={{ flexBasis: "auto" }}
             >
               {/* Premium Scale-Up Wrapper inside card */}
-              <div className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] overflow-hidden relative">
+              <div className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.03] overflow-hidden relative">
                 {/* High Quality Image with secondary zoom on hover */}
                 <img 
                   src={item.image} 
                   alt={item.title} 
-                  className="w-full h-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] contrast-105" 
+                  className="h-full w-auto min-w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.05] contrast-105" 
                   referrerPolicy="no-referrer"
                 />
 
-                {/* Glassmorphic/Gradient info panel */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-500 z-10 flex flex-col justify-end p-4 text-white">
-                  {item.category && (
-                    <span className="text-[8px] uppercase tracking-widest text-[#D8CBB8] font-bold font-mono mb-1">
-                      {item.category}
-                    </span>
-                  )}
-                  <h4 className="text-xs sm:text-sm font-heading font-medium tracking-wide text-white">
-                    {item.title}
-                  </h4>
-                  {item.description && (
-                    <p className="text-[10px] text-white/80 leading-relaxed font-sans line-clamp-2 mt-1 hidden sm:block">
-                      {item.description}
-                    </p>
-                  )}
+                {/* Subtle Grain/Noise Overlay */}
+                <div 
+                  className="absolute inset-0 pointer-events-none opacity-[0.035] mix-blend-overlay z-20"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                  }}
+                />
+
+                {/* Glassmorphic/Gradient info panel - reveals with premium slide-up transition on hover only */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out z-10 flex flex-col justify-end p-4 text-white">
+                  <div className="transform translate-y-3 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    {item.category && (
+                      <span className="text-[8px] uppercase tracking-widest text-[#D8CBB8] font-bold font-mono mb-1 block">
+                        {item.category}
+                      </span>
+                    )}
+                    {item.title && item.title.trim() !== "" && (
+                      <h4 className="text-xs sm:text-sm font-heading font-medium tracking-wide text-white">
+                        {item.title}
+                      </h4>
+                    )}
+                    {item.description && item.description.trim() !== "" && (
+                      <p className="text-[10px] text-white/80 leading-relaxed font-sans line-clamp-2 mt-1 hidden sm:block">
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Subtle Maximize icon for mobile */}
@@ -148,7 +162,7 @@ export default function BentoGallery({
             {/* Close button */}
             <button 
               onClick={() => setLightboxIndex(null)}
-              className="absolute top-6 right-6 text-white/70 hover:text-white p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer hover:scale-105 z-50"
+              className="absolute top-6 right-6 text-white/70 hover:text-white p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer md:hover:scale-105 z-50"
               aria-label="Close Lightbox"
             >
               <X size={20} />
@@ -186,7 +200,7 @@ export default function BentoGallery({
                 {/* Navigation controls */}
                 <button 
                   onClick={handlePrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 select-none"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none"
                   aria-label="Previous image"
                 >
                   <ChevronLeft size={20} />
@@ -194,7 +208,7 @@ export default function BentoGallery({
 
                 <button 
                   onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 select-none"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none"
                   aria-label="Next image"
                 >
                   <ChevronRight size={20} />
@@ -202,16 +216,18 @@ export default function BentoGallery({
               </div>
 
               {/* Caption details underneath image */}
-              <div className="text-center text-white mt-5 max-w-lg space-y-1 px-4">
+              <div className="text-center text-white mt-5 max-w-lg space-y-2 px-4">
                 {items[lightboxIndex].category && (
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#D8CBB8] font-mono">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#D8CBB8] font-mono block">
                     {items[lightboxIndex].category}
                   </span>
                 )}
-                <h4 className="text-base font-heading tracking-wide font-medium">
-                  {items[lightboxIndex].title}
-                </h4>
-                {items[lightboxIndex].description && (
+                {items[lightboxIndex].title && items[lightboxIndex].title.trim() !== "" && (
+                  <h4 className="text-base font-heading tracking-wide font-medium">
+                    {items[lightboxIndex].title}
+                  </h4>
+                )}
+                {items[lightboxIndex].description && items[lightboxIndex].description.trim() !== "" && (
                   <p className="text-xs text-stone-300 leading-relaxed font-sans font-light">
                     {items[lightboxIndex].description}
                   </p>

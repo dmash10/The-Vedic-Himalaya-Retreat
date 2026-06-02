@@ -34,66 +34,60 @@ export default function Gallery() {
     console.error("Failed to parse gallery images:", e);
   }
 
-  const defaultImages: GalleryImage[] = [
-    {
-      src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200",
-      category: "Peaks & Vibe",
-      title: "Chaukhamba Summits",
-      desc: "Glacial snow peaks overlooking our open sunrise yoga deck."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200",
-      category: "Sanctuary Suites",
-      title: "Luxury Mountain Suite",
-      desc: "Cozy custom electric temperature beds lined with organic heavy wool blankets."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1200",
-      category: "Spiritual Life",
-      title: "The Slate Dining Pavilion",
-      desc: "Pure organic thalis cooked over fresh timber and mountain logs."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
-      category: "Spiritual Life",
-      title: "Himalayan Mandap Vows",
-      desc: "Our cedar marriage lawns framed beautifully by pine forests and mountain fog."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1200",
-      category: "Peaks & Vibe",
-      title: "Guptkashi Dawn Mist",
-      desc: "Ethereal blue morning fog hanging gracefully over our cedar pine cliffs."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1580977276076-ac4ccbec0680?auto=format&fit=crop&q=80&w=1200",
-      category: "Sanctuary Suites",
-      title: "Aura Bath & Spa Suite",
-      desc: "Continuous organic hot water flows with cold slate stone tiles."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=1200",
-      category: "Spiritual Life",
-      title: "Restorative Herbal Sips",
-      desc: "Hot immune-support ginger remedies upon custom arrival desks."
-    },
-    {
-      src: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
-      category: "Peaks & Vibe",
-      title: "Sacred Temple Rays",
-      desc: "Spiritual morning light pierces the traditional deodar woodwork in Guptkashi."
+  let homeImages: GalleryImage[] = [];
+  try {
+    const homeImagesStr = getValue('home', 'bento_gallery_items', '[]');
+    const parsedHome = homeImagesStr ? JSON.parse(homeImagesStr) : [];
+    if (Array.isArray(parsedHome)) {
+      homeImages = parsedHome.map((item: any) => ({
+        src: item.image,
+        category: item.category || "Mountain Views",
+        title: item.title || "",
+        desc: item.description || "",
+        is_visible: item.is_visible !== false
+      }));
     }
-  ];
+  } catch (e) {
+    console.error("Failed to parse home gallery images:", e);
+  }
 
-  const galleryImages = (dbImages && dbImages.length > 0) ? dbImages : defaultImages;
-  const visibleImages = galleryImages.filter((img) => img.is_visible !== false);
+  // Merge and deduplicate by image URL (src)
+  const combinedImages: GalleryImage[] = [];
+  const seenUrls = new Set<string>();
 
-  const categoriesStr = getValue('gallery', 'gallery_categories', 'Peaks & Vibe, Sanctuary Suites, Spiritual Life');
-  const categories = ["All", ...categoriesStr.split(',').map((c: string) => c.trim()).filter(c => c && c !== "All")];
+  const mainSource = dbImages || [];
+  for (const img of mainSource) {
+    if (img && img.src && !seenUrls.has(img.src)) {
+      seenUrls.add(img.src);
+      combinedImages.push(img);
+    }
+  }
+
+  for (const img of homeImages) {
+    if (img && img.src && !seenUrls.has(img.src)) {
+      seenUrls.add(img.src);
+      combinedImages.push(img);
+    }
+  }
+
+  const visibleImages = combinedImages.filter((img) => img.is_visible !== false);
+
+  // 1. Get configured categories from database settings
+  const categoriesStr = getValue('gallery', 'gallery_categories', 'Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges');
+  const configuredCategories = categoriesStr.split(',').map((c: string) => c.trim()).filter(c => c && c !== "All");
+
+  // 2. Extract active categories from visible images
+  const activeCategories = Array.from(new Set(visibleImages.map(img => img.category).filter(Boolean)));
+
+  // 3. Merge them, keeping order of configured categories first
+  const mergedCategories = Array.from(new Set([...configuredCategories, ...activeCategories]));
+
+  // 4. Ensure we only show categories that actually contain at least one visible image so tabs are never empty!
+  const categories = ["All", ...mergedCategories.filter(cat => visibleImages.some(img => img.category?.trim() === cat.trim()))];
 
   const filteredImages = selectedCategory === "All" 
     ? visibleImages 
-    : visibleImages.filter(img => img.category === selectedCategory);
+    : visibleImages.filter(img => img.category?.trim() === selectedCategory.trim());
 
   return (
     <div className="bg-[#FAF9F5] text-slate-charcoal pt-32 pb-24 min-h-screen">
@@ -135,25 +129,28 @@ export default function Gallery() {
 
         {/* Cinematic Bento Layout Grid - Desktop & Mobile */}
         {(() => {
-          const mappedGalleryItems = filteredImages.map(img => ({
-            image: img.src,
-            title: img.title,
-            category: img.category,
-            description: img.desc
-          }));
+          const mappedGalleryItems = filteredImages.map(img => {
+            const rawTitle = img.title || "";
+            const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Sanctuary View"].includes(rawTitle.trim());
+            const title = isPlaceholderTitle ? "" : rawTitle;
 
-          const galleryGetItemSpan = (i: number) => {
-            if (i % 5 === 0) return "col-span-2 row-span-2";
-            if (i % 4 === 1) return "col-span-1 row-span-2";
-            return "col-span-1 row-span-1";
-          };
+            const rawDesc = img.desc || "";
+            const isPlaceholderDesc = ["Description...", "Uploaded via bulk catalog"].includes(rawDesc.trim());
+            const description = isPlaceholderDesc ? "" : rawDesc;
+
+            return {
+              image: img.src,
+              title: title,
+              category: img.category,
+              description: description
+            };
+          });
 
           return (
             <BentoGallery 
               items={mappedGalleryItems} 
-              getItemSpan={galleryGetItemSpan}
               theme="light"
-              borderRadiusClass="rounded-2xl"
+              borderRadiusClass="rounded-xl"
             />
           );
         })()}

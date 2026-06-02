@@ -115,7 +115,7 @@ export default function AdminLogin() {
 
         {/* Footer */}
         <p className="text-center text-[#8E9F96]/30 text-[10px] mt-6 font-sans">
-          The Green Hills Resort · Content Management System
+          The Vedic Himalaya Retreat · Content Management System
         </p>
       </div>
     </div>

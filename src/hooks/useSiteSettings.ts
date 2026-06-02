@@ -21,16 +21,16 @@ export interface SiteSettings {
 }
 
 const defaultSettings: SiteSettings = {
-  hotel_name: 'The Green Hills Resort',
+  hotel_name: 'The Vedic Himalaya Retreat',
   tagline: 'Peace in the Pines',
-  primary_phone: '+91 95369 26336',
-  secondary_phone: '',
+  primary_phone: '+91 81265 73560',
+  secondary_phone: '+91 63981 41605',
   tertiary_phone: '',
-  whatsapp_number: '919536926336',
-  email: 'info@thegreenhillsresort.com',
-  address: 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495',
+  whatsapp_number: '918126573560',
+  email: 'stay@vedichimalaya.com',
+  address: 'Village Dewar, Guptkashi, Kedarnath Route',
   google_maps_url: '',
-  whatsapp_default_message: 'Hi, I want to book a room at The Green Hills Resort',
+  whatsapp_default_message: 'Hi, I want to book a room at The Vedic Himalaya Retreat',
   booking_enabled: true,
   show_prices: true,
   maintenance_mode: false,

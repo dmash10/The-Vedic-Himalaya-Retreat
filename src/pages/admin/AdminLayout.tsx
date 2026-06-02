@@ -42,7 +42,7 @@ export default function AdminLayout() {
             <Trees className="w-5 h-5 text-[#C4A665]" />
           </div>
           <div>
-            <span className="font-heading text-base tracking-tight block leading-tight text-[#F8FAFC]">Green Hills</span>
+            <span className="font-heading text-base tracking-tight block leading-tight text-[#F8FAFC]">Vedic Himalaya</span>
             <span className="text-[9px] uppercase tracking-[0.2em] text-[#8E9F96] font-bold">CMS Panel</span>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function AdminLayout() {
                 <div className="w-8 h-8 rounded-lg bg-[#C4A665]/10 border border-[#C4A665]/20 flex items-center justify-center">
                   <Trees className="w-4.5 h-4.5 text-[#C4A665]" />
                 </div>
-                <span className="font-heading text-sm text-[#F8FAFC]">Green Hills CMS</span>
+                <span className="font-heading text-sm text-[#F8FAFC]">Vedic Himalaya CMS</span>
               </div>
               <button onClick={toggleSidebar} className="text-[#8E9F96] hover:text-white p-1">
                 <X className="h-5 w-5" />

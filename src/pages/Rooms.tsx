@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useRooms } from "@/hooks/useRooms";
 import { useContent } from "@/hooks/useContent";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import PageLoader from "@/components/PageLoader";
 
 // Integrated Brand Logos for high psychological trust
@@ -27,12 +28,158 @@ const TripAdvisorLogo = () => (
   </svg>
 );
 
+interface RoomCardProps {
+  room: any;
+  index: number;
+  setSearchParams: any;
+  setLightboxImage: (url: string) => void;
+  easePremium: any;
+  settings: any;
+}
+
+function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium, settings }: RoomCardProps) {
+  const [currentImageIdx, setCurrentImageIdx] = useState(0);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15px" }}
+      transition={{ duration: 0.7, delay: index * 0.12, ease: easePremium }}
+      className="group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden"
+    >
+      
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF9F5] cursor-pointer">
+        <img 
+          src={room.images[currentImageIdx]} 
+          alt={room.title}
+          className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103"
+          onClick={() => setLightboxImage(room.images[currentImageIdx])}
+        />
+        
+        {/* Quiet Float Label */}
+        <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono pointer-events-none">
+          {room.badge}
+        </span>
+
+        {/* Navigation Arrows */}
+        {room.images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentImageIdx(prev => (prev > 0 ? prev - 1 : room.images.length - 1));
+              }}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentImageIdx(prev => (prev < room.images.length - 1 ? prev + 1 : 0));
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight size={14} />
+            </button>
+
+            {/* Mini Slide Dots Indicators */}
+            <div className="absolute bottom-4 left-4 flex gap-1 z-10 pointer-events-none">
+              {room.images.map((_, i) => (
+                <span 
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    currentImageIdx === i ? "bg-white w-3" : "bg-white/45"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        
+        {/* Quiet Float Price */}
+        {settings.show_prices && (
+          <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans pointer-events-none">
+            <span className="text-[10px] text-[#FAF9F5]/70 font-normal">from</span>
+            <span className="text-[13px] font-heading font-bold text-[#FAF9F5]">₹{room.price.toLocaleString("en-IN")}</span>
+            <span className="text-[9px] text-[#FAF9F5]/60 lowercase font-normal italic">/nt</span>
+          </div>
+        )}
+      </div>
+      
+      {/* Narrative body & detailed selections */}
+      <div className="flex-grow p-5 sm:p-7 flex flex-col justify-between">
+        <div className="space-y-3 mb-5">
+          <div className="flex items-center gap-1.5 text-amber-700 text-[11px] font-bold">
+            <Star size={11} className="fill-amber-400 text-amber-500" />
+            <span>4.9 Index Rating</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-heading font-medium tracking-tight text-slate-charcoal group-hover:text-deep-teal transition-colors duration-300">
+            {room.title}
+          </h2>
+          <p className="text-slate-charcoal/80 text-xs sm:text-sm leading-relaxed font-sans font-normal">
+            {room.description}
+          </p>
+        </div>
+
+        {/* Quiet list of experiences inclusions */}
+        <div className="border-t border-[#D8CBB8]/40 pt-4 mb-4 space-y-2.5 flex flex-col">
+          <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-slate-charcoal/60">Included Experiences</span>
+          <div className="flex flex-wrap gap-1.5 text-zinc-650">
+            {room.amenities.slice(0, 4).map((amenity: any, i: number) => {
+              const IconComponent = amenity.icon;
+              return (
+                <div key={i} className="flex items-center gap-1 bg-[#FAF9F5]/70 text-slate-charcoal px-2.5 py-1 rounded-full border border-[#D8CBB8]/40 hover:border-deep-teal hover:bg-white transition-all cursor-default" title={amenity.desc}>
+                  <IconComponent size={11} className="text-deep-teal shrink-0" />
+                  <span className="text-[10px] sm:text-[11px] font-sans font-semibold leading-none">{amenity.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Pricing and Action navigation */}
+        <div className="flex items-center justify-between pt-3 border-t border-[#D8CBB8]/40">
+          <div className="flex flex-col">
+            <span className="text-[9px] uppercase tracking-wider font-bold text-slate-charcoal/50">Nightly Rate</span>
+            <span className="font-heading font-bold text-base sm:text-lg text-slate-charcoal flex items-baseline gap-0.5">
+              {settings.show_prices ? (
+                <>
+                  ₹{room.price.toLocaleString("en-IN")}
+                  <span className="text-[10px] font-normal text-slate-charcoal/60 font-sans">/night</span>
+                </>
+              ) : (
+                <span className="text-xs uppercase tracking-wider text-[#1B4C44] font-bold">Pricing on Request</span>
+              )}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSearchParams({ room: room.id })}
+            className="inline-flex items-center gap-1.5 text-[10.5px] sm:text-xs font-bold tracking-widest uppercase text-warm-white bg-deep-teal hover:bg-slate-charcoal rounded-xl px-3 sm:px-4.5 py-2.5 sm:py-3 transition-colors duration-350 cursor-pointer"
+          >
+            View Room <ArrowRight size={13} className="transition-transform group-hover:translate-x-1 duration-300" />
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Rooms() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedRoomId = searchParams.get("room");
 
   const { rooms: dbRooms, loading } = useRooms();
   const { getValue, loading: contentLoading, content } = useContent();
+  const { settings } = useSiteSettings();
+  const whatsappNumber = settings.whatsapp_number || "918126573560";
 
   const roomsHeading = getValue('rooms', 'rooms_heading', 'Sanctuary Suites');
   const roomsSubheading = getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging');
@@ -115,6 +262,7 @@ export default function Rooms() {
     ? (rooms.find((r) => r.id === selectedRoomId) || rooms[0] || null)
     : (rooms.length === 1 ? rooms[0] : null);
   const [activeImage, setActiveImage] = useState("");
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [currentReviewIdx, setCurrentReviewIdx] = useState(0);
   const [isReviewExpanded, setIsReviewExpanded] = useState(false);
 
@@ -168,6 +316,41 @@ export default function Rooms() {
       return;
     }
 
+    // Build ticket data synchronously so we can open WhatsApp immediately (bypasses popup blockers)
+    const d1 = new Date(checkIn);
+    const d2 = new Date(checkOut);
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    const nights = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
+    
+    const baseCost = (selectedRoom?.price || 0) * nights;
+    const guestsNum = parseInt(guestCount) || 1;
+    const poojaCost = addSpecialPooja ? 2500 : 0;
+    const breakfastCost = addCompulsoryBreakfast ? 350 * guestsNum * nights : 0;
+    const finalCalculatedTotal = baseCost + poojaCost + breakfastCost;
+    const ticketId = `KED-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // Open WhatsApp immediately (synchronous - bypasses popup blockers)
+    const waMessage = [
+      `Namaste! I would like to reserve a stay:`,
+      ``,
+      `• *Voucher ID*: ${ticketId}`,
+      `• *Suite*: ${selectedRoom?.title || 'Suite'}`,
+      `• *Check-in*: ${checkIn}`,
+      `• *Check-out*: ${checkOut}`,
+      `• *Nights*: ${nights} night(s)`,
+      `• *Guests*: ${guestCount}`,
+      `• *Guest Name*: ${guestName}`,
+      `• *Email*: ${guestEmail}`,
+      `• *Contact*: ${guestPhone}`,
+      addSpecialPooja ? `• *Pooja Arrangement*: Yes` : '',
+      addCompulsoryBreakfast ? `• *Breakfast*: Included` : '',
+      `• *Total Stay Cost*: ${settings.show_prices ? `₹${finalCalculatedTotal.toLocaleString("en-IN")}` : "Pricing on Request"}`,
+    ].filter(Boolean).join('\n');
+
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
+    window.open(waUrl, '_blank');
+
+    // Now run the loading animation on the current page
     setBookingStep("loading");
     
     const phases = [
@@ -186,25 +369,15 @@ export default function Rooms() {
         setLoadingText(phases[currentPhase]);
       } else {
         clearInterval(interval);
-        const d1 = new Date(checkIn);
-        const d2 = new Date(checkOut);
-        const timeDiff = Math.abs(d2.getTime() - d1.getTime());
-        const nights = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
-        
-        const baseCost = (selectedRoom?.price || 0) * nights;
-        const guestsNum = parseInt(guestCount) || 1;
-        const poojaCost = addSpecialPooja ? 2500 : 0;
-        const breakfastCost = addCompulsoryBreakfast ? 350 * guestsNum * nights : 0;
-        const finalCalculatedTotal = baseCost + poojaCost + breakfastCost; // discount is subtracted visually
-        
+
         const ticket = {
-          id: `KED-${Math.floor(100000 + Math.random() * 900000)}`,
+          id: ticketId,
           roomTitle: selectedRoom?.title,
           checkIn,
           checkOut,
           guests: guestCount,
           nights,
-          total: finalCalculatedTotal,
+          total: settings.show_prices ? finalCalculatedTotal : 0,
           guestName,
           guestEmail,
           guestPhone,
@@ -300,13 +473,49 @@ export default function Rooms() {
                   {/* PHOTO GALLERY */}
                   <div className="space-y-3.5">
                     {/* Large Main Photo */}
-                    <div className="relative aspect-[16/10] overflow-hidden bg-zinc-150 border border-zinc-250/20 rounded-xl shadow-md">
+                    <div 
+                      className="relative aspect-[16/10] overflow-hidden bg-zinc-150 border border-zinc-250/20 rounded-xl shadow-md cursor-zoom-in group"
+                      onClick={() => setLightboxImage(activeImage || selectedRoom.images[0])}
+                    >
                       <img
                         src={activeImage || selectedRoom.images[0]}
                         alt={selectedRoom.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.01]"
+                        className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                      
+                      {/* Navigation Arrows for Detail View */}
+                      {selectedRoom.images.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const currentIdx = selectedRoom.images.indexOf(activeImage || selectedRoom.images[0]);
+                              const prevIdx = currentIdx > 0 ? currentIdx - 1 : selectedRoom.images.length - 1;
+                              setActiveImage(selectedRoom.images[prevIdx]);
+                            }}
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+                            aria-label="Previous image"
+                          >
+                            <ChevronLeft size={16} strokeWidth={2.5} />
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const currentIdx = selectedRoom.images.indexOf(activeImage || selectedRoom.images[0]);
+                              const nextIdx = currentIdx < selectedRoom.images.length - 1 ? currentIdx + 1 : 0;
+                              setActiveImage(selectedRoom.images[nextIdx]);
+                            }}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+                            aria-label="Next image"
+                          >
+                            <ChevronRight size={16} strokeWidth={2.5} />
+                          </button>
+                        </>
+                      )}
                     </div>
 
                     {/* Thumbnail List */}
@@ -601,14 +810,17 @@ export default function Rooms() {
                   
                   {/* Title & Beautiful Rate Panel */}
                   <div className="pb-5 border-b border-warm-white/10 flex items-center justify-between gap-2">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8] flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#FAF9F5] animate-pulse" />
-                        Direct Treasury rate
-                      </span>
-                      <div className="flex items-baseline gap-1 mt-1">
-                        <span className="text-3xl sm:text-4xl font-heading font-bold text-warm-white">₹{selectedRoom.price.toLocaleString("en-IN")}</span>
-                        <span className="text-warm-white/70 text-xs italic">/ night</span>
+                    <div className="flex flex-col text-left">
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/50">RATES PLAN</span>
+                      <div className="flex items-baseline gap-1 select-none pt-0.5">
+                        {settings.show_prices ? (
+                          <>
+                            <span className="text-3xl sm:text-4xl font-heading font-bold text-warm-white">₹{selectedRoom.price.toLocaleString("en-IN")}</span>
+                            <span className="text-warm-white/70 text-xs italic">/ night</span>
+                          </>
+                        ) : (
+                          <span className="text-xl font-heading font-bold text-warm-white uppercase tracking-wider">Pricing on Request</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-1 text-[9px] sm:text-[11px] font-bold text-rock-900 bg-[#EFEAE1] px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-stone-sand/20 hover:scale-[1.01] transition-transform duration-300 select-none font-sans shrink-0 whitespace-nowrap">
@@ -630,7 +842,23 @@ export default function Rooms() {
 
                   {/* Booking Flow Form */}
                   {bookingStep === "idle" && (
-                    <form className="space-y-5" onSubmit={handleBookingSubmit}>
+                    settings.booking_enabled === false ? (
+                      <div className="bg-[#FAF9F5]/10 border border-[#D8CBB8]/15 p-6 rounded-2xl text-center space-y-4">
+                        <h4 className="text-lg font-heading text-[#D8CBB8]">Bookings Closed</h4>
+                        <p className="text-warm-white/70 text-xs leading-relaxed">
+                          Online bookings are temporarily closed. Please contact us directly via WhatsApp to book your room.
+                        </p>
+                        <a 
+                          href={`https://wa.me/${whatsappNumber}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="w-full inline-flex items-center justify-center py-3.5 px-6 rounded-lg bg-stone-sand hover:bg-[#E5D7C3] text-slate-charcoal font-sans font-bold text-xs uppercase tracking-[0.18em] transition-colors"
+                        >
+                          CONTACT DESK
+                        </a>
+                      </div>
+                    ) : (
+                      <form className="space-y-5" onSubmit={handleBookingSubmit}>
                                      {/* Dates Selector Group */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
@@ -700,13 +928,27 @@ export default function Rooms() {
                             return (
                               <>
                                 <div className="flex justify-between items-center text-warm-white/90 font-medium border-b border-warm-white/10 pb-2.5">
-                                  <div>
-                                    <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
-                                    <span className="text-[10px] text-warm-white/70 block">
-                                      ₹{selectedRoom.price.toLocaleString("en-IN")} × {nightsCount} night(s)
-                                    </span>
-                                  </div>
-                                  <span className="font-heading font-medium text-warm-white text-sm">₹{baseCost.toLocaleString("en-IN")}</span>
+                                  {settings.show_prices ? (
+                                    <>
+                                      <div>
+                                        <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
+                                        <span className="text-[10px] text-warm-white/70 block">
+                                          ₹{selectedRoom.price.toLocaleString("en-IN")} × {nightsCount} night(s)
+                                        </span>
+                                      </div>
+                                      <span className="font-heading font-medium text-warm-white text-sm">₹{baseCost.toLocaleString("en-IN")}</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <div>
+                                        <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
+                                        <span className="text-[10px] text-warm-white/70 block">
+                                          Stay Plan for {nightsCount} night(s)
+                                        </span>
+                                      </div>
+                                      <span className="font-heading font-medium text-warm-white text-sm">—</span>
+                                    </>
+                                  )}
                                 </div>
                                 
                                 <div className="space-y-1.5">
@@ -729,14 +971,18 @@ export default function Rooms() {
 
                                   <div className="flex justify-between items-center text-warm-white/80 text-[11px] font-semibold">
                                     <span>• Direct Member Discount</span>
-                                    <span className="font-semibold text-stone-sand">- ₹1,200</span>
+                                    <span className="font-semibold text-stone-sand">
+                                      {settings.show_prices ? "- ₹1,200" : "Active Member Perks"}
+                                    </span>
                                   </div>
                                 </div>
 
                                 <div className="flex justify-between items-baseline text-sm font-bold text-warm-white border-t border-dashed border-warm-white/15 pt-3">
                                   <span className="font-heading uppercase tracking-wide text-xs">Total Stay:</span>
                                   <div className="text-right">
-                                    <span className="text-xl text-stone-sand font-semibold">₹{finalStayTotal.toLocaleString("en-IN")}</span>
+                                    <span className="text-xl text-stone-sand font-semibold">
+                                      {settings.show_prices ? `₹${finalStayTotal.toLocaleString("en-IN")}` : "Pricing on Request"}
+                                    </span>
                                     <p className="text-[9px] text-[#FAF9F5]/60 font-normal">All taxes & hot water showers included</p>
                                   </div>
                                 </div>
@@ -809,7 +1055,7 @@ export default function Rooms() {
                       </div>
 
                     </form>
-                  )}
+                  ))}
 
                   {/* Booking Processing / Loading state */}
                   {bookingStep === "loading" && (
@@ -886,7 +1132,9 @@ export default function Rooms() {
 
                         <div className="pt-3 border-t border-dashed border-[#D8CBB8]/40 flex justify-between font-sans items-center">
                           <span className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Total Stay Cost:</span>
-                          <span className="text-[#1B3C41] font-bold text-base">₹{(generatedTicket.total - 1200).toLocaleString("en-IN")}</span>
+                          <span className="text-[#1B3C41] font-bold text-base">
+                            {settings.show_prices ? `₹${(generatedTicket.total - 1200).toLocaleString("en-IN")}` : "Pricing on Request"}
+                          </span>
                         </div>
                       </div>
 
@@ -940,85 +1188,15 @@ export default function Rooms() {
               {/* Grid with Pristine Multi-image Suite Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 {rooms.map((room, index) => (
-                  <motion.div 
+                  <RoomCard
                     key={room.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-15px" }}
-                    transition={{ duration: 0.7, delay: index * 0.12, ease: easePremium }}
-                    className="group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden"
-                  >
-                    
-                    {/* Full aspect thumbnail scene */}
-                    <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF9F5]">
-                      <img 
-                        src={room.images[0]} 
-                        alt={room.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103"
-                      />
-                      {/* Quiet Float Label */}
-                      <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono">
-                        {room.badge}
-                      </span>
-                      
-                      {/* Quiet Float Price */}
-                      <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans">
-                        <span className="text-[10px] text-[#FAF9F5]/70 font-normal">from</span>
-                        <span className="text-[13px] font-heading font-bold text-[#FAF9F5]">₹{room.price.toLocaleString("en-IN")}</span>
-                        <span className="text-[9px] text-[#FAF9F5]/60 lowercase font-normal italic">/nt</span>
-                      </div>
-                    </div>
-                    
-                    {/* Narrative body & detailed selections */}
-                    <div className="flex-grow p-5 sm:p-7 flex flex-col justify-between">
-                      <div className="space-y-3 mb-5">
-                        <div className="flex items-center gap-1.5 text-amber-700 text-[11px] font-bold">
-                          <Star size={11} className="fill-amber-400 text-amber-500" />
-                          <span>4.9 Index Rating</span>
-                        </div>
-                        <h2 className="text-xl sm:text-2xl font-heading font-medium tracking-tight text-slate-charcoal group-hover:text-deep-teal transition-colors duration-300">
-                          {room.title}
-                        </h2>
-                        <p className="text-slate-charcoal/80 text-xs sm:text-sm leading-relaxed font-sans font-normal">
-                          {room.description}
-                        </p>
-                      </div>
- 
-                      {/* Quiet list of experiences inclusions */}
-                      <div className="border-t border-[#D8CBB8]/40 pt-4 mb-4 space-y-2.5 flex flex-col">
-                        <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-slate-charcoal/60">Included Experiences</span>
-                        <div className="flex flex-wrap gap-1.5 text-zinc-650">
-                          {room.amenities.slice(0, 4).map((amenity, i) => {
-                            const IconComponent = amenity.icon;
-                            return (
-                              <div key={i} className="flex items-center gap-1 bg-[#FAF9F5]/70 text-slate-charcoal px-2.5 py-1 rounded-full border border-[#D8CBB8]/40 hover:border-deep-teal hover:bg-white transition-all cursor-default" title={amenity.desc}>
-                                <IconComponent size={11} className="text-deep-teal shrink-0" />
-                                <span className="text-[10px] sm:text-[11px] font-sans font-semibold leading-none">{amenity.label}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      
-                      {/* Pricing and Action navigation */}
-                      <div className="flex items-center justify-between pt-3 border-t border-[#D8CBB8]/40">
-                        <div className="flex flex-col">
-                          <span className="text-[9px] uppercase tracking-wider font-bold text-slate-charcoal/50">Nightly Rate</span>
-                          <span className="font-heading font-bold text-base sm:text-lg text-slate-charcoal flex items-baseline gap-0.5">
-                            ₹{room.price.toLocaleString("en-IN")}
-                            <span className="text-[10px] font-normal text-slate-charcoal/60 font-sans">/night</span>
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setSearchParams({ room: room.id })}
-                          className="inline-flex items-center gap-1.5 text-[10.5px] sm:text-xs font-bold tracking-widest uppercase text-warm-white bg-deep-teal hover:bg-slate-charcoal rounded-xl px-3 sm:px-4.5 py-2.5 sm:py-3 transition-colors duration-350 cursor-pointer"
-                        >
-                          View Room <ArrowRight size={13} className="transition-transform group-hover:translate-x-1 duration-300" />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
+                    room={room}
+                    index={index}
+                    setSearchParams={setSearchParams}
+                    setLightboxImage={setLightboxImage}
+                    easePremium={easePremium}
+                    settings={settings}
+                  />
                 ))}
               </div>
             </motion.div>
@@ -1117,6 +1295,47 @@ export default function Rooms() {
             </div>
           );
         })()}
+
+      {/* Premium Lightbox Modal for Room Images */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxImage(null)}
+            className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"
+          >
+            {/* Close button */}
+            <button 
+              onClick={() => setLightboxImage(null)}
+              className="absolute top-6 right-6 text-white/70 hover:text-white p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer md:hover:scale-105 z-50"
+              aria-label="Close Lightbox"
+            >
+              <X size={20} />
+            </button>
+
+            <div 
+              className="relative max-w-5xl w-full flex flex-col items-center justify-center" 
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Image display viewport */}
+              <div className="relative w-full flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black/40">
+                <motion.img 
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.95, opacity: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 180 }}
+                  src={lightboxImage} 
+                  alt="Sanctuary Suite View" 
+                  className="max-w-full max-h-[85vh] object-contain rounded-xl select-none"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       </div>
     </div>

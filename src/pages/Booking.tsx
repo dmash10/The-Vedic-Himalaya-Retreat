@@ -25,7 +25,7 @@ export default function Booking() {
 
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
-  const whatsappNumber = settings.whatsapp_number || "917060326489";
+  const whatsappNumber = settings.whatsapp_number || "918126573560";
 
   // Prevent flash of fallback text while CMS content loads
   if (loading && content.length === 0) return <PageLoader />;
@@ -34,17 +34,17 @@ export default function Booking() {
   const bookingHeadingItalic = getValue('booking', 'booking_heading_italic', 'Stay');
   const bookingBadge = getValue('booking', 'booking_badge', 'Guaranteed sanctuary booking');
   const bookingSubheading = getValue('booking', 'booking_subheading', 'Elevate your Himalayan ascent with a direct direct-booking premium rate.');
-  const bookingVisible = getValue('booking', 'booking_visible', 'true') !== 'false';
+  const bookingVisible = getValue('booking', 'booking_visible', 'true') !== 'false' && settings.booking_enabled !== false;
 
   if (!bookingVisible) {
     return (
       <div className="bg-[#FAF9F5] text-slate-charcoal pt-32 pb-24 min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="container mx-auto px-4 max-w-md relative z-10 text-center space-y-6 bg-white p-8 md:p-12 border border-[#D8CBB8]/30 shadow-2xl rounded-2xl">
           <h1 className="text-3xl font-heading tracking-tight text-slate-charcoal">
-            Bookings <span className="italic font-normal text-[#1B4C44]">Paused</span>
+            Bookings <span className="italic font-normal text-[#1B4C44]">Closed</span>
           </h1>
           <p className="text-[#1C2E2A]/70 text-xs font-medium font-sans leading-relaxed">
-            Online reservation requests are currently paused for system updates. Please connect with our reservation desk directly via WhatsApp.
+            Online bookings are temporarily closed. Please contact us directly via WhatsApp to book your room.
           </p>
           <a 
             href={`https://wa.me/${whatsappNumber}`} 
@@ -76,6 +76,43 @@ export default function Booking() {
       return;
     }
 
+    // Build ticket data synchronously so we can open WhatsApp immediately (bypasses popup blockers)
+    const d1 = new Date(checkIn);
+    const d2 = new Date(checkOut);
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    const nights = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
+    
+    const basePrice = roomType === "Deodar Imperial Suite" ? 9500 : roomType === "Kedar View Balcony Room" ? 7200 : 5800;
+    const baseCost = basePrice * nights;
+    const guestsNum = parseInt(guests) || 1;
+    const poojaCost = addSpecialPooja ? 2500 : 0;
+    const breakfastCost = 350 * guestsNum * nights;
+    const total = baseCost + poojaCost + breakfastCost - 1200;
+
+    const ticketId = `KED-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // Open WhatsApp immediately (synchronous - bypasses popup blockers)
+    const waMessage = [
+      `Namaste! I would like to reserve a stay:`,
+      ``,
+      `• *Voucher ID*: ${ticketId}`,
+      `• *Suite*: ${roomType}`,
+      `• *Check-in*: ${checkIn}`,
+      `• *Check-out*: ${checkOut}`,
+      `• *Nights*: ${nights} night(s)`,
+      `• *Guests*: ${guests}`,
+      `• *Guest Name*: ${guestName}`,
+      `• *Email*: ${guestEmail}`,
+      `• *Contact*: ${guestPhone}`,
+      addSpecialPooja ? `• *Pooja Arrangement*: Yes` : '',
+      `• *Breakfast*: Included`,
+      `• *Total Stay Cost*: ${settings.show_prices ? `₹${total.toLocaleString("en-IN")}` : "Pricing on Request"}`,
+    ].filter(Boolean).join('\n');
+
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
+    window.open(waUrl, '_blank');
+
+    // Now run the loading animation on the current page
     setBookingStep("loading");
     const phrases = [
       "Verifying peak-season calendar spaces...",
@@ -93,27 +130,15 @@ export default function Booking() {
         setLoadingText(phrases[currentPhase]);
       } else {
         clearInterval(interval);
-        
-        const d1 = new Date(checkIn);
-        const d2 = new Date(checkOut);
-        const timeDiff = Math.abs(d2.getTime() - d1.getTime());
-        const nights = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
-        
-        const basePrice = roomType === "Deodar Imperial Suite" ? 9500 : roomType === "Kedar View Balcony Room" ? 7200 : 5800;
-        const baseCost = basePrice * nights;
-        const guestsNum = parseInt(guests) || 1;
-        const poojaCost = addSpecialPooja ? 2500 : 0;
-        const breakfastCost = 350 * guestsNum * nights;
-        const total = baseCost + poojaCost + breakfastCost - 1200; // direct discount constant
 
         const ticket = {
-          id: `KED-${Math.floor(100000 + Math.random() * 900000)}`,
+          id: ticketId,
           roomTitle: roomType,
           checkIn,
           checkOut,
           guests,
           nights,
-          total,
+          total: settings.show_prices ? total : 0,
           guestName,
           guestEmail,
           guestPhone,
@@ -407,7 +432,9 @@ export default function Booking() {
                   <span className="text-[9px] text-[#A88C52] font-semibold uppercase font-mono">No pre-payment required</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-xl font-bold font-heading text-slate-charcoal">₹{generatedTicket.total.toLocaleString("en-IN")}</span>
+                  <span className="text-xl font-bold font-heading text-slate-charcoal">
+                    {settings.show_prices ? `₹${generatedTicket.total.toLocaleString("en-IN")}` : "Pricing on Request"}
+                  </span>
                   <p className="text-[8px] text-[#1B4C44] uppercase font-extrabold tracking-widest font-mono">Sattvik Perks Combined</p>
                 </div>
               </div>

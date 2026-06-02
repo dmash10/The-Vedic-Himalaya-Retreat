@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Users, UtensilsCrossed, Key, Sparkles, Heart, ChevronLeft, ChevronRight, Calendar, Compass, MapPin, Wine } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import PageLoader from "@/components/PageLoader";
+import BentoGallery from "@/components/BentoGallery";
 
 interface WeddingOfferingCardProps {
   key?: string;
@@ -14,11 +15,13 @@ interface WeddingOfferingCardProps {
   isMobile: boolean;
 }
 
-const getWeddingTransformParams = (idx: number, total: number) => {
+// Custom scroll-based scale-up and slide transform keyframe generator (freestyle, zero tilt, zero opacity fade)
+const getWeddingTransformParams = (idx: number, total: number, isMobile: boolean) => {
   if (total <= 1) {
     return {
       inputs: [0, 1],
       scale: [1, 1],
+      x: ["0vw", "0vw"],
       y: ["0vh", "0vh"],
       opacity: [1, 1],
       rotate: [0, 0],
@@ -31,6 +34,7 @@ const getWeddingTransformParams = (idx: number, total: number) => {
   const step = 1.0 / (total - 1);
   const inputs: number[] = [];
   const scale: number[] = [];
+  const x: string[] = [];
   const y: string[] = [];
   const opacity: number[] = [];
   const rotate: number[] = [];
@@ -38,8 +42,8 @@ const getWeddingTransformParams = (idx: number, total: number) => {
   const z: number[] = [];
   const visibility: string[] = [];
 
-  const initialScale = 1.0 - idx * 0.07;
-  const baseRotate = idx % 2 === 0 ? -3.5 - (idx * 0.5) : 3.5 + (idx * 0.5);
+  const initialScale = isMobile ? 1.0 - idx * 0.03 : 1.0 - idx * 0.07;
+  const baseRotate = isMobile ? 0 : (idx % 2 === 0 ? -3.5 - (idx * 0.5) : 3.5 + (idx * 0.5));
 
   // Align keyframe inputs directly on active step boundaries and include intermediate points for opacity fade
   for (let k = 0; k <= total - 1; k++) {
@@ -53,6 +57,7 @@ const getWeddingTransformParams = (idx: number, total: number) => {
   const clampedInputs = uniqueInputs.map(v => Math.max(0, Math.min(1, v)));
 
   clampedInputs.forEach(progress => {
+    let currentX = "0vw";
     let currentY = "0vh";
     let currentScale = initialScale;
     let currentRotate = baseRotate;
@@ -61,88 +66,73 @@ const getWeddingTransformParams = (idx: number, total: number) => {
     let currentZ = 0;
     let currentVisibility = "visible";
 
-    // Y, Z-rotation, rotateX, and Z translate scroll calculations
-    if (idx < total - 1) {
-      const slideStart = idx * step;
-      const slideEnd = (idx + 1) * step;
+    if (isMobile) {
+      // Layout side-by-side in a horizontal row and translate the track dynamically with vertical scroll progress
+      currentX = `${(idx - progress * (total - 1)) * 105}%`;
+      currentY = "0vh";
+      currentScale = 1.0;
+      currentRotate = 0;
+      currentOpacity = 1.0;
+      currentRotateX = 0;
+      currentZ = 0;
+      currentVisibility = "visible";
+    } else {
+      // Keep scale at 1.0 at all times on desktop to prevent texture scaling blur
+      currentScale = 1.0;
+      currentRotate = 0; // Do not tilt/rotate these cards (makes them identical to Home page)
 
-      if (progress <= slideStart) {
-        currentY = "0vh";
-        currentRotate = baseRotate;
+      // Desktop Y, rotateX, and Z translate scroll calculations
+      if (idx < total - 1) {
+        const slideStart = idx * step;
+        const slideEnd = (idx + 1) * step;
+
+        if (progress <= slideStart) {
+          // Flat 2D stacked position: stays perfectly static and stable, shifting downwards to keep header clear
+          currentX = "0vw";
+          currentY = `${idx * 2.2}vh`;
+          currentRotateX = 0;
+          currentZ = 0;
+          currentOpacity = 1.0;
+          currentVisibility = "visible";
+        } else if (progress >= slideEnd) {
+          currentX = "0vw";
+          currentY = "-120vh";
+          currentRotateX = 25;
+          currentZ = -80;
+          currentOpacity = 0.0;
+          currentVisibility = "hidden";
+        } else {
+          // Active slide-away transition: slides away smoothly starting directly from its downward stack position
+          const ratio = (progress - slideStart) / (slideEnd - slideStart);
+          const startY = idx * 2.2;
+          currentX = "0vw";
+          currentY = `${startY + ratio * (-120 - startY)}vh`;
+          currentRotateX = ratio * 25;
+          currentZ = ratio * -80;
+          
+          // Keep card fully visible while moving, fade out only at the very end of transition
+          if (ratio < 0.85) {
+            currentOpacity = 1.0;
+            currentVisibility = "visible";
+          } else {
+            currentOpacity = 1.0 - (ratio - 0.85) / 0.15;
+            currentVisibility = "visible";
+          }
+        }
+      } else {
+        // Last card in the stack stays perfectly static at its downward stack position
+        currentX = "0vw";
+        currentY = `${idx * 2.2}vh`;
         currentRotateX = 0;
         currentZ = 0;
         currentOpacity = 1.0;
         currentVisibility = "visible";
-      } else if (progress >= slideEnd) {
-        currentY = "-120vh";
-        currentRotate = idx % 2 === 0 ? -12 : 12;
-        currentRotateX = 25;
-        currentZ = -80;
-        currentOpacity = 0.0;
-        currentVisibility = "hidden";
-      } else {
-        const ratio = (progress - slideStart) / (slideEnd - slideStart);
-        currentY = `${ratio * -120}vh`;
-        const targetRotate = idx % 2 === 0 ? -12 : 12;
-        currentRotate = baseRotate + ratio * (targetRotate - baseRotate);
-        currentRotateX = ratio * 25;
-        currentZ = ratio * -80;
-        
-        // Keep card fully visible while moving, fade out only at the very end of transition
-        if (ratio < 0.85) {
-          currentOpacity = 1.0;
-          currentVisibility = "visible";
-        } else {
-          currentOpacity = 1.0 - (ratio - 0.85) / 0.15;
-          currentVisibility = "visible";
-        }
-      }
-    } else {
-      currentY = "0vh";
-      currentRotate = baseRotate;
-      currentRotateX = 0;
-      currentZ = 0;
-      currentOpacity = 1.0;
-      currentVisibility = "visible";
-    }
-
-    // Smoothly calculate scale changes from behind cards sliding away
-    let activeOffsetScale = 0;
-    for (let k = 0; k < idx; k++) {
-      const cardSlideStart = k * step;
-      const cardSlideEnd = (k + 1) * step;
-      if (progress <= cardSlideStart) {
-        // no contribution
-      } else if (progress >= cardSlideEnd) {
-        activeOffsetScale += 0.07;
-      } else {
-        const ratio = (progress - cardSlideStart) / (cardSlideEnd - cardSlideStart);
-        activeOffsetScale += ratio * 0.07;
-      }
-    }
-    currentScale = initialScale + activeOffsetScale;
-
-    // Smoothly calculate scale change when this card itself slides away
-    if (idx < total - 1) {
-      const slideStart = idx * step;
-      const slideEnd = (idx + 1) * step;
-      if (progress > slideStart && progress < slideEnd) {
-        const ratio = (progress - slideStart) / (slideEnd - slideStart);
-        currentScale = 1.0 + ratio * 0.08;
-      } else if (progress >= slideEnd) {
-        currentScale = 1.08;
       }
     }
 
-    // Adjust rotation for underlying cards as top cards fly away
-    if (progress < idx * step) {
-      const currentActiveStep = Math.floor(progress / step);
-      const stepProgress = (progress - currentActiveStep * step) / step;
-      currentRotate = baseRotate - (idx - currentActiveStep) * 0.5 * Math.min(1, Math.max(0, stepProgress));
-    }
-
-    y.push(currentY);
     scale.push(currentScale);
+    x.push(currentX);
+    y.push(currentY);
     rotate.push(currentRotate);
     opacity.push(currentOpacity);
     rotateX.push(currentRotateX);
@@ -153,9 +143,10 @@ const getWeddingTransformParams = (idx: number, total: number) => {
   return {
     inputs: clampedInputs,
     scale,
+    x,
     y,
-    opacity,
     rotate,
+    opacity,
     rotateX,
     z,
     visibility
@@ -163,9 +154,10 @@ const getWeddingTransformParams = (idx: number, total: number) => {
 };
 
 function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: WeddingOfferingCardProps) {
-  const params = getWeddingTransformParams(idx, total);
+  const params = getWeddingTransformParams(idx, total, isMobile);
   
-  const scale = useTransform(scrollYProgress, params.inputs, isMobile ? params.scale.map(() => 1.0 - idx * 0.04) : params.scale);
+  const scale = useTransform(scrollYProgress, params.inputs, params.scale);
+  const x = useTransform(scrollYProgress, params.inputs, params.x);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotate = useTransform(scrollYProgress, params.inputs, params.rotate);
@@ -177,6 +169,7 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
     <motion.div 
       style={{ 
         scale, 
+        x,
         y,
         opacity,
         rotate,
@@ -185,16 +178,19 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
         visibility,
         transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
-        backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden",
-        transformStyle: "preserve-3d",
-        WebkitTransformStyle: "preserve-3d",
-        willChange: "transform, opacity"
+        // Desktop-specific anti-blur optimizations
+        willChange: isMobile ? "transform, opacity" : "auto",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+        WebkitBackfaceVisibility: isMobile ? "visible" : "hidden",
+        backfaceVisibility: isMobile ? "visible" : "hidden",
+        WebkitFontSmoothing: isMobile ? "antialiased" : "subpixel-antialiased",
+        MozOsxFontSmoothing: isMobile ? "grayscale" : "auto",
+        outline: "1px solid transparent",
       }}
-      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
+      className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
     >
-      {/* Subtle glamorous glint texture overlay for light ray highlights */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
+      {/* Subtle glamorous glint texture overlay for light ray highlights - rounded corners added to match clipping */}
+      <div className="absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
 
       {/* Left Details column with big design aesthetics and reduced, readable, high-end copy */}
       <div className="flex-1 md:w-1/2 flex flex-col justify-between py-1 xs:py-2 md:py-3 px-1 md:px-3 z-10 text-left font-sans">
@@ -212,7 +208,7 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
           <h3 className="text-lg sm:text-2xl lg:text-3xl font-serif font-normal tracking-wide leading-tight">
             {offer.title}
           </h3>
-          <p className="text-[11px] sm:text-sm opacity-90 leading-relaxed font-sans font-light max-w-sm">
+          <p className="text-[11px] sm:text-sm leading-relaxed font-sans font-normal max-w-sm">
             {offer.description}
           </p>
         </div>
@@ -403,7 +399,7 @@ export default function Weddings() {
       {
         num: "02",
         badge: "CULINARY ARTISTRY",
-        title: "Bespoke Sattvik Menus",
+        title: "Bespoke Vegetarian Menus",
         description: "Pure vegetarian, regional organic ingredients curated carefully by our executive chefs for high physical vitality and ultimate sensory purity.",
         image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1200",
         bgClass: "bg-[#3A1412]",
@@ -775,38 +771,115 @@ export default function Weddings() {
         <section 
           ref={weddingSpecsRef} 
           className="relative bg-[#FAF9F5]"
-          style={{ height: `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
+          style={{ height: isMobile ? "auto" : `${(visibleOfferings.length - 1) * 90 + 110}vh` }}
         >
-          <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
-            <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
-              
-              <div className="text-center pt-20 xs:pt-24 sm:pt-28 md:pt-2 mb-6 md:mb-12 max-w-2xl mx-auto space-y-2.5 shrink-0 animate-fade-in">
+          {isMobile ? (
+            // Mobile Native Horizontal Carousel
+            <div className="py-16 px-6 relative z-10 w-full overflow-hidden">
+              <div className="text-center mb-8 max-w-2xl mx-auto space-y-2.5 shrink-0">
                 <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block font-sans">
                   {weddingsOfferingsTagline}
                 </span>
-                <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading text-slate-charcoal mt-1 tracking-tight font-light leading-none">
+                <h2 className="text-3xl sm:text-4xl font-heading text-slate-charcoal mt-1 tracking-tight font-light leading-none">
                   {weddingsOfferingsHeading} <span className="italic font-serif text-[#1B4C44] font-normal">{weddingsOfferingsHeadingItalic}</span>
                 </h2>
-                <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
+                <p className="text-[10px] text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
                   {weddingsOfferingsDesc}
                 </p>
               </div>
 
-              <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
-                {visibleOfferings.map((offer, idx) => (
-                  <WeddingOfferingCard 
-                    key={offer.num} 
-                    offer={offer} 
-                    idx={idx} 
-                    total={visibleOfferings.length} 
-                    scrollYProgress={weddingSpecsScroll}
-                    isMobile={isMobile}
-                  />
+              {/* Native Horizontal Scroll Row */}
+              <div className="flex flex-row overflow-x-auto gap-4 snap-x snap-mandatory no-scrollbar px-6 -mx-6 pb-6 pt-2 select-none -webkit-overflow-scrolling-touch">
+                {visibleOfferings.map((offer: any) => (
+                  <div
+                    key={offer.num}
+                    className={`relative w-[85vw] max-w-[340px] h-[380px] xs:h-[350px] shrink-0 snap-center rounded-[1.6rem] border border-[#D8CBB8]/30 shadow-md overflow-hidden ${offer.bgClass} ${offer.textClass} flex flex-col p-4.5 gap-3.5`}
+                  >
+                    {/* Subtle glamorous glint texture overlay for light ray highlights */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.012] to-white/[0.03] pointer-events-none" />
+
+                    {/* Top row with number and badge */}
+                    <div className="flex justify-between items-start z-10 font-sans">
+                      <span className="text-2xl font-serif font-extrabold tracking-tight opacity-20 block leading-none">
+                        {offer.num}
+                      </span>
+                      <span className="text-[8px] tracking-[0.2em] font-mono uppercase font-bold opacity-65 block mt-0.5">
+                        {offer.badge}
+                      </span>
+                    </div>
+
+                    {/* Middle title and description */}
+                    <div className="space-y-1.5 z-10 text-left py-1 font-sans">
+                      <h3 className="text-base font-serif font-normal tracking-wide leading-tight">
+                        {offer.title}
+                      </h3>
+                      <p className="text-[10.5px] opacity-90 leading-relaxed font-sans font-light">
+                        {offer.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom image illustration */}
+                    <div className="flex-1 p-1 bg-white/10 rounded-[1.1rem] border border-white/10 overflow-hidden relative w-full">
+                      <div className="w-full h-full rounded-[0.8rem] overflow-hidden relative">
+                        <img 
+                          src={offer.image} 
+                          alt={offer.title} 
+                          className="absolute inset-0 w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
 
+              {/* Swipe Indication */}
+              <div className="flex items-center justify-center gap-2 mt-5 text-[11px] font-bold tracking-[0.25em] text-[#1B4C44] font-heading select-none">
+                <span className="uppercase opacity-90">Swipe to explore</span>
+                <motion.div 
+                  animate={{ x: [0, 8, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                  className="flex items-center text-[#A88C52]"
+                >
+                  <ChevronRight size={14} className="stroke-[3]" />
+                  <ChevronRight size={14} className="-ml-2 stroke-[3] opacity-60" />
+                </motion.div>
+              </div>
             </div>
-          </div>
+          ) : (
+            // Desktop Sticky Interactive Vertical Stack Section
+            <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
+              <div className="container mx-auto px-6 md:px-4 max-w-6xl relative z-10">
+                
+                <div className="text-center pt-20 xs:pt-24 sm:pt-28 md:pt-2 mb-6 md:mb-12 max-w-2xl mx-auto space-y-2.5 shrink-0 animate-fade-in">
+                  <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block font-sans">
+                    {weddingsOfferingsTagline}
+                  </span>
+                  <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading text-slate-charcoal mt-1 tracking-tight font-light leading-none">
+                    {weddingsOfferingsHeading} <span className="italic font-serif text-[#1B4C44] font-normal">{weddingsOfferingsHeadingItalic}</span>
+                  </h2>
+                  <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
+                    {weddingsOfferingsDesc}
+                  </p>
+                </div>
+
+                <div className="relative w-full max-w-5xl mx-auto h-[480px] xs:h-[440px] sm:h-[440px] md:h-[420px] lg:h-[450px]" style={{ perspective: "800px" }}>
+                  {visibleOfferings.map((offer, idx) => (
+                    <WeddingOfferingCard 
+                      key={offer.num} 
+                      offer={offer} 
+                      idx={idx} 
+                      total={visibleOfferings.length} 
+                      scrollYProgress={weddingSpecsScroll}
+                      isMobile={isMobile}
+                    />
+                  ))}
+                </div>
+
+              </div>
+            </div>
+          )}
         </section>
       )}
 
@@ -824,101 +897,48 @@ export default function Weddings() {
               {weddingsGalleryDesc}
             </p>
           </div>
+                    {(() => {
+            const mappedGalleryItems = [
+              {
+                image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800",
+                title: "Altar under the Snowpeaks",
+                category: "CANOPY VOWS"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800",
+                title: "Long table woodland banquets",
+                category: "OUTDOOR SLATES"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800",
+                title: "Starlit fireplace gatherings",
+                category: "GLASS SANCTUARY"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800",
+                title: "Deodar twilight trail entrance",
+                category: "WOODEN TORCHES"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800",
+                title: "Hand raised local millet thalis",
+                category: "VEGETARIAN FEASTS"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800",
+                title: "Lawn cocktails & quiet embers",
+                category: "TWILIGHT SPIRIT"
+              }
+            ];
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-            <div className="space-y-3 md:space-y-4 lg:space-y-6">
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-[3/4]">
-                <img 
-                  src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" 
-                  alt="Sacred Alpine Canopy vows setup" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">CANOPY VOWS</span>
-                    <span className="text-xs text-white font-serif">Altar under the Snowpeaks</span>
-                  </div>
-                </div>
-              </div>
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-square">
-                <img 
-                  src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800" 
-                  alt="Bespoke outdoor wedding fine-dining deodar table" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">OUTDOOR SLATES</span>
-                    <span className="text-xs text-white font-serif">Long table woodland banquets</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3 md:space-y-4 lg:space-y-6 pt-6 md:pt-10">
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-square">
-                <img 
-                  src="https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800" 
-                  alt="Glass Pavilion evening reception starlight" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">GLASS SANCTUARY</span>
-                    <span className="text-xs text-white font-serif">Starlit fireplace gatherings</span>
-                  </div>
-                </div>
-              </div>
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-[3/4]">
-                <img 
-                  src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800" 
-                  alt="Traditional Garhwali multi-tiered wedding flower designs" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">WOODEN TORCHES</span>
-                    <span className="text-xs text-white font-serif">Deodar twilight trail entrance</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3 md:space-y-4 lg:space-y-6 col-span-2 md:col-span-1">
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-[3/4]">
-                <img 
-                  src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" 
-                  alt="Fine sattvik organic wedding foods" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">SATTVIK FEASTS</span>
-                    <span className="text-xs text-white font-serif">Hand raised local millet thalis</span>
-                  </div>
-                </div>
-              </div>
-              <div className="relative group overflow-hidden rounded-xl border border-stone-200/50 aspect-square">
-                <img 
-                  src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800" 
-                  alt="Ambient wedding night glow celebrations" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div>
-                    <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] block">TWILIGHT SPIRIT</span>
-                    <span className="text-xs text-white font-serif">Lawn cocktails & quiet embers</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            return (
+              <BentoGallery 
+                items={mappedGalleryItems} 
+                theme="light"
+                borderRadiusClass="rounded-xl"
+              />
+            );
+          })()}
         </div>
 
         {/* Action Button */}

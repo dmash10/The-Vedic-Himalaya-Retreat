@@ -62,7 +62,7 @@ export default function AdminDashboard() {
         <div className="relative z-10 space-y-4">
           <div className="flex items-center gap-2">
             <Trees className="w-4.5 h-4.5 text-[#C4A665]" />
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[#8E9F96] font-bold">The Green Hills Resort</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-[#8E9F96] font-bold">The Vedic Himalaya Retreat</span>
           </div>
           <div>
             <h1 className="text-xl md:text-2xl font-heading font-normal text-[#F8FAFC]">

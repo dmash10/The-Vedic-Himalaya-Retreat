@@ -23,7 +23,7 @@ export default function Contact() {
   const contactHeading = getValue('contact', 'contact_heading', 'We Await Your');
   const contactSubheading = getValue('contact', 'contact_subheading', 'Prepare your pilgrimage plans beautifully. Our reservation crew is available 24/7 to orchestrate your luxury stay and pure Sattvik dining requirements.');
 
-  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'SEMI VILLAGE, Kedarnath Rd, Kund, Guptkashi, Uttarakhand 246495');
+  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246495');
   const contactEmailText = getValue('contact', 'contact_email', settings.email || 'stay@vedichimalaya.com');
 
   const contactHeroVisible = getValue('contact', 'contact_hero_visible', 'true') !== 'false';
@@ -34,6 +34,8 @@ export default function Contact() {
   const contactFormVisible = getValue('contact', 'contact_form_visible', 'true') !== 'false';
   const contactFormTitle = getValue('contact', 'contact_form_title', 'Send an Inquiry');
 
+  const whatsappNumber = settings.whatsapp_number || "918126573560";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName || !email || !message) {
@@ -41,6 +43,21 @@ export default function Contact() {
       return;
     }
 
+    const fullName = lastName ? `${firstName} ${lastName}` : firstName;
+
+    // Open WhatsApp immediately (synchronous - bypasses popup blockers)
+    const waMessage = [
+      `Namaste! I would like to send an inquiry:`,
+      ``,
+      `• *Name*: ${fullName}`,
+      `• *Email*: ${email}`,
+      `• *Message*: ${message}`,
+    ].join('\n');
+
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
+    window.open(waUrl, '_blank');
+
+    // Store inquiry locally for admin panel
     const newInquiry = {
       id: `INQ-${Math.floor(10000 + Math.random() * 90000)}`,
       firstName,
