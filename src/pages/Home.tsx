@@ -140,7 +140,7 @@ const getTransformParams = (idx: number, total: number) => {
 function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: OfferingCardProps) {
   const params = getTransformParams(idx, total);
   
-  const scale = useTransform(scrollYProgress, params.inputs, params.scale);
+  const scale = useTransform(scrollYProgress, params.inputs, isMobile ? params.scale.map(() => 1.0 - idx * 0.04) : params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotateX = useTransform(scrollYProgress, params.inputs, isMobile ? params.rotateX.map(() => 0) : params.rotateX);

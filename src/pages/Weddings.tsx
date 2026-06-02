@@ -149,7 +149,7 @@ const getWeddingTransformParams = (idx: number, total: number) => {
 function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: WeddingOfferingCardProps) {
   const params = getWeddingTransformParams(idx, total);
   
-  const scale = useTransform(scrollYProgress, params.inputs, params.scale);
+  const scale = useTransform(scrollYProgress, params.inputs, isMobile ? params.scale.map(() => 1.0 - idx * 0.04) : params.scale);
   const y = useTransform(scrollYProgress, params.inputs, params.y);
   const opacity = useTransform(scrollYProgress, params.inputs, params.opacity);
   const rotate = useTransform(scrollYProgress, params.inputs, params.rotate);
