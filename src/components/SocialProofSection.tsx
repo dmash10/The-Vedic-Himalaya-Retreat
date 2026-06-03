@@ -45,7 +45,7 @@ const reviews = [
         date: "November 2024",
         rating: 5,
         state: "West Bengal",
-        text: "Real Himalayan hospitality. They packed hot aloo parathas for our early morning walk up to the forest trails. The spiced tea here is amazing. This sanctuary has a soul, unlike the noisy hotels on the main highways. Jai Kedar!"
+        text: "Real Himalayan hospitality. They packed hot aloo parathas for our early morning walk up to the forest trails. The spiced tea here is amazing. This place has a soul, unlike the noisy hotels on the main highways. Jai Kedar!"
     },
     {
         name: "Arjun Reddy",
@@ -66,7 +66,7 @@ const reviews = [
         date: "October 2024",
         rating: 4,
         state: "Punjab",
-        text: "Extremely tidy sanctuary on the hill. Staff treats you like family. If you want silence and total peace of mind, stay here. Far better than the congested and noisy hotels near the busy markets below."
+        text: "Extremely tidy retreat on the hill. Staff treats you like family. If you want silence and total peace of mind, stay here. Far better than the congested and noisy hotels near the busy markets below."
     },
     {
         name: "Suresh Kumar",

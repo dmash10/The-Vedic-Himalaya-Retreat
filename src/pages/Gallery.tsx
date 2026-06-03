@@ -131,7 +131,7 @@ export default function Gallery() {
         {(() => {
           const mappedGalleryItems = filteredImages.map(img => {
             const rawTitle = img.title || "";
-            const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Sanctuary View"].includes(rawTitle.trim());
+            const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Retreat View"].includes(rawTitle.trim());
             const title = isPlaceholderTitle ? "" : rawTitle;
 
             const rawDesc = img.desc || "";
