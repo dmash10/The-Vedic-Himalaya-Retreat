@@ -35,8 +35,8 @@
   --font-script: "Pinyon Script", cursive;
 
   --font-sans: var(--font-jakarta);
-  --font-heading: var(--font-marcellus);
-  --font-serif: var(--font-marcellus);
+  --font-heading: var(--font-bricolage);
+  --font-serif: var(--font-bricolage);
 }
 
 @layer base {
