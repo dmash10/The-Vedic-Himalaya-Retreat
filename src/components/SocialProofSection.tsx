@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useContent } from "@/hooks/useContent";
 
 // 40 highly realistic, raw, and down-to-earth guest reviews from real pilgrims & travelers
 const reviews = [
@@ -287,6 +288,7 @@ const reviews = [
 ];
 
 export default function SocialProofSection() {
+    const { getValue, content } = useContent();
     const [activeReviews, setActiveReviews] = useState<any[]>(reviews);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
@@ -332,38 +334,30 @@ export default function SocialProofSection() {
         };
     }, []);
 
-    // Sync reviews with localStorage initially, with overwrite validation for updates
+    // Sync reviews with Supabase database initially, fallback to defaults if not set
     useEffect(() => {
-        const storedReviewsStr = localStorage.getItem("adminReviews_v2_1");
-        let useDefault = true;
-        if (storedReviewsStr) {
-            try {
-                const parsed = JSON.parse(storedReviewsStr);
-                // Overwrite if stored dataset is depleted or outdated so new 40 reviews take effect
-                if (parsed.length >= 38) {
-                    const approvedOnly = parsed.filter((r: any) => r.approved !== false);
-                    if (approvedOnly.length > 0) {
-                        setActiveReviews(approvedOnly);
-                        setCurrentIndex(0);
-                        useDefault = false;
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to parse stored reviews", e);
-            }
+        let dbReviews = [];
+        try {
+            const val = getValue('home', 'social_proof_reviews', '[]');
+            dbReviews = JSON.parse(val);
+        } catch (e) {
+            console.error("Failed to parse db reviews:", e);
         }
-        
-        if (useDefault) {
+
+        if (Array.isArray(dbReviews) && dbReviews.length > 0) {
+            const approvedOnly = dbReviews.filter((r: any) => r.approved !== false);
+            setActiveReviews(approvedOnly);
+            setCurrentIndex(0);
+        } else {
             const seeded = reviews.map((r, idx) => ({
                 ...r,
                 id: `REV-${1000 + idx}`,
                 approved: true
             }));
-            localStorage.setItem("adminReviews_v2_1", JSON.stringify(seeded));
             setActiveReviews(seeded);
             setCurrentIndex(0);
         }
-    }, []);
+    }, [content, getValue]);
 
     // Safe, clamped pagination index changers that cycle smoothly using mathematically clean state
     const goNext = useCallback(() => {

@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/hooks/useContent";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import PageLoader from "@/components/PageLoader";
+import { getMapEmbedUrl } from "@/lib/utils";
+
 
 export default function Contact() {
   const [firstName, setFirstName] = useState("");
@@ -272,6 +274,50 @@ export default function Contact() {
                </AnimatePresence>
             </div>
           )}  </div>
+
+        {/* Location Map Preview Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: easePremium }}
+          className="mt-16 max-w-4xl mx-auto"
+        >
+          <div className="bg-white border border-[#D8CBB8]/30 shadow-xl rounded-2xl p-6 md:p-8 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.2em] font-black text-[#A88C52] font-mono block mb-1">Interactive Map</span>
+                <h3 className="text-xl font-heading font-medium text-slate-charcoal">Resort Coordinates</h3>
+                <p className="text-xs text-slate-charcoal/70 mt-1 font-sans">
+                  Located in the serene village of Dewar, Guptkashi, along the sacred Kedarnath road.
+                </p>
+              </div>
+              {(settings.google_maps_url || settings.address) && (
+                <a
+                  href={settings.google_maps_url || `https://maps.google.com/?q=${encodeURIComponent(settings.address || "Village Dewar, Guptkashi")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full md:w-auto px-5 py-2.5 rounded-xl border border-[#D8CBB8] text-slate-charcoal hover:bg-[#1B4C44] hover:text-white hover:border-[#1B4C44] transition-all duration-300 font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] inline-flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                >
+                  <MapPin size={12} />
+                  <span>Open in Google Maps</span>
+                </a>
+              )}
+            </div>
+
+            <div className="relative w-full h-[350px] overflow-hidden rounded-xl border border-[#D8CBB8]/30 shadow-inner bg-[#FAF9F5]">
+              <iframe
+                src={getMapEmbedUrl(settings.google_maps_url || 'https://maps.app.goo.gl/1Ec5QAh6RJano1BZ7', settings.address || 'Village Dewar, Guptkashi, Kedarnath Route')}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

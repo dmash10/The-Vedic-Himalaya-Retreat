@@ -7,7 +7,7 @@ import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { MessageSquare, Phone, Mail, Sparkles } from "lucide-react";
 
 export function Layout() {
-  const { pathname } = useLocation();
+  const pathname = useLocation().pathname;
   const { settings, loading } = useSiteSettings();
 
   useEffect(() => {
@@ -15,11 +15,7 @@ export function Layout() {
   }, [pathname]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0A1613]">
-        <div className="w-10 h-10 rounded-full border-2 border-[#D8CBB8]/30 border-t-[#C4A665] animate-spin" />
-      </div>
-    );
+    return null;
   }
 
   // 1. Maintenance Mode implementation (Admin Routes are outside of layout, so they remain fully accessible)
@@ -42,9 +38,14 @@ export function Layout() {
         <header className="relative z-10 p-6 md:p-8 border-b border-[#D8CBB8]/10 bg-black/10 backdrop-blur-xs flex justify-center sm:justify-start">
           <div className="flex flex-col text-center sm:text-left">
             <span className="font-heading font-normal text-lg sm:text-xl tracking-widest uppercase text-[#FAF9F5]">
-              {settings.hotel_name || "The Vedic Himalaya Retreat"}
+              <span className="sm:hidden">
+                {settings.hotel_name ? settings.hotel_name.replace(/Retreat/gi, '').trim() : "The Vedic Himalaya"}
+              </span>
+              <span className="hidden sm:inline">
+                {settings.hotel_name || "The Vedic Himalaya Retreat"}
+              </span>
             </span>
-            <span className="text-[10px] italic text-[#C4A665] uppercase tracking-widest mt-1">
+            <span className="hidden sm:inline text-[10px] italic text-[#C4A665] uppercase tracking-widest mt-1">
               {settings.tagline || "Peace in the Pines"}
             </span>
           </div>

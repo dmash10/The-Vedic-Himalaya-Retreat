@@ -17,13 +17,16 @@ export interface Room {
   display_order?: number;
 }
 
-export const useRooms = () => {
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [loading, setLoading] = useState(true);
+// Module-level cache to prevent loader flickering on page navigation
+let cachedRooms: Room[] | null = null;
 
-  const fetchRooms = async () => {
+export const useRooms = () => {
+  const [rooms, setRooms] = useState<Room[]>(cachedRooms || []);
+  const [loading, setLoading] = useState(cachedRooms === null);
+
+  const fetchRooms = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const { data, error } = await supabase
         .from('rooms')
         .select('*')
@@ -31,11 +34,13 @@ export const useRooms = () => {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setRooms(data || []);
+      const roomsData = data || [];
+      cachedRooms = roomsData;
+      setRooms(roomsData);
     } catch (error) {
       console.error('Error fetching rooms:', error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -49,9 +54,11 @@ export const useRooms = () => {
       if (error) throw error;
 
       // Optimistic update
-      setRooms((prev) =>
-        prev.map((room) => (room.id === id ? { ...room, ...updates } : room))
-      );
+      setRooms((prev) => {
+        const next = prev.map((room) => (room.id === id ? { ...room, ...updates } : room));
+        cachedRooms = next;
+        return next;
+      });
 
       return { success: true };
     } catch (error) {
@@ -69,7 +76,11 @@ export const useRooms = () => {
         .single();
 
       if (error) throw error;
-      setRooms((prev) => [...prev, data]);
+      setRooms((prev) => {
+        const next = [...prev, data];
+        cachedRooms = next;
+        return next;
+      });
       return { success: true };
     } catch (error) {
       console.error('Error creating room:', error);
@@ -85,7 +96,11 @@ export const useRooms = () => {
         .eq('id', id);
 
       if (error) throw error;
-      setRooms((prev) => prev.filter((room) => room.id !== id));
+      setRooms((prev) => {
+        const next = prev.filter((room) => room.id !== id);
+        cachedRooms = next;
+        return next;
+      });
       return { success: true };
     } catch (error) {
       console.error('Error deleting room:', error);
@@ -94,7 +109,12 @@ export const useRooms = () => {
   };
 
   useEffect(() => {
-    fetchRooms();
+    if (cachedRooms) {
+      // Silently refresh in the background if we already have cache
+      fetchRooms(true);
+    } else {
+      fetchRooms(false);
+    }
   }, []);
 
   return {
@@ -103,6 +123,6 @@ export const useRooms = () => {
     updateRoom,
     createRoom,
     deleteRoom,
-    refresh: fetchRooms,
+    refresh: () => fetchRooms(false),
   };
 };

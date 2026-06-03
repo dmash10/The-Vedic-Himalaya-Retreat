@@ -3,6 +3,67 @@ import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import { toast } from 'sonner';
 
+// Helper function to compress images and guarantee that the result is strictly under 400KB.
+const compressImageUnder400KB = async (file: File): Promise<File> => {
+  let targetSizeMB = 0.38; // Under 390KB
+  let initialQuality = 0.8;
+  let maxWidthOrHeight = 1920;
+
+  // Try standard compression first
+  const firstOptions = {
+    maxSizeMB: targetSizeMB,
+    maxWidthOrHeight: maxWidthOrHeight,
+    useWebWorker: true,
+    fileType: 'image/webp' as const,
+    initialQuality: initialQuality,
+    maxIteration: 15,
+  };
+  
+  let resultBlob = await imageCompression(file, firstOptions);
+  
+  // If the compressed size is still greater than 400KB (409,600 bytes), run progressive compression passes
+  let attempts = 0;
+  while (resultBlob.size > 395 * 1024 && attempts < 4) {
+    attempts++;
+    maxWidthOrHeight = Math.round(maxWidthOrHeight * 0.85);
+    initialQuality = Math.max(0.3, initialQuality - 0.15);
+    targetSizeMB = targetSizeMB * 0.8;
+    
+    console.log(`Re-compressing image: attempt ${attempts}, size was ${(resultBlob.size / 1024).toFixed(1)} KB. Trying max size: ${targetSizeMB.toFixed(2)} MB, dimensions: ${maxWidthOrHeight}px, quality: ${initialQuality.toFixed(2)}`);
+    
+    const retryOptions = {
+      maxSizeMB: targetSizeMB,
+      maxWidthOrHeight: maxWidthOrHeight,
+      useWebWorker: true,
+      fileType: 'image/webp' as const,
+      initialQuality: initialQuality,
+      maxIteration: 10,
+    };
+    
+    resultBlob = await imageCompression(new File([resultBlob], file.name, { type: 'image/webp' }), retryOptions);
+  }
+  
+  if (resultBlob.size > 400 * 1024) {
+    console.log(`Final emergency compression pass: size was ${(resultBlob.size / 1024).toFixed(1)} KB`);
+    const emergencyOptions = {
+      maxSizeMB: 0.25,
+      maxWidthOrHeight: 1280,
+      useWebWorker: true,
+      fileType: 'image/webp' as const,
+      initialQuality: 0.4,
+    };
+    resultBlob = await imageCompression(new File([resultBlob], file.name, { type: 'image/webp' }), emergencyOptions);
+  }
+  
+  console.log(`Final compressed image size: ${(resultBlob.size / 1024).toFixed(1)} KB`);
+  return new File(
+    [resultBlob],
+    file.name.replace(/\.[^/.]+$/, '.webp'),
+    { type: 'image/webp', lastModified: Date.now() }
+  );
+};
+
+
 export interface ZoneMedia {
   id: string;
   zone_id: string;
@@ -97,18 +158,7 @@ export const useImageZones = () => {
 
       let fileToUpload = file;
       if (type === 'image') {
-        const options = {
-          maxSizeMB: 2,
-          maxWidthOrHeight: 1920,
-          useWebWorker: true,
-          fileType: 'image/webp' as const,
-        };
-        const compressedBlob = await imageCompression(file, options);
-        fileToUpload = new File(
-          [compressedBlob],
-          file.name.replace(/\.[^/.]+$/, '.webp'),
-          { type: 'image/webp', lastModified: Date.now() }
-        );
+        fileToUpload = await compressImageUnder400KB(file);
       }
 
       const timestamp = Date.now();
@@ -261,19 +311,7 @@ export const useImageZones = () => {
     try {
       setUploading(true);
 
-      let fileToUpload = file;
-      const options = {
-        maxSizeMB: 2,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-        fileType: 'image/webp' as const,
-      };
-      const compressedBlob = await imageCompression(file, options);
-      fileToUpload = new File(
-        [compressedBlob],
-        file.name.replace(/\.[^/.]+$/, '.webp'),
-        { type: 'image/webp', lastModified: Date.now() }
-      );
+      let fileToUpload = await compressImageUnder400KB(file);
 
       const timestamp = Date.now();
       const fileName = `the-green-hills-resort/uploads/${timestamp}.webp`;

@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Link } from "react-router-dom";
@@ -24,6 +24,7 @@ interface OfferingCardProps {
   total: number;
   scrollYProgress: any;
   isMobile: boolean;
+  readyToLoad?: boolean;
 }
 
 // Custom scroll-based scale-up and slide transform keyframe generator (freestyle, zero tilt, zero opacity fade)
@@ -156,7 +157,7 @@ const getTransformParams = (idx: number, total: number, isMobile: boolean) => {
   };
 };
 
-function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: OfferingCardProps) {
+function OfferingCard({ offer, idx, total, scrollYProgress, isMobile, readyToLoad = false }: OfferingCardProps) {
   const params = getTransformParams(idx, total, isMobile);
   
   const scale = useTransform(scrollYProgress, params.inputs, params.scale);
@@ -226,9 +227,10 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile }: Offering
       <div className="flex-1 md:w-1/2 p-1 sm:p-2 bg-white/10 md:bg-white/5 rounded-[1.3rem] sm:rounded-[1.8rem] border border-white/10 overflow-hidden relative group h-36 xs:h-44 sm:h-52 md:h-auto min-h-[140px] md:min-h-0">
         <div className="w-full h-full rounded-[1rem] sm:rounded-[1.3rem] overflow-hidden relative">
           <img 
-            src={offer.image} 
+            src={readyToLoad ? offer.image : ""} 
             alt={offer.title} 
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            loading="lazy"
             referrerPolicy="no-referrer"
           />
           {/* Gentle overlay gradient to soften image edges */}
@@ -282,6 +284,8 @@ export default function Home() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
   const [slideIndex, setSlideIndex] = useState(0);
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [polaroidsInteracted, setPolaroidsInteracted] = useState(false);
   const [suiteData, setSuiteData] = useState({
     title: "Pinewood Family Suite",
     badge: "Signature Reserve",
@@ -293,15 +297,184 @@ export default function Home() {
     ]
   });
 
-  const { content, loading, getValue } = useContent();
+  const { content, loading, getValue, appReady } = useContent();
   const { rooms } = useRooms();
   const { settings } = useSiteSettings();
 
+  const [loadRemaining, setLoadRemaining] = useState(false);
+  const roomSectionRef = useRef<HTMLDivElement>(null);
+  const [loadBento, setLoadBento] = useState(false);
+
+  useEffect(() => {
+    if (appReady) {
+      const timer = setTimeout(() => {
+        setLoadRemaining(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [appReady]);
+
+  useEffect(() => {
+    if (!appReady) return; // Wait until page loader is dismissed and layout settles
+
+    const el = roomSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setLoadBento(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [appReady]);
+
+  // Centralized cross-page background preloading queue (runs slowly in background after Bento starts loading)
+  useEffect(() => {
+    if (loadBento) {
+      const roomCardImg = rooms[0]?.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200";
+      const diningHeroImg = getValue('dining', 'dining_image', '');
+      const weddingsHeroImg = getValue('weddings', 'weddings_image', '');
+
+      // Parse weddings polaroids to preload them as well
+      const weddingsPolaroidsStr = getValue('weddings', 'weddings_polaroids', '[]');
+      let weddingPolaroidImages: string[] = [];
+      try {
+        const parsed = JSON.parse(weddingsPolaroidsStr);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          weddingPolaroidImages = parsed.map((item: any) => item.image).filter(Boolean);
+        }
+      } catch (e) {
+        console.error("Failed to parse weddings_polaroids in preloader:", e);
+      }
+
+      // Default fallback polaroids if weddings_polaroids is empty or unconfigured
+      if (weddingPolaroidImages.length === 0) {
+        weddingPolaroidImages = [
+          "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800",
+          "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800",
+          "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800",
+          "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800"
+        ];
+      }
+
+      // Parse experiences slides to preload them
+      const experiencesSlidesStr = getValue('experiences', 'experience_slides', '[]');
+      let experiencesSlideImages: string[] = [];
+      try {
+        const parsed = JSON.parse(experiencesSlidesStr);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          experiencesSlideImages = parsed.map((item: any) => item.image).filter(Boolean);
+        }
+      } catch (e) {
+        console.error("Failed to parse experience_slides in preloader:", e);
+      }
+      if (experiencesSlideImages.length === 0) {
+        experiencesSlideImages = [
+          "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1566378268012-ea11aa6e7b46?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=2000"
+        ];
+      }
+
+      // Parse explore (nearby) slides to preload them
+      const nearbySlidesStr = getValue('nearby', 'nearby_slides', '[]');
+      let nearbySlideImages: string[] = [];
+      try {
+        const parsed = JSON.parse(nearbySlidesStr);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          nearbySlideImages = parsed.map((item: any) => item.image).filter(Boolean);
+        }
+      } catch (e) {
+        console.error("Failed to parse nearby_slides in preloader:", e);
+      }
+      if (nearbySlideImages.length === 0) {
+        nearbySlideImages = [
+          "https://images.unsplash.com/photo-1626082896492-766af4fc6595?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2000",
+          "https://images.unsplash.com/photo-1627855913251-512c1b2f0b78?auto=format&fit=crop&q=80&w=2000"
+        ];
+      }
+
+      // Combine all images into priority steps
+      const rawQueue: (string | string[])[] = [
+        roomCardImg,
+        diningHeroImg,
+        [weddingsHeroImg, ...weddingPolaroidImages].filter(Boolean),
+        ...experiencesSlideImages,
+        ...nearbySlideImages,
+        ...(rooms.slice(1).map(r => r.card_image_url).filter(Boolean) as string[])
+      ].filter(Boolean);
+
+      // Deduplicate elements globally across steps to save bandwidth
+      const seen = new Set<string>();
+      const preloadQueue: (string | string[])[] = [];
+
+      rawQueue.forEach(item => {
+        if (Array.isArray(item)) {
+          const filtered = item.filter(src => {
+            if (!src || seen.has(src)) return false;
+            seen.add(src);
+            return true;
+          });
+          if (filtered.length > 0) {
+            preloadQueue.push(filtered);
+          }
+        } else {
+          if (item && !seen.has(item)) {
+            seen.add(item);
+            preloadQueue.push(item);
+          }
+        }
+      });
+
+      let delay = 1200; // Wait 1.2s after Bento gallery starts loading to start preloading other pages
+      preloadQueue.forEach((item) => {
+        setTimeout(() => {
+          if (Array.isArray(item)) {
+            item.forEach((src) => {
+              const img = new Image();
+              img.src = src;
+            });
+          } else {
+            const img = new Image();
+            img.src = item;
+          }
+        }, delay);
+        delay += 1000; // Fetch each subsequent step with a 1-second interval to avoid choking browser resources
+      });
+    }
+  }, [loadBento, rooms, getValue]);
 
   const heroTitleLine1 = getValue('home', 'hero_line1', 'Peace in the');
   const heroTitleLine2 = getValue('home', 'hero_line2', 'Pines');
   const heroSubtitle = getValue('home', 'hero_subtitle', 'Village Dewar, Guptkashi, Kedarnath Route');
-  const heroImage = getValue('home', 'hero_image', '');
+  // Instant local cache resolution (loads immediately on mount)
+  const [cachedHeroImage, setCachedHeroImage] = useState(() => {
+    return localStorage.getItem('cached_resort_hero_image') || '';
+  });
+
+  const dbHeroImage = getValue('home', 'hero_image', '');
+
+  useEffect(() => {
+    if (dbHeroImage) {
+      localStorage.setItem('cached_resort_hero_image', dbHeroImage);
+      setCachedHeroImage(dbHeroImage);
+    }
+  }, [dbHeroImage]);
+
+  const heroImage = dbHeroImage || cachedHeroImage;
   const heroCta = getValue('home', 'hero_cta', 'Reserve Your Stay');
   const heroCtaLink = getValue('home', 'hero_cta_link', '/rooms');
 
@@ -468,16 +641,17 @@ export default function Home() {
   };
 
   const nextSlide = () => {
+    setPolaroidsInteracted(true);
     setSlideIndex((prev) => (prev + 1) % (visiblePolaroids.length || 1));
   };
 
   const prevSlide = () => {
+    setPolaroidsInteracted(true);
     setSlideIndex((prev) => (prev - 1 + visiblePolaroids.length) % (visiblePolaroids.length || 1));
   };
 
   return (
     <div className="bg-[#F6F4EF] text-slate-charcoal pb-20 md:pb-0 font-sans">
-      {loading && content.length === 0 && <PageLoader />}
       {/* Hero Section */}
       {heroVisible && (
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
@@ -487,11 +661,23 @@ export default function Home() {
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#1E2229] via-black/15 to-[#1E2229]/40 z-10" />
             {heroImage && (
-              <img 
-                src={heroImage} 
-                alt="Foggy Himalayan Mountains" 
-                className="w-full h-full object-cover object-center scale-105"
-              />
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
+                {/* Blurred preview behind — shows through where crisp image hasn't painted yet */}
+                {!heroLoaded && (
+                  <img
+                    src={heroImage}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover object-center filter blur-xl scale-105 opacity-60"
+                  />
+                )}
+                {/* Crisp image loads naturally top-to-bottom over the blur */}
+                <img 
+                  src={heroImage} 
+                  alt="Foggy Himalayan Mountains" 
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                  onLoad={() => setHeroLoaded(true)}
+                />
+              </div>
             )}
           </motion.div>
           
@@ -661,6 +847,12 @@ export default function Home() {
                       shadowClass = "shadow-none border-transparent";
                     }
 
+                    const imageSrc = i === 0
+                      ? item.image
+                      : (i === 1 || i === 3)
+                      ? (appReady ? item.image : "")
+                      : (loadBento || polaroidsInteracted ? item.image : "");
+
                     return (
                       <motion.div 
                          key={item.id}
@@ -681,12 +873,18 @@ export default function Home() {
                         className={`absolute w-[58%] bg-white p-3.5 md:p-4.5 pb-12 md:pb-16 border rounded-xs ${shadowClass} ${isPointerEventsActive} transition-shadow duration-[400ms]`}
                       >
                         <div className="aspect-square w-full overflow-hidden bg-stone-55 border border-stone-100 rounded-2xs group relative">
-                          <img 
-                            src={item.image} 
-                            className="w-full h-full object-cover duration-700 ease-out group-hover:scale-105 transition-transform" 
-                            alt={item.title}
-                            referrerPolicy="no-referrer"
-                          />
+                          {imageSrc ? (
+                            <img 
+                              src={imageSrc} 
+                              className="w-full h-full object-cover duration-700 ease-out group-hover:scale-105 transition-transform" 
+                              alt={item.title}
+                              loading={i === 0 ? "eager" : "lazy"}
+                              fetchPriority={i === 0 ? "high" : "auto"}
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-[#FAF9F5]/80 animate-pulse" />
+                          )}
                         </div>
                         <div className="mt-4 text-center px-1">
                           <span className="font-script text-2xl md:text-3.5xl text-[#2E3438] block tracking-wide leading-none">{item.title}</span>
@@ -764,9 +962,10 @@ export default function Home() {
                     <div className="flex-1 p-1 bg-white/10 rounded-[1.1rem] border border-white/10 overflow-hidden relative w-full">
                       <div className="w-full h-full rounded-[0.8rem] overflow-hidden relative">
                         <img 
-                          src={offer.image} 
+                          src={loadRemaining ? offer.image : ""} 
                           alt={offer.title} 
                           className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
                           referrerPolicy="no-referrer"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
@@ -815,6 +1014,7 @@ export default function Home() {
                       total={visibleOfferings.length} 
                       scrollYProgress={offeringsScroll}
                       isMobile={isMobile}
+                      readyToLoad={loadRemaining}
                     />
                   ))}
                 </div>
@@ -879,7 +1079,7 @@ export default function Home() {
       )}
 
       {/* Rooms Peek */}
-      <section className="py-10 md:py-24 bg-[#EFEAE1]/45 overflow-hidden">
+      <section ref={roomSectionRef} className="py-10 md:py-24 bg-[#EFEAE1]/45 overflow-hidden">
         <div className="container mx-auto px-4 md:px-4 max-w-6xl">
           <div className="flex flex-col items-center text-center mb-6 md:mb-16 space-y-2 md:space-y-4">
             <span className="uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold text-deep-teal">Accommodation</span>
@@ -900,9 +1100,10 @@ export default function Home() {
             {/* Visual Column */}
             <div className="md:col-span-6 relative aspect-[16/9] md:aspect-auto overflow-hidden bg-[#FAF9F5]">
               <img 
-                src={roomData.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200"} 
+                src={loadRemaining ? (roomData.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200") : ""} 
                 alt={roomData.name} 
                 className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-1000 ease-out"
+                loading="lazy"
                 referrerPolicy="no-referrer"
               />
               {/* Luxury Transparent Glass Badge */}
@@ -1069,7 +1270,8 @@ export default function Home() {
             </div>
              
              {(() => {
-               const mappedBentoItems = bentoGalleryItems.map((item, idx) => ({
+               const visibleBentoItems = bentoGalleryItems.filter((item: any) => item.is_visible !== false);
+               const mappedBentoItems = visibleBentoItems.map((item, idx) => ({
                  image: item.image,
                  title: item.title,
                  category: `Slide ${(idx + 1).toString().padStart(2, "0")}`
@@ -1079,6 +1281,7 @@ export default function Home() {
                    items={mappedBentoItems} 
                    theme="light" 
                    borderRadiusClass="rounded-xl"
+                   readyToLoad={loadBento}
                  />
                );
              })()}
@@ -1118,7 +1321,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
 
 
     </div>

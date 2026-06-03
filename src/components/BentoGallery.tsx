@@ -17,6 +17,7 @@ interface BentoGalleryProps {
   getItemSpan?: (index: number) => string;
   theme?: "light" | "dark";
   enableLightbox?: boolean;
+  readyToLoad?: boolean;
 }
 
 const defaultGetItemSpan = (index: number) => {
@@ -36,9 +37,11 @@ export default function BentoGallery({
   onItemClick,
   getItemSpan = defaultGetItemSpan,
   theme = "dark",
-  enableLightbox = true
+  enableLightbox = true,
+  readyToLoad = true
 }: BentoGalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [loadedMap, setLoadedMap] = useState<Record<string, boolean>>({});
 
   const handleCardClick = (index: number) => {
     if (onItemClick) {
@@ -83,10 +86,12 @@ export default function BentoGallery({
   return (
     <>
       <div 
-        className="flex flex-wrap gap-2 w-full justify-center"
+        className="grid grid-cols-2 gap-3 w-full auto-rows-[140px] xs:auto-rows-[185px] grid-flow-dense md:flex md:flex-wrap md:gap-2 md:justify-center"
       >
         {items.map((item, index) => {
           const isDarkTheme = theme === "dark";
+          const imgKey = `${item.image}-${index}`;
+          const isLoaded = loadedMap[imgKey];
 
           return (
             <motion.div
@@ -97,16 +102,22 @@ export default function BentoGallery({
               transition={{ duration: 0.8, delay: index * 0.05 }}
               key={item.image + index}
               onClick={() => handleCardClick(index)}
-              className={`h-[180px] xs:h-[220px] md:h-[260px] flex-grow relative overflow-hidden bg-stone-sand/20 cursor-pointer select-none ${borderRadiusClass} group`}
+              className={`w-full h-full md:w-auto md:h-[260px] md:flex-grow relative overflow-hidden bg-stone-sand/20 cursor-pointer select-none ${borderRadiusClass} group ${getItemSpan(index)}`}
               style={{ flexBasis: "auto" }}
             >
               {/* Premium Scale-Up Wrapper inside card */}
-              <div className="w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.03] overflow-hidden relative">
+              <div className={`w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.03] overflow-hidden relative ${borderRadiusClass}`}>
+                {/* Shimmering Skeleton Loader */}
+                {!isLoaded && (
+                  <div className="absolute inset-0 bg-[#EFEAE1]/25 dark:bg-white/5 animate-pulse z-10" />
+                )}
+                
                 {/* High Quality Image with secondary zoom on hover */}
                 <img 
-                  src={item.image} 
+                  src={readyToLoad ? item.image : ""} 
                   alt={item.title} 
-                  className="h-full w-auto min-w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.05] contrast-105" 
+                  onLoad={() => setLoadedMap(prev => ({ ...prev, [imgKey]: true }))}
+                  className={`w-full h-full md:h-full md:w-auto md:min-w-full object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.05] contrast-105 ${borderRadiusClass} ${isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`} 
                   referrerPolicy="no-referrer"
                 />
 
@@ -173,7 +184,7 @@ export default function BentoGallery({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image display viewport with drag swiping */}
-              <div className="relative w-full aspect-video md:max-h-[70vh] flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black/40">
+              <div className="relative max-w-full max-h-[75vh] flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black/40">
                 <motion.img 
                   key={lightboxIndex}
                   initial={{ scale: 0.95, opacity: 0 }}
@@ -182,7 +193,7 @@ export default function BentoGallery({
                   transition={{ type: "spring", damping: 25, stiffness: 180 }}
                   src={items[lightboxIndex].image} 
                   alt={items[lightboxIndex].title} 
-                  className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
+                  className="max-w-full max-h-[75vh] object-contain rounded-xl select-none"
                   referrerPolicy="no-referrer"
                   drag="x"
                   dragConstraints={{ left: 0, right: 0 }}

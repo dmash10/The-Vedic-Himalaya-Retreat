@@ -135,6 +135,15 @@ const DEFAULT_WEDDINGS_POLAROIDS = [
   { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Floral Mandap", desc: "TRADITIONAL GARHWALI HARMONY", is_visible: true }
 ];
 
+const DEFAULT_WEDDINGS_GALLERY = [
+  { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Altar under the Snowpeaks", category: "CANOPY VOWS", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800", title: "Long table woodland banquets", category: "OUTDOOR SLATES", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS SANCTUARY", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Deodar twilight trail entrance", category: "WOODEN TORCHES", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", title: "Hand raised local millet thalis", category: "VEGETARIAN FEASTS", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800", title: "Lawn cocktails & quiet embers", category: "TWILIGHT SPIRIT", is_visible: true }
+];
+
 const DEFAULT_WEDDINGS_VENUES = [
   {
     id: "canopy-lawn",
@@ -267,6 +276,26 @@ const DEFAULT_EXPERIENCES_SLIDES = [
     subtitle: "Local trails and pony excursions",
     description: "Trek through surrounding forest routes with a local resident, explore nearby mountain viewpoints on sturdily trained ponies, or walk through the historic village lanes.",
     image: "https://images.unsplash.com/photo-1566378268012-ea11aa6e7b46?auto=format&fit=crop&q=80&w=2000",
+    icon: "Compass",
+    is_visible: true
+  },
+  {
+    id: "horseriding",
+    category: "RECREATION",
+    title: "Horse Riding",
+    subtitle: "Scenic mountain paths on sturdy ponies",
+    description: "Explore the surrounding alpine slopes, tall forests, and peaceful valley viewports on sturdily trained mountain horses with a dedicated handler.",
+    image: "",
+    icon: "Compass",
+    is_visible: true
+  },
+  {
+    id: "cycling",
+    category: "LOCAL TRIPS",
+    title: "Cycling on Village Roads",
+    subtitle: "Pedal through historic pine forest paths",
+    description: "Rent one of our premium hybrid bicycles and explore the winding, quiet paved roads of Village Dewar, feeling the fresh cedar breeze.",
+    image: "",
     icon: "Compass",
     is_visible: true
   },
@@ -780,6 +809,7 @@ export default function AdminPages() {
   const [roomsAmenities, setRoomsAmenities] = useState<any[]>([]);
   const [roomsReviews, setRoomsReviews] = useState<any[]>([]);
   const [weddingPolaroids, setWeddingPolaroids] = useState<any[]>([]);
+  const [weddingsGallery, setWeddingsGallery] = useState<any[]>([]);
   const [venues, setVenues] = useState<any[]>([]);
   const [weddingOfferings, setWeddingOfferings] = useState<any[]>([]);
   const [experienceSlides, setExperienceSlides] = useState<any[]>([]);
@@ -806,7 +836,7 @@ export default function AdminPages() {
       'why_choose_visible', 'home_gallery_visible', 'home_cta_visible', 'social_proof_visible',
       'about_story_visible', 'pillars_visible', 'notice_visible', 'hours_visible', 'dietary_visible',
       'specialty_visible', 'alchemy_visible', 'dining_polaroids_visible', 'weddings_hero_visible',
-      'weddings_story_visible', 'weddings_polaroids_visible', 'weddings_venues_visible', 'weddings_offerings_visible',
+      'weddings_story_visible', 'weddings_polaroids_visible', 'weddings_venues_visible', 'weddings_offerings_visible', 'weddings_gallery_visible',
       'experiences_tour_visible', 'experiences_gallery_visible', 'nearby_tour_visible', 'nearby_treks_visible', 'nearby_gallery_visible',
       'dining_hero_visible', 'dining_philosophy_visible', 'dining_rituals_visible', 'dining_pavilion_visible', 'dining_vows_visible',
       'rooms_hero_visible', 'gallery_hero_visible', 'contact_hero_visible', 'contact_form_visible', 'booking_visible'
@@ -933,12 +963,12 @@ export default function AdminPages() {
     } else if (activePageId === 'dining') {
       setFormFields({
         dining_heading: getValue('dining', 'dining_heading', 'Traditional Mountain Dining'),
-        dining_subheading: getValue('dining', 'dining_subheading', 'Nourishment for Body & Soul'),
+        dining_subheading: getValue('dining', 'dining_subheading', 'An intimate, fire-warmed communion with high-altitude terrace crops and raw forest elixirs.'),
         dining_image: getValue('dining', 'dining_image', ''),
         dining_hours: getValue('dining', 'dining_hours', '7:30 AM - 10:00 PM'),
         dining_dietary: getValue('dining', 'dining_dietary', 'Pure Vegetarian Cuisine'),
-        dining_hero_subtitle: getValue('dining', 'dining_hero_subtitle', 'Dine at the Sanctuary'),
-        dining_philosophy_tagline: getValue('dining', 'dining_philosophy_tagline', 'Alpine Harvest Dining'),
+        dining_hero_subtitle: getValue('dining', 'dining_hero_subtitle', 'SATTVIK NOURISHMENT'),
+        dining_philosophy_tagline: getValue('dining', 'dining_philosophy_tagline', 'SATTVIK NOURISHMENT'),
         dining_philosophy_heading: getValue('dining', 'dining_philosophy_heading', 'Nourished by the High Valley Peaks'),
         dining_philosophy_desc: getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, traditional vegetarian recipes. Every grain of red millet has been collected by family handmills in the tiny terrace properties clinging high above the valley dust."),
         dining_alchemy_tagline: getValue('dining', 'dining_alchemy_tagline', 'TRADITIONAL COOKING METHODS'),
@@ -1003,7 +1033,7 @@ export default function AdminPages() {
       }
     } else if (activePageId === 'weddings') {
       setFormFields({
-        weddings_heading: getValue('weddings', 'weddings_heading', 'Destination Weddings'),
+        weddings_heading: getValue('weddings', 'weddings_heading', 'The Great Himalayan Wedding'),
         weddings_subheading: getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas'),
         weddings_image: getValue('weddings', 'weddings_image', ''),
         weddings_hero_badge: getValue('weddings', 'weddings_hero_badge', 'SACRED WEDDINGS & CELEBRATIONS'),
@@ -1037,6 +1067,12 @@ export default function AdminPages() {
         setWeddingPolaroids(Array.isArray(val) && val.length > 0 ? val : DEFAULT_WEDDINGS_POLAROIDS);
       } catch {
         setWeddingPolaroids(DEFAULT_WEDDINGS_POLAROIDS);
+      }
+      try {
+        const val = JSON.parse(getValue('weddings', 'weddings_gallery', '[]'));
+        setWeddingsGallery(Array.isArray(val) && val.length > 0 ? val : DEFAULT_WEDDINGS_GALLERY);
+      } catch {
+        setWeddingsGallery(DEFAULT_WEDDINGS_GALLERY);
       }
       try {
         const val = JSON.parse(getValue('weddings', 'venue_cards', '[]'));
@@ -1299,6 +1335,7 @@ export default function AdminPages() {
       updates.push({ section: 'dining', key: 'dining_vows', value: JSON.stringify(diningVows) });
     } else if (activePageId === 'weddings') {
       updates.push({ section: 'weddings', key: 'weddings_polaroids', value: JSON.stringify(weddingPolaroids) });
+      updates.push({ section: 'weddings', key: 'weddings_gallery', value: JSON.stringify(weddingsGallery) });
       updates.push({ section: 'weddings', key: 'venue_cards', value: JSON.stringify(venues) });
       updates.push({ section: 'weddings', key: 'wedding_offerings', value: JSON.stringify(weddingOfferings) });
     } else if (activePageId === 'experiences') {
@@ -2414,15 +2451,38 @@ export default function AdminPages() {
                       </div>
                     )}
 
-                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
-                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Gallery Section Headings</div>
-                      <TextInputGroup label="Gallery Tagline" icon={Type} value={formFields.weddings_gallery_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_tagline: v }))} />
-                      <div className="grid grid-cols-2 gap-4">
-                        <TextInputGroup label="Gallery Heading" icon={Type} value={formFields.weddings_gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading: v }))} />
-                        <TextInputGroup label="Gallery Heading (Italic)" icon={Type} value={formFields.weddings_gallery_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading_italic: v }))} />
+                    <SectionToggle label="Weddings Gallery Section" checked={visibilities.weddings_gallery_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, weddings_gallery_visible: v }))} />
+                    {visibilities.weddings_gallery_visible && (
+                      <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                        <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Gallery Section Headings</div>
+                        <TextInputGroup label="Gallery Tagline" icon={Type} value={formFields.weddings_gallery_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_tagline: v }))} />
+                        <div className="grid grid-cols-2 gap-4">
+                          <TextInputGroup label="Gallery Heading" icon={Type} value={formFields.weddings_gallery_heading} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading: v }))} />
+                          <TextInputGroup label="Gallery Heading (Italic)" icon={Type} value={formFields.weddings_gallery_heading_italic} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_heading_italic: v }))} />
+                        </div>
+                        <TextAreaGroup label="Gallery Description" value={formFields.weddings_gallery_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_desc: v }))} rows={2} />
+
+                        <ListEditor
+                          title="Wedding Bento Grid Images"
+                          items={weddingsGallery}
+                          onChange={setWeddingsGallery}
+                          createDefaultItem={() => ({ image: '', title: 'Visual Photo', category: 'CANOPY VOWS', is_visible: true })}
+                          getItemLabel={(item) => item.title}
+                          getItemImage={(item) => item.image}
+                          renderItemEditor={(item, idx, updateField) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                              <div className="space-y-4">
+                                <TextInputGroup label="Photo Title/Description" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
+                                <TextInputGroup label="Category Group" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
+                              </div>
+                              <ImageUploader label="Image" currentImage={item.image} onImageChange={(p) => updateField('image', p)} aspectRatio="aspect-[4/3] w-full" />
+                            </div>
+                          )}
+                          onSave={handleSavePage}
+                          isSaving={isSaving !== null}
+                        />
                       </div>
-                      <TextAreaGroup label="Gallery Description" value={formFields.weddings_gallery_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_gallery_desc: v }))} rows={2} />
-                    </div>
+                    )}
 
                     <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
                       <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bottom CTA Section</div>

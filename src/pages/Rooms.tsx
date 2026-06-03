@@ -211,7 +211,7 @@ export default function Rooms() {
         { label: "Hot Beverage Station", icon: "Coffee", desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
       ];
     }
-    return list;
+    return list.filter((a: any) => a.is_visible !== false);
   }, [content]);
 
   const cmsReviews = useMemo(() => {

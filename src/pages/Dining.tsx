@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { Leaf, Flame, Wind, Sparkles, Utensils, Coffee, ChevronRight, Check, ChevronLeft } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
@@ -17,13 +17,37 @@ export default function Dining() {
   const { getValue, loading, content } = useContent();
   const { menuItems } = useMenu();
 
-  // Prevent flash of fallback text while CMS content loads
-  if (loading && content.length === 0) return <PageLoader />;
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
 
+  const y1 = useTransform(heroScroll, [0, 1], ["0%", "50%"]);
+  const opacity1 = useTransform(heroScroll, [0, 0.8], [1, 0]);
 
   const diningHeading = getValue('dining', 'dining_heading', 'Traditional Mountain Dining');
-  const diningSubheading = getValue('dining', 'dining_subheading', 'Nourishment for Body & Soul');
+  const diningSubheading = getValue('dining', 'dining_subheading', 'An intimate, fire-warmed communion with high-altitude terrace crops and raw forest elixirs.');
   const diningImage = getValue('dining', 'dining_image', '');
+
+  // Split heading into two parts, placing the last word (or "Dining" / "Feast" / "Harvest") on the second line
+  const headingWords = diningHeading.split(" ");
+  let headingLine1 = diningHeading;
+  let headingLine2 = "";
+  if (headingWords.length > 1) {
+    const diningIndex = headingWords.findIndex(w => 
+      w.toLowerCase().includes("dining") || w.toLowerCase().includes("feast") || w.toLowerCase().includes("harvest")
+    );
+    if (diningIndex > 0) {
+      headingLine1 = headingWords.slice(0, diningIndex).join(" ");
+      headingLine2 = headingWords.slice(diningIndex).join(" ");
+    } else {
+      const lastIndex = headingWords.length - 1;
+      headingLine1 = headingWords.slice(0, lastIndex).join(" ");
+      headingLine2 = headingWords[lastIndex];
+    }
+  }
+
   const diningHours = getValue('dining', 'dining_hours', '7:30 AM - 10:00 PM');
   const diningDietary = getValue('dining', 'dining_dietary', 'Pure Vegetarian Cuisine');
 
@@ -41,8 +65,8 @@ export default function Dining() {
   const diningVowsVisible = getValue('dining', 'dining_vows_visible', 'true') !== 'false';
 
   // New Text Fields
-  const diningHeroSubtitle = getValue('dining', 'dining_hero_subtitle', 'Dine at the Sanctuary');
-  const diningPhilosophyTagline = getValue('dining', 'dining_philosophy_tagline', 'Alpine Harvest Dining');
+  const diningHeroSubtitle = getValue('dining', 'dining_hero_subtitle', 'SATTVIK NOURISHMENT');
+  const diningPhilosophyTagline = getValue('dining', 'dining_philosophy_tagline', 'SATTVIK NOURISHMENT');
   const diningPhilosophyHeading = getValue('dining', 'dining_philosophy_heading', 'Nourished by the High Valley Peaks');
   const diningPhilosophyDesc = getValue('dining', 'dining_philosophy_desc', "Savor the Mandakini basin's untouched alpine fields with hyper-local, traditional vegetarian recipes. Every grain of red millet has been collected by family handmills in the tiny terrace properties clinging high above the valley dust.");
   
@@ -202,14 +226,13 @@ export default function Dining() {
   }
   const visibleDiningPolaroids = diningPolaroids.filter((p: any) => p.is_visible !== false);
 
-  const [selectedRitual, setSelectedRitual] = useState("morning");
   const [activeSpecialtyCategory, setActiveSpecialtyCategory] = useState("all");
   const [activeMenuCategory, setActiveMenuCategory] = useState("all");
   const [activeVowDetail, setActiveVowDetail] = useState<string | null>("purity");
   const [slideIndex, setSlideIndex] = useState(0);
-  const [activeAlchemy, setActiveAlchemy] = useState("clay");
 
-  const activeAlchemyData = visibleKitchenAlchemies.find((a: any) => a.id === activeAlchemy) || visibleKitchenAlchemies[0] || kitchenAlchemies[0];
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   const nextSlide = () => {
     setSlideIndex((prev) => (prev + 1) % Math.max(1, visibleDiningPolaroids.length));
@@ -296,66 +319,43 @@ export default function Dining() {
     ? visibleMenuItems
     : visibleMenuItems.filter(item => item.category === activeMenuCategory);
 
-  const activeRitualData = visibleDailyRituals.find((r: any) => r.id === selectedRitual) || visibleDailyRituals[0];
-
-  const heroImageSrc = diningImage || "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1800";
-
   return (
     <div className="bg-[#FAF9F5] text-[#2E3438] pb-24 min-h-screen font-sans antialiased overflow-x-hidden">
       
       {/* 1. LUXURY FULL-SCREEN HERO */}
       {diningHeroVisible && (
-        <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-          {/* Cinematic Backdrop Image */}
-          <div className="absolute inset-0">
-            <img 
-              src={heroImageSrc}
-              className="w-full h-full object-cover scale-[1.03] brightness-[0.75]"
-              alt="Handmade rustic bakery and warm tea table by the hills"
-              referrerPolicy="no-referrer"
-            />
-            {/* Gentle darkening brand-aligned gradient overlays to ensure text has absolute readability */}
-            <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2E3438] via-black/25 to-transparent" />
-          </div>
-
-          {/* Hero Copy overlay */}
-          <div className="relative z-10 text-center px-6 max-w-4xl space-y-4 md:space-y-6 mt-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: easePremium }}
+        <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
+          <motion.div 
+            style={{ y: y1 }}
+            className="absolute inset-0 w-full h-full bg-[#1A2621]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2E3438] via-black/15 to-[#2E3438]/40 z-10" />
+            {diningImage && (
+              <img 
+                src={diningImage} 
+                className="w-full h-full object-cover object-center scale-105"
+                alt="Cinematic Dining Setup"
+                referrerPolicy="no-referrer"
+              />
+            )}
+          </motion.div>
+          
+          <motion.div 
+            style={{ opacity: opacity1 }}
+            className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 pt-20"
+          >
+            <motion.h1 
+              initial={{ opacity: 0, filter: "blur(10px)", y: 25 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 1.5, ease: easePremium, delay: 0.4 }}
+              className="text-[3.5rem] leading-[0.9] md:text-8xl lg:text-9xl font-heading tracking-tighter text-warm-white group"
             >
-              <span className="font-script text-3xl md:text-5.5xl text-[#D8CBB8] tracking-wide block">
-                {diningHeroSubtitle}
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: easePremium, delay: 0.1 }}
-              className="text-4xl md:text-7xl font-serif text-white font-light tracking-tight leading-[1.05]"
-            >
-              {diningHeading}
+              {headingLine1} <br />
+              {headingLine2 && (
+                <span className="italic font-normal text-stone-sand/90">{headingLine2}</span>
+              )}
             </motion.h1>
-
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="w-16 h-[1.5px] bg-[#D8CBB8]/60 mx-auto"
-            />
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="text-white/90 text-xs md:text-sm max-w-lg mx-auto leading-relaxed tracking-wider font-light"
-            >
-              {diningSubheading}
-            </motion.p>
-          </div>
+          </motion.div>
         </section>
       )}
 
@@ -377,131 +377,7 @@ export default function Dining() {
         </section>
       )}
 
-      {/* UNIQUE INTERACTIVE VESSEL ALCHEMY SECTION */}
-      {alchemyVisible && visibleKitchenAlchemies.length > 0 && (
-        <section className="py-20 md:py-28 bg-[#FAF9F5] border-t border-stone-200 relative overflow-hidden">
-          {/* Subtle decorative grid lines */}
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#EFEAE1]/20 to-transparent pointer-events-none" />
 
-          <div className="container mx-auto px-6 max-w-6xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-              
-              {/* Left Column: Alchemical Choices (interactive tabs) */}
-              <div className="lg:col-span-5 space-y-8 text-left z-10">
-                <div className="space-y-3">
-                  <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-                    {diningAlchemyTagline}
-                  </span>
-                  <h2 className="text-3xl sm:text-5xl lg:text-5.5xl font-serif text-[#2E3438] leading-[1.1] font-light">
-                    {diningAlchemyHeading.split(',')[0]}, <br /> 
-                    <span className="italic font-normal text-[#1B4C44] font-serif">{diningAlchemyHeading.split(',')[1] || ''}</span>
-                  </h2>
-                  <p className="text-xs md:text-sm text-slate-charcoal/70 font-sans leading-relaxed">
-                    {diningAlchemyDesc}
-                  </p>
-                </div>
-
-                {/* Vertical selector items */}
-                <div className="space-y-4 pt-4">
-                  {visibleKitchenAlchemies.map((alc: any) => (
-                    <button
-                      key={alc.id}
-                      onClick={() => {
-                        setActiveAlchemy(alc.id);
-                      }}
-                      className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex items-center gap-4 cursor-pointer relative overflow-hidden group ${
-                        activeAlchemy === alc.id 
-                          ? "bg-white border-[#A88C52] shadow-[0_10px_30px_rgba(168,140,82,0.08)] scale-[1.01]" 
-                          : "bg-stone-50/50 border-stone-200/60 hover:bg-white hover:border-stone-300"
-                      }`}
-                    >
-                      {/* Active highlight color pill */}
-                      <div 
-                        className="w-1 h-12 rounded-full transition-transform duration-300"
-                        style={{ 
-                          backgroundColor: alc.accentColor,
-                          transform: activeAlchemy === alc.id ? "scaleY(1)" : "scaleY(0.2)"
-                        }} 
-                      />
-                      
-                      <div className="flex-1">
-                        <span className="text-[8px] tracking-widest font-black uppercase font-mono" style={{ color: alc.accentColor }}>
-                          {alc.tagline}
-                        </span>
-                        <h4 className="text-sm md:text-md font-serif text-slate-charcoal mt-0.5">
-                          {alc.title}
-                        </h4>
-                      </div>
-
-                      <ChevronRight 
-                        size={16} 
-                        className={`transition-transform duration-300 ${
-                          activeAlchemy === alc.id ? "translate-x-1 opacity-100" : "opacity-30 group-hover:opacity-75"
-                        }`} 
-                        style={{ color: alc.accentColor }}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Column: 3D Parallax Tilt Custom Showcase Card */}
-              <div className="lg:col-span-7 flex flex-col items-center justify-center pt-8 lg:pt-0">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeAlchemy}
-                    initial={{ opacity: 0, scale: 0.96, y: 15 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.96, y: -15 }}
-                    transition={{ duration: 0.5, ease: easePremium }}
-                    className="w-full max-w-xl"
-                  >
-                    {/* Clean, elegant static container */}
-                    <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-stone-100 border border-stone-200/80 shadow-[0_30px_70px_rgba(46,52,56,0.12)] group">
-                      {/* Image with normal display */}
-                      <img
-                        src={activeAlchemyData.illustration}
-                        className="absolute inset-0 w-full h-full object-cover brightness-[0.7] transition-all duration-700 ease-out group-hover:scale-102"
-                        alt={activeAlchemyData.title}
-                        referrerPolicy="no-referrer"
-                      />
-                      
-                      {/* Darkening Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
-
-                      {/* Flat Elegant Details overlay */}
-                      <div className="absolute bottom-6 left-6 right-6 z-20 text-white flex flex-col justify-end text-left select-none">
-                        <span className="text-[8px] font-mono tracking-widest text-[#D8CBB8] uppercase font-bold">
-                          {activeAlchemyData.tagline}
-                        </span>
-                        <h3 className="text-xl md:text-3xl font-serif text-white mt-1">
-                          {activeAlchemyData.title}
-                        </h3>
-                        <p className="text-[11.5px] md:text-xs text-white/80 font-sans mt-2 leading-relaxed max-w-md font-light">
-                          {activeAlchemyData.desc}
-                        </p>
-
-                        {/* Metadata specs table */}
-                        <div className="grid grid-cols-2 gap-4 border-t border-white/10 mt-4 pt-3.5 text-[9px] font-mono uppercase tracking-[0.12em] text-[#D8CBB8] font-bold">
-                          <div>
-                            <span className="text-[8px] text-white/45 block">Vessel</span>
-                            <span className="mt-0.5 block text-white truncate font-sans font-semibold text-[10.5px] leading-tight capitalize">{activeAlchemyData.vessel}</span>
-                          </div>
-                          <div>
-                            <span className="text-[8px] text-white/45 block">Key Vitality Benefit</span>
-                            <span className="mt-0.5 block text-white truncate font-sans font-semibold text-[10.5px] leading-tight capitalize">{activeAlchemyData.benefit}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* DYNAMIC DINING POLAROIDS CAROUSEL */}
       {diningPolaroidsVisible && visibleDiningPolaroids.length > 0 && (
@@ -647,122 +523,7 @@ export default function Dining() {
         </section>
       )}
 
-      {/* 3. INTERACTIVE DAILY RITUALS (The Nourishment Cycle Explorer) */}
-      {diningRitualsVisible && visibleDailyRituals.length > 0 && (
-        <section className="py-20 bg-[#EFEAE1]/30 border-y border-[#D8CBB8]/20 relative">
-          <div className="container mx-auto px-6 md:px-12 max-w-6xl">
-            <div className="text-center md:text-left mb-12">
-              <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block mb-2 font-mono">
-                {diningRitualsTagline}
-              </span>
-              <h2 className="text-3xl md:text-5xl font-serif text-[#1B4C44] tracking-tight">
-                {diningRitualsHeading.split(' ')[0]} {diningRitualsHeading.split(' ')[1] || ''} <span className="italic font-normal font-serif">{diningRitualsHeading.split(' ').slice(2).join(' ')}</span>
-              </h2>
-              <p className="text-xs md:text-sm text-[#2E3438]/70 mt-3 font-sans max-w-md">
-                {diningRitualsDesc}
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-              {/* Left Column: Vertical Interactive Tabs & Information */}
-              <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
-                <div className="space-y-3.5">
-                  {visibleDailyRituals.map((ritual: any) => (
-                    <button
-                      key={ritual.id}
-                      onClick={() => setSelectedRitual(ritual.id)}
-                      className={`w-full text-left p-5 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
-                        selectedRitual === ritual.id
-                          ? "bg-white border-[#A88C52] shadow-[0_4px_20px_rgba(168,140,82,0.06)] scale-[1.02]"
-                          : "bg-transparent border-transparent hover:bg-white/50"
-                      }`}
-                    >
-                      <div>
-                        <p className="text-[8px] md:text-[9px] tracking-widest font-black uppercase text-[#A88C52] font-mono">
-                          {ritual.time}
-                        </p>
-                        <h4 className="text-sm md:text-md font-serif text-slate-charcoal mt-1">
-                          {ritual.title}
-                        </h4>
-                      </div>
-                      <ChevronRight 
-                        className={`h-4.5 w-4.5 text-[#A88C52] transition-transform duration-300 ${
-                          selectedRitual === ritual.id ? "translate-x-1" : "opacity-30"
-                        }`} 
-                      />
-                    </button>
-                  ))}
-                </div>
-
-                {/* Detail view pane of active ritual */}
-                {activeRitualData && (
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedRitual}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.35, ease: easePremium }}
-                      className="bg-white p-6 rounded-2xl border border-stone-200/50 shadow-xs"
-                    >
-                      <p className="text-xs md:text-sm text-slate-charcoal/80 leading-relaxed font-sans italic font-normal text-left">
-                        "{activeRitualData.desc}"
-                      </p>
-
-                      <div className="grid grid-cols-3 gap-3 border-t border-stone-100 mt-5 pt-4 text-left">
-                        <div>
-                          <span className="text-[8px] tracking-wider uppercase text-slate-charcoal/45 block font-mono">Warmth</span>
-                          <span className="text-[11px] font-bold text-[#1B4C44] mt-0.5 block">{activeRitualData.stats?.warmth}</span>
-                        </div>
-                        <div>
-                          <span className="text-[8px] tracking-wider uppercase text-slate-charcoal/45 block font-mono">Focus</span>
-                          <span className="text-[11px] font-bold text-[#A88C52] mt-0.5 block">{activeRitualData.stats?.focus}</span>
-                        </div>
-                        <div>
-                          <span className="text-[8px] tracking-wider uppercase text-slate-charcoal/45 block font-mono">Key Herb</span>
-                          <span className="text-[11px] font-bold text-slate-charcoal mt-0.5 block truncate">{activeRitualData.stats?.herbs}</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                )}
-              </div>
-
-              {/* Right Column: Visual Showcase Frame */}
-              <div className="lg:col-span-7 relative flex items-center justify-center">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-[#D8CBB8]/40 shadow-md">
-                  {activeRitualData && (
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={selectedRitual}
-                        src={activeRitualData.image}
-                        initial={{ opacity: 0, scale: 1.05 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.02 }}
-                        transition={{ duration: 0.6, ease: easePremium }}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        alt={activeRitualData.title}
-                        referrerPolicy="no-referrer"
-                      />
-                    </AnimatePresence>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                  {activeRitualData && (
-                    <div className="absolute bottom-5 left-5 z-10 text-white text-left">
-                      <span className="text-[9px] tracking-widest font-black uppercase text-[#D8CBB8] font-mono">
-                        {activeRitualData.time}
-                      </span>
-                      <h4 className="text-md md:text-xl font-serif text-white mt-1">
-                        {activeRitualData.title}
-                      </h4>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* 4. THE SLATE PAVILION */}
       {diningPavilionVisible && (

@@ -252,9 +252,6 @@ export default function Nearby() {
 
   const { getValue, loading, content } = useContent();
 
-  // Prevent flash of fallback text while CMS content loads
-  if (loading && content.length === 0) return <PageLoader />;
-
   const nearbyHeading = getValue('nearby', 'nearby_heading', 'Himalayan Travel Guide');
   const nearbySubheading = getValue('nearby', 'nearby_subheading', 'Coordinates of Rudraprayag');
 
@@ -376,6 +373,9 @@ export default function Nearby() {
     if (difficultyFilter === "All") return true;
     return trek.difficulty === difficultyFilter;
   });
+
+  // Prevent flash of fallback text while CMS content loads
+  if (loading && content.length === 0) return <PageLoader />;
 
   return (
     <div className={`relative w-full bg-[#0B1714] text-[#FAF9F5] font-sans selection:bg-[#A88C52] selection:text-[#0B1714] ${

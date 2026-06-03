@@ -15,6 +15,8 @@ interface ContentContextType {
   updateMultipleContent: (items: { section: string; key: string; value: string }[]) => Promise<{ success: boolean; error?: any }>;
   getValue: (section: string, key: string, fallback?: string) => string;
   refresh: () => Promise<void>;
+  appReady: boolean;
+  setAppReady: (ready: boolean) => void;
 }
 
 const ContentContext = createContext<ContentContextType | null>(null);
@@ -22,6 +24,7 @@ const ContentContext = createContext<ContentContextType | null>(null);
 export function ContentProvider({ children }: { children: React.ReactNode }) {
   const [content, setContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [appReady, setAppReady] = useState(false);
 
   const fetchContent = useCallback(async () => {
     try {
@@ -91,6 +94,8 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
       updateMultipleContent,
       getValue,
       refresh: fetchContent,
+      appReady,
+      setAppReady,
     }}>
       {children}
     </ContentContext.Provider>

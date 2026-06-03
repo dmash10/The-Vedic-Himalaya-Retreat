@@ -260,7 +260,7 @@ export default function Weddings() {
   const easePremium = [0.22, 1, 0.36, 1] as const;
   const { getValue, loading, content } = useContent();
 
-  const weddingsHeading = getValue('weddings', 'weddings_heading', 'Destination Weddings');
+  const weddingsHeading = getValue('weddings', 'weddings_heading', 'The Great Himalayan Wedding');
   const weddingsSubheading = getValue('weddings', 'weddings_subheading', 'Sacred Celebrations in the Himalayas');
   const weddingsImage = getValue('weddings', 'weddings_image', '');
   const weddingsHeroBadge = getValue('weddings', 'weddings_hero_badge', 'SACRED WEDDINGS & CELEBRATIONS');
@@ -299,6 +299,7 @@ export default function Weddings() {
   const polaroidsVisible = getValue('weddings', 'weddings_polaroids_visible', 'true') !== 'false';
   const venuesVisible = getValue('weddings', 'weddings_venues_visible', 'true') !== 'false';
   const offeringsVisible = getValue('weddings', 'weddings_offerings_visible', 'true') !== 'false';
+  const galleryVisible = getValue('weddings', 'weddings_gallery_visible', 'true') !== 'false';
 
   let weddingPolaroids = [];
   try {
@@ -430,8 +431,54 @@ export default function Weddings() {
   }
   const visibleOfferings = weddingOfferings.filter((o: any) => o.is_visible !== false);
 
+  let weddingsGallery = [];
+  try {
+    const val = getValue('weddings', 'weddings_gallery', '[]');
+    weddingsGallery = JSON.parse(val);
+  } catch (e) {
+    console.error("Error parsing weddings gallery:", e);
+  }
+  if (!Array.isArray(weddingsGallery) || weddingsGallery.length === 0) {
+    weddingsGallery = [
+      { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Altar under the Snowpeaks", category: "CANOPY VOWS", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800", title: "Long table woodland banquets", category: "OUTDOOR SLATES", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS SANCTUARY", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Deodar twilight trail entrance", category: "WOODEN TORCHES", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", title: "Hand raised local millet thalis", category: "VEGETARIAN FEASTS", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800", title: "Lawn cocktails & quiet embers", category: "TWILIGHT SPIRIT", is_visible: true }
+    ];
+  }
+  const visibleGallery = weddingsGallery.filter((item: any) => item.is_visible !== false);
+
   const [slideIndex, setSlideIndex] = useState(0);
   const [activeVenue, setActiveVenue] = useState<string | null>(null);
+
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const y1 = useTransform(heroScroll, [0, 1], ["0%", "50%"]);
+  const opacity1 = useTransform(heroScroll, [0, 0.8], [1, 0]);
+
+  // Split heading into two parts, placing "wedding" or "weddings" (or fallback last word) on the second line
+  const headingWords = weddingsHeading.split(" ");
+  let headingLine1 = weddingsHeading;
+  let headingLine2 = "";
+  if (headingWords.length > 1) {
+    const weddingIndex = headingWords.findIndex(w => 
+      w.toLowerCase().includes("wedding")
+    );
+    if (weddingIndex > 0) {
+      headingLine1 = headingWords.slice(0, weddingIndex).join(" ");
+      headingLine2 = headingWords.slice(weddingIndex).join(" ");
+    } else {
+      const lastIndex = headingWords.length - 1;
+      headingLine1 = headingWords.slice(0, lastIndex).join(" ");
+      headingLine2 = headingWords[lastIndex];
+    }
+  }
 
   const weddingSpecsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: weddingSpecsScroll } = useScroll({
@@ -449,61 +496,40 @@ export default function Weddings() {
 
   return (
     <div className="bg-[#FAF9F5] text-slate-charcoal pb-24 min-h-screen font-sans antialiased">
-      {loading && content.length === 0 && <PageLoader />}
-      
-      {/* 1. EDITORIAL HERO PANEL */}
+      {loading && content.length === 0 && <PageLoader />}      {/* 1. EDITORIAL HERO PANEL */}
       {heroVisible && (
-        <section className="relative h-screen w-full flex items-center justify-center text-center px-4 overflow-hidden pt-20">
-          <div className="absolute inset-0 z-0 bg-[#0B1714]">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#222425] via-black/15 to-[#0B1714]/65 z-10" />
-            <img 
-              src={weddingsImage || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1800"} 
-              className="w-full h-full object-cover scale-[1.03] brightness-[0.7] contrast-[1.03]"
-              alt="Cinematic Alpine Wedding Setup"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-          
-          <div className="relative z-20 max-w-4xl space-y-6 text-white pt-10 px-4">
-            <motion.div 
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: easePremium }}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/10 text-[#D8CBB8] text-[9px] uppercase font-bold tracking-[0.25em] rounded-full border border-white/10 backdrop-blur-xs select-none"
-            >
-              <Sparkles size={11} className="text-[#A88C52] animate-pulse" />
-              <span>{weddingsHeroBadge}</span>
-            </motion.div>
-            
-            <motion.h1 
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: easePremium }}
-              className="text-4xl md:text-7xl font-serif font-light tracking-tight leading-[1.05] text-white"
-            >
-              {weddingsHeading}
-            </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="text-xs md:text-sm max-w-lg mx-auto text-white/95 leading-relaxed font-light"
-            >
-              {weddingsSubheading}
-            </motion.p>
-
-            {weddingsHeroDesc && (
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.6 }}
-                className="text-xs md:text-sm max-w-lg mx-auto text-white/70 leading-relaxed font-light"
-              >
-                {weddingsHeroDesc}
-              </motion.p>
+        <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
+          <motion.div 
+            style={{ y: y1 }}
+            className="absolute inset-0 w-full h-full bg-[#1E2229]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1E2229] via-black/15 to-[#1E2229]/40 z-10" />
+            {weddingsImage && (
+              <img 
+                src={weddingsImage} 
+                className="w-full h-full object-cover object-center scale-105"
+                alt="Cinematic Alpine Wedding Setup"
+                referrerPolicy="no-referrer"
+              />
             )}
-          </div>
+          </motion.div>
+          
+          <motion.div 
+            style={{ opacity: opacity1 }}
+            className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 pt-20"
+          >
+            <motion.h1 
+              initial={{ opacity: 0, filter: "blur(10px)", y: 25 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 1.5, ease: easePremium, delay: 0.4 }}
+              className="text-[3.5rem] leading-[0.9] md:text-8xl lg:text-9xl font-heading tracking-tighter text-warm-white group"
+            >
+              {headingLine1} <br />
+              {headingLine2 && (
+                <span className="italic font-normal text-stone-sand/90">{headingLine2}</span>
+              )}
+            </motion.h1>
+          </motion.div>
         </section>
       )}
 
@@ -711,7 +737,7 @@ export default function Weddings() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.7, delay: index * 0.1, ease: easePremium }}
-                  className="bg-[#EFEAE1]/40 border border-[#D8CBB8]/40 hover:border-[#1B4C44] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-500 flex flex-col group"
+                  className="bg-[#EFEAE1]/40 border border-[#D8CBB8]/40 hover:border-[#1B4C44] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-[border-color,box-shadow] duration-300 flex flex-col group"
                 >
                   <div className="relative aspect-video w-full overflow-hidden bg-stone-100">
                     <img
@@ -885,61 +911,26 @@ export default function Weddings() {
 
       {/* GALLERY SECTION (Clean sans card background layout) */}
       <section className="py-24 bg-[#FAF9F5]">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-3 mb-12">
-            <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-              {weddingsGalleryTagline}
-            </span>
-            <h3 className="text-3xl md:text-5xl font-serif text-[#1B4C44]">
-              {weddingsGalleryHeading} <span className="italic font-normal font-serif">{weddingsGalleryHeadingItalic}</span>
-            </h3>
-            <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-lg mx-auto font-sans">
-              {weddingsGalleryDesc}
-            </p>
+        {galleryVisible && (
+          <div className="container mx-auto px-6 max-w-6xl">
+            <div className="text-center space-y-3 mb-12">
+              <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
+                {weddingsGalleryTagline}
+              </span>
+              <h3 className="text-3xl md:text-5xl font-serif text-[#1B4C44]">
+                {weddingsGalleryHeading} <span className="italic font-normal font-serif">{weddingsGalleryHeadingItalic}</span>
+              </h3>
+              <p className="text-xs md:text-sm text-slate-charcoal/70 max-w-lg mx-auto font-sans">
+                {weddingsGalleryDesc}
+              </p>
+            </div>
+            <BentoGallery 
+              items={visibleGallery} 
+              theme="light"
+              borderRadiusClass="rounded-xl"
+            />
           </div>
-                    {(() => {
-            const mappedGalleryItems = [
-              {
-                image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800",
-                title: "Altar under the Snowpeaks",
-                category: "CANOPY VOWS"
-              },
-              {
-                image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800",
-                title: "Long table woodland banquets",
-                category: "OUTDOOR SLATES"
-              },
-              {
-                image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800",
-                title: "Starlit fireplace gatherings",
-                category: "GLASS SANCTUARY"
-              },
-              {
-                image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800",
-                title: "Deodar twilight trail entrance",
-                category: "WOODEN TORCHES"
-              },
-              {
-                image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800",
-                title: "Hand raised local millet thalis",
-                category: "VEGETARIAN FEASTS"
-              },
-              {
-                image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800",
-                title: "Lawn cocktails & quiet embers",
-                category: "TWILIGHT SPIRIT"
-              }
-            ];
-
-            return (
-              <BentoGallery 
-                items={mappedGalleryItems} 
-                theme="light"
-                borderRadiusClass="rounded-xl"
-              />
-            );
-          })()}
-        </div>
+        )}
 
         {/* Action Button */}
         <div className="flex flex-col items-center mt-16 space-y-4">

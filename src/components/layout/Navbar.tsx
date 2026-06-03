@@ -45,10 +45,10 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const isHome = location.pathname === "/";
+  const isTransparentPage = location.pathname === "/" || location.pathname === "/weddings";
   // Maintain beautiful warm white / mist text for premium visual contrast against dark backgrounds
   const textColor = "text-warm-white";
-  const overlayBg = isScrolled || !isHome ? "bg-[#10231E]/95 backdrop-blur-md border-b border-[#D8CBB8]/15 shadow-xl" : "bg-transparent";
+  const overlayBg = isScrolled || !isTransparentPage ? "bg-[#10231E]/95 backdrop-blur-md border-b border-[#D8CBB8]/15 shadow-xl" : "bg-transparent";
   const buttonVariant = "outline";
 
   const easePremium = [0.22, 1, 0.36, 1] as const;
@@ -63,9 +63,16 @@ export function Navbar() {
             {/* Logo */}
             <Link to="/" className={`flex flex-col z-50 relative ${textColor}`}>
               <span className="font-heading font-normal text-xl tracking-wider uppercase leading-none">
-                {settings.hotel_name || "Vedic Himalaya"}
+                <span className="sm:hidden">
+                  {settings.hotel_name ? settings.hotel_name.replace(/Retreat/gi, '').trim() : "The Vedic Himalaya"}
+                </span>
+                <span className="hidden sm:inline">
+                  {settings.hotel_name || "The Vedic Himalaya Retreat"}
+                </span>
               </span>
-              <span className="text-[10px] italic opacity-85 mt-1 uppercase tracking-widest text-stone-sand">{settings.tagline || "Village Dewar, Guptkashi"}</span>
+              <span className="hidden sm:inline text-[10px] italic opacity-85 mt-1 uppercase tracking-widest text-stone-sand">
+                {settings.tagline || "Village Dewar, Guptkashi"}
+              </span>
              </Link>
 
             {/* Desktop Nav */}
