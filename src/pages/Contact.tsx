@@ -288,7 +288,7 @@ export default function Contact() {
                 <span className="text-[10px] uppercase tracking-[0.2em] font-black text-[#A88C52] font-mono block mb-1">Interactive Map</span>
                 <h3 className="text-xl font-heading font-medium text-slate-charcoal">Resort Coordinates</h3>
                 <p className="text-xs text-slate-charcoal/70 mt-1 font-sans">
-                  Located in the serene village of Dewar, Guptkashi, along the sacred Kedarnath road.
+                  Located in the quiet village of Dewar, Guptkashi, along the Kedarnath road.
                 </p>
               </div>
               {(settings.google_maps_url || settings.address) && (

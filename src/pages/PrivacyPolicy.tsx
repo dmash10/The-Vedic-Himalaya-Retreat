@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
             className="group inline-flex items-center gap-2 text-[10px] sm:text-xs text-[#1B4C44] uppercase tracking-widest font-extrabold font-sans hover:text-[#A88C52] transition-colors"
           >
             <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Sanctuary</span>
+            <span>Return to Home</span>
           </Link>
         </div>
 
@@ -63,7 +63,7 @@ export default function PrivacyPolicy() {
                   <span>1. Commitment to Digital Serenity</span>
                 </h2>
                 <p>
-                  At <strong className="font-semibold text-slate-charcoal">The Green Hills Resort</strong>, we guard your personal sanctuary information with the same reverence we hold for the pristine mountain air and ancient deodar woods surrounding our location. We believe that privacy is an essential dimension of spiritual calm.
+                  At <strong className="font-semibold text-slate-charcoal">The Green Hills Resort</strong>, we guard your personal information with the same reverence we hold for the pristine mountain air and ancient deodar woods surrounding our location. We believe that privacy is an essential dimension of spiritual calm.
                 </p>
                 <p>
                   In compliance with global framework standards including the General Data Protection Regulation (GDPR), the California Consumer Privacy Act (CCPA), and the Digital Personal Data Protection Act (DPDPA) of India, this document details how we collect, process, secure, and respect your personal digital credentials. We strictly enforce a policy of zero commercial monetization, zero data leasing, and absolute transaction confidentiality.
@@ -87,7 +87,7 @@ export default function PrivacyPolicy() {
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#1B4C44] text-xs sm:text-sm uppercase tracking-wide">B. Sanctuary Experience & Dietary Preferences</h4>
+                    <h4 className="font-bold text-[#1B4C44] text-xs sm:text-sm uppercase tracking-wide">B. Stay Experience & Dietary Preferences</h4>
                     <p className="text-xs sm:text-sm text-slate-charcoal/80 mt-1">
                       Your chosen cabin specifications, arrival schedules, dietary requirements (such as vegetarian, gluten-free, or specific allergen metrics), and astrological alignment inquiry data to customize private yoga practices.
                     </p>
@@ -167,10 +167,10 @@ export default function PrivacyPolicy() {
               <section className="p-6 sm:p-8 bg-[#EFEAE1]/50 border border-[#D8CBB8]/30 rounded-2xl space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#1B4C44] font-extrabold">
                   <Heart size={14} className="text-[#A88C52] fill-current" />
-                  <span>Sanctuary Commitment</span>
+                  <span>Our Commitment</span>
                 </div>
                 <p className="text-xs text-slate-charcoal/70 leading-relaxed italic">
-                  "To preserve the absolute purity, peace, and spiritual frequencies of the sanctuary, we conduct our digital footprint and regulatory procedures with the highest tier of ethics, care, and respectful silence."
+                  "To preserve the peace and comfort of the retreat, we conduct our digital footprint and regulatory procedures with the highest tier of ethics, care, and respectful silence."
                 </p>
               </section>
             </>

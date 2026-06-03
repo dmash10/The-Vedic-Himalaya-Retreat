@@ -84,7 +84,7 @@ export default function Dining() {
   
   const diningPavilionTagline = getValue('dining', 'dining_pavilion_tagline', 'THE MAIN SALON');
   const diningPavilionHeading = getValue('dining', 'dining_pavilion_heading', 'The Slate Pavilion');
-  const diningPavilionDesc1 = getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Sit inside a secure warm sanctuary with uninterrupted views of the majestic snowline of Chaukhamba peaks.');
+  const diningPavilionDesc1 = getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Enjoy your meal in a warm indoor dining space with clear views of the majestic snowline of Chaukhamba peaks.');
   const diningPavilionDesc2 = getValue('dining', 'dining_pavilion_desc2', 'Guests gather around cold-slab slate fireplace tables while foods are slow-cooked using traditional wood fuel. We avoid processed white sugars, chemical vegetable oils, and commercial steel pans—cooking inside clay pots and raw regional iron vessels.');
   const diningPavilionImage = getValue('dining', 'dining_pavilion_image', '');
   const diningPavilionDresscode = getValue('dining', 'dining_pavilion_dresscode', 'Casual Resort Comfort');

@@ -102,7 +102,7 @@ const defaultSlides = [
     category: "ALPINE MEADOW REFUGE",
     title: "Chopta Valley",
     subtitle: "The legendary mini switzerland of Uttarakhand",
-    description: "Nestled within Kedarnath Wild Forest Sanctuary, this scenic meadow is surrounded by dense, mossy pine, spruce, and pink cedar. Home to native mountain musk deer and rare monal pheasants, Chopta offers pristine crisp winds, clean starlit skies, and boundless green trails.",
+    description: "Located inside the Kedarnath Wild Forest area, this scenic meadow is surrounded by dense, mossy pine, spruce, and pink cedar. Home to native mountain musk deer and rare monal pheasants, Chopta offers clean mountain winds, starry skies, and boundless green trails.",
     image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=2000",
     altitude: "2,680m",
     distance: "1 Hour Scenic Drive from Retreat",
@@ -112,7 +112,7 @@ const defaultSlides = [
     id: "kartikswami",
     category: "RIDGE-TOP SHIELD",
     title: "Kartik Swami Mandir",
-    subtitle: "A floating cliff haven on narrow vertical spires",
+    subtitle: "A floating cliffside retreat on narrow vertical spires",
     description: "Dramatically built on a sharp, vertical knife-edge ridge at 3,050 meters. Accessible via a scenic 3km trail from Kanakchauri village, the approach is wreathed by hundreds of ringing bell bells offered by travelers. The final deck overlooks clear, endless vertical drop-offs directly facing the snow peak lines.",
     image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=2000",
     altitude: "3,050m",
@@ -185,7 +185,7 @@ const defaultTreks: Trek[] = [
     distance: "16 km (One Way)",
     bestSeason: "May to October",
     duration: "1.5 Days",
-    highlight: "High mountain glens and massive slate-faced temple sanctuary",
+    highlight: "High mountain glens and massive slate-faced temple complex",
     description: "Trek alongside wild mountain rivers and pristine mountain villages. The meadow surroundings of Madmaheshwar are revered as some of the most beautiful in Rudraprayag."
   },
   {
@@ -230,7 +230,7 @@ const defaultTreks: Trek[] = [
     bestSeason: "Year-Round",
     duration: "Half Hour",
     highlight: "Water dripping naturally over river stones",
-    description: "Located near Rudraprayag. An extraordinary natural cave sanctuary where water droplets continuously bathe icons on riverbanks, offering absolute natural cooling."
+    description: "Located near Rudraprayag. An extraordinary natural cave retreat where water droplets continuously bathe icons on riverbanks, offering absolute natural cooling."
   },
   {
     title: "Hariyali Devi Siddhapeeth Path",
@@ -271,10 +271,10 @@ export default function Nearby() {
   const nearbyScenesHeadingItalic = getValue('nearby', 'nearby_scenes_heading_italic', 'Rudraprayag');
   const nearbyScenesDesc = getValue('nearby', 'nearby_scenes_desc', 'Breathtaking glances of alpine lakes, high altitude meadows, ringing brass bells, and misty pine routes. Click components to expand view.');
 
-  const nearbyCtaBadge = getValue('nearby', 'nearby_cta_badge', 'Your Sacred Sanctuary awaits');
+  const nearbyCtaBadge = getValue('nearby', 'nearby_cta_badge', 'A peaceful stay awaits you');
   const nearbyCtaHeading = getValue('nearby', 'nearby_cta_heading', 'Trek the peaks.');
   const nearbyCtaHeadingItalic = getValue('nearby', 'nearby_cta_heading_italic', 'Find your peace.');
-  const nearbyCtaDesc = getValue('nearby', 'nearby_cta_desc', 'The Vedic Himalaya Retreat is carefully nested at Guptkashi, offering elite transit and absolute evening meditation silence after high altitudes treks.');
+  const nearbyCtaDesc = getValue('nearby', 'nearby_cta_desc', 'The Vedic Himalaya Retreat is built at Guptkashi, offering easy transit and quiet evenings after high-altitude treks.');
   const nearbyCtaBtnText = getValue('nearby', 'nearby_cta_btn_text', 'Reserve Your Basecamp Stay');
   const nearbyCtaBtnLink = getValue('nearby', 'nearby_cta_btn_link', '/rooms');
 

@@ -181,7 +181,7 @@ export default function Rooms() {
   const { settings } = useSiteSettings();
   const whatsappNumber = settings.whatsapp_number || "918126573560";
 
-  const roomsHeading = getValue('rooms', 'rooms_heading', 'Sanctuary Suites');
+  const roomsHeading = getValue('rooms', 'rooms_heading', 'Mountain View Rooms');
   const roomsSubheading = getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging');
   const roomsNotice = getValue('rooms', 'rooms_notice', 'Important Booking Notice...');
   const noticeVisible = getValue('rooms', 'notice_visible', 'true') !== 'false';
@@ -208,7 +208,7 @@ export default function Rooms() {
         { label: "Spa Slate Bath", icon: "Bath", desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
         { label: "Smart Sound Hub", icon: "Tv", desc: "Massive 55\" cinematic display with premium room audio" },
         { label: "Ultimate Fiber", icon: "Wifi", desc: "Ultra performance high-speed complimentary internet" },
-        { label: "Hot Beverage Station", icon: "Coffee", desc: "Exquisite electric hot beverage server and regional herbal tea blends" }
+        { label: "Hot Beverage Station", icon: "Coffee", desc: "Premium electric hot kettle and regional herbal tea blends" }
       ];
     }
     return list.filter((a: any) => a.is_visible !== false);
@@ -583,7 +583,7 @@ export default function Rooms() {
                     </div>
                   </div>
 
-                  {/* Sanctuary Provisions (Exclusive Inclusions with Solid Slate Rock Background) */}
+                  {/* Room Provisions (Exclusive Inclusions with Solid Slate Rock Background) */}
                   <div className="bg-[#2D3139] border border-[#BAC1C8]/25 p-6 sm:p-8 rounded-2xl shadow-md space-y-6">
                     <div>
                       <span className="text-[9px] uppercase tracking-[0.2em] font-extrabold text-[#FAF9F5]/60 block mb-0.5">EXCLUSIVE INCLUSIONS</span>
@@ -1062,7 +1062,7 @@ export default function Rooms() {
                     <div className="py-16 flex flex-col items-center justify-center text-center space-y-4">
                       <div className="w-10 h-10 border-2 border-zinc-200/20 border-t-[#D8CBB8] rounded-full animate-spin" />
                       <div>
-                        <p className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8] font-extrabold animate-pulse">Allocating Sanctuary</p>
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8] font-extrabold animate-pulse">Checking Room Availability</p>
                         <p className="italic text-base text-warm-white mt-1 animate-pulse">
                           {loadingText}
                         </p>
@@ -1082,7 +1082,7 @@ export default function Rooms() {
                         <div className="mx-auto w-10 h-10 bg-[#FAF9F5]/10 rounded-full flex items-center justify-center border border-[#FAF9F5]/20 text-[#FAF9F5] shadow-sm">
                           <CheckCircle2 size={18} className="text-[#D8CBB8]" />
                         </div>
-                        <h3 className="text-lg font-heading font-semibold text-warm-white">Sanctuary Lock Confirmed</h3>
+                        <h3 className="text-lg font-heading font-semibold text-warm-white">Room Reserved</h3>
                         <p className="text-stone-sand text-[9px] font-bold uppercase tracking-widest bg-[#FAF9F5]/10 px-3.5 py-1.5 border border-[#FAF9F5]/15 rounded-full inline-block font-mono">
                           HOLD SECURED • {generatedTicket.id}
                         </p>
@@ -1276,9 +1276,9 @@ export default function Rooms() {
                     </svg>
                   </div>
                   <div className="space-y-0.5">
-                    <span className="font-bold text-[#2D3438] block font-heading tracking-wide uppercase text-[10px]">Verified Booking Sanctuary Record</span>
+                    <span className="font-bold text-[#2D3438] block font-heading tracking-wide uppercase text-[10px]">Verified Booking Details</span>
                     <p className="text-[#5C6B5F] leading-relaxed text-[11px] font-medium font-sans">
-                      This review is verified authentic through The Vedic Himalaya Retreat booking ledger and is locked as of seasonal trail access check periods.
+                      This review is verified authentic through The Vedic Himalaya Retreat booking ledger.
                     </p>
                   </div>
                 </div>
@@ -1327,7 +1327,7 @@ export default function Rooms() {
                   exit={{ scale: 0.95, opacity: 0 }}
                   transition={{ type: "spring", damping: 25, stiffness: 180 }}
                   src={lightboxImage} 
-                  alt="Sanctuary Suite View" 
+                  alt="Mountain View Room" 
                   className="max-w-full max-h-[85vh] object-contain rounded-xl select-none"
                   referrerPolicy="no-referrer"
                 />
@@ -1372,14 +1372,14 @@ export const ARCHIVED_MULTIPLE_ROOMS = [
     reviews: [
       { name: "Rahul Sharma", rating: 5, location: "Delhi", date: "May 2024", text: "The beds were incredibly comfortable and the environment is designed with true refinement. Spotless stone shower with hot water always ready.", source: "google" },
       { name: "Kuldeep Rana", rating: 4, location: "Haryana", date: "May 2022", text: "Good hotel for the price. Rooms are spacious but the WiFi was slow. Location is perfect - away from Guptkashi's crowded market. Would have given 5 stars if breakfast timing was earlier.", source: "google" },
-      { name: "Anita Desai", rating: 5, location: "Mumbai", date: "April 2024", text: "Exquisite attention to detail, breathtaking views, and wonderful tea. A masterclass in modern mountain serenity.", source: "tripadvisor" },
-      { name: "Nitin Rawat", rating: 5, location: "Rudraprayag", date: "Oct 2023", text: "Beautiful sanctuary! Absolute luxury in the middle of nature. Perfect starting point for Kedarnath route.", source: "tripadvisor" }
+      { name: "Anita Desai", rating: 5, location: "Mumbai", date: "April 2024", text: "Great attention to detail, breathtaking views, and wonderful herbal tea. A masterclass in peaceful mountain stays.", source: "tripadvisor" },
+      { name: "Nitin Rawat", rating: 5, location: "Rudraprayag", date: "Oct 2023", text: "Beautiful resort! Absolute comfort in the middle of nature. Perfect starting point for Kedarnath route.", source: "tripadvisor" }
     ]
   },
   {
     id: "3-bed",
     title: "3 Bed Room",
-    badge: "Tri-Sanctuary",
+    badge: "Family Suite",
     price: 8500,
     description: "Perfect for families, spiritual seekers, or small travel squads exploring the sacred Guptkashi region. Beautifully spacious layouts equipped with premium plush beds, warm lighting, and luxury fixtures blending modern convenience with rustic mountain charm.",
     images: [

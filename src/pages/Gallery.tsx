@@ -24,7 +24,7 @@ export default function Gallery() {
   const galleryHeading = getValue('gallery', 'gallery_heading', 'Captured Stillness');
   const gallerySubheading = getValue('gallery', 'gallery_subheading', 'Take a slow, visual tour of our deodar-framed spaces, snow summits, and restorative pilgrimage amenities.');
   const galleryHeroVisible = getValue('gallery', 'gallery_hero_visible', 'true') !== 'false';
-  const galleryHeroBadge = getValue('gallery', 'gallery_hero_badge', 'THE SANCTUARY CHRONICLES');
+  const galleryHeroBadge = getValue('gallery', 'gallery_hero_badge', 'OUR VISUAL STORY');
 
   let dbImages: GalleryImage[] = [];
   try {

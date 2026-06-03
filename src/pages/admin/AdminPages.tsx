@@ -35,14 +35,14 @@ const PAGES_LIST = [
 // Fallback Default Content Catalogs (Syncs Frontend Default Assets to CMS when DB is unpopulated)
 const DEFAULT_HOME_POLAROIDS = [
   { title: "Double Pine Suite", desc: "ELEVATED ALPINE LIVING", image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800", is_visible: true },
-  { title: "Sanctuary Comforts", desc: "COZY HEARTH COMPANIONSHIP", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", is_visible: true },
+  { title: "Cozy Comforts", desc: "COZY HEARTH COMPANIONSHIP", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", is_visible: true },
   { title: "Chaukhamba Peak", desc: "MISTY GOLDEN RANGE VISTAS", image: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800", is_visible: true },
   { title: "Hearthside Breads", desc: "ORGANIC FRESH BREADS", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", is_visible: true }
 ];
 
 const DEFAULT_HOME_OFFERINGS = [
   { num: "01", badge: "CELESTIAL MEMORIES", title: "Destination Weddings", description: "Exchange eternal vows on elegant stone cedar terraces wreathed in soft misty breeze and sacred Himalayan aesthetics.", image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#3A1412]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 10\" // E 79° 04' 40\"", icon: "Heart", is_visible: true },
-  { num: "02", badge: "RETREAT BASECAMP", title: "Kedarnath Yatra Stay", description: "Your premium high-altitude rest sanctuary base. Retreat to comfortable modern pine wood cabins nestled along the sacred pilgrimage route.", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#0f2822]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 12\" // E 79° 04' 45\"", icon: "Mountain", is_visible: true },
+  { num: "02", badge: "RETREAT BASECAMP", title: "Kedarnath Yatra Stay", description: "Your premium high-altitude rest stay. Rest in comfortable modern pine wood cabins built along the Kedarnath pilgrimage route.", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#0f2822]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 12\" // E 79° 04' 45\"", icon: "Mountain", is_visible: true },
   { num: "03", badge: "INNER WELLNESS", title: "Yoga & Prana Studio", description: "Tune your physical vessel with high-altitude breathing alignment, meditative pine forest morning walks, and sunset sound bowls.", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#EFEAE1]", textClass: "text-[#0B1714]", coords: "N 30° 16' 15\" // E 79° 04' 50\"", icon: "Wind", is_visible: true },
   { num: "04", badge: "VILLAGE RETREAT", title: "Himalayan Village Life", description: "Uncover quiet mountain paths, pure riverbeds, organic farming cycles, and the timeless warmth of authentic local communities.", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#09100e]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 18\" // E 79° 04' 52\"", icon: "Compass", is_visible: true }
 ];
@@ -87,7 +87,7 @@ const DEFAULT_ROOMS_AMENITIES = [
   { label: "Electric Heated Beds", icon: "Bed", desc: "Dual control electric temperature overlays.", is_visible: true },
   { label: "Mountain View Balcony", icon: "Mountain", desc: "Private sit-out facing misty Chaukhamba peaks.", is_visible: true },
   { label: "Organic Herb Brews", icon: "Coffee", desc: "Complimentary raw ginger tea upon arrival.", is_visible: true },
-  { label: "High-Speed Internet", icon: "Wifi", desc: "Sanctuary-wide continuous high bandwidth.", is_visible: true },
+  { label: "High-Speed Internet", icon: "Wifi", desc: "Resort-wide continuous high bandwidth.", is_visible: true },
   { label: "Slate Hot Baths", icon: "Droplets", desc: "Continuous mountain hot spring streams.", is_visible: true },
   { label: "Wooden Work Desks", icon: "Briefcase", desc: "Hand-crafted mountain deodar wood desks.", is_visible: true }
 ];
@@ -95,7 +95,7 @@ const DEFAULT_ROOMS_AMENITIES = [
 const DEFAULT_ROOMS_REVIEWS = [
   { name: "Arjun Sharma", rating: 5, location: "New Delhi", date: "May 2026", text: "The Pinewood suite was an exceptional rest base before our Kedarnath trek. The electric bed heating made a huge difference in the mountain chill.", source: "google", is_visible: true },
   { name: "Devika Rao", rating: 5, location: "Bangalore", date: "April 2026", text: "A truly restorative space. Waking up to the misty views of Chaukhamba peaks and hot ginger brews was unforgettable.", source: "tripadvisor", is_visible: true },
-  { name: "Rahul Verma", rating: 5, location: "Mumbai", date: "May 2026", text: "Pure organic vegetarian dining and serene forest surroundings. The staff coordinated our puja circuits beautifully.", source: "google", is_visible: true }
+  { name: "Rahul Verma", rating: 5, location: "Mumbai", date: "May 2026", text: "Pure organic vegetarian dining and quiet forest surroundings. The staff coordinated our puja circuits beautifully.", source: "google", is_visible: true }
 ];
 
 const DEFAULT_DINING_SPECIALTIES = [
@@ -138,7 +138,7 @@ const DEFAULT_WEDDINGS_POLAROIDS = [
 const DEFAULT_WEDDINGS_GALLERY = [
   { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Altar under the Snowpeaks", category: "CANOPY VOWS", is_visible: true },
   { image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800", title: "Long table woodland banquets", category: "OUTDOOR SLATES", is_visible: true },
-  { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS SANCTUARY", is_visible: true },
+  { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS PAVILION", is_visible: true },
   { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Deodar twilight trail entrance", category: "WOODEN TORCHES", is_visible: true },
   { image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", title: "Hand raised local millet thalis", category: "VEGETARIAN FEASTS", is_visible: true },
   { image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800", title: "Lawn cocktails & quiet embers", category: "TWILIGHT SPIRIT", is_visible: true }
@@ -150,7 +150,7 @@ const DEFAULT_WEDDINGS_VENUES = [
     title: "Sacred Canopy Lawn",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
     capacity: "Up to 20 guests",
-    location: "East Sanctuary Facing",
+    location: "East Forest Facing",
     highlight: "Kedarnath peaks backdrop during golden sunset hours.",
     vibe: "Intimate, Sacred Open Sky",
     tags: ["Panoramic Vistas", "Open Wood Hearth", "Custom Carpets"],
@@ -161,7 +161,7 @@ const DEFAULT_WEDDINGS_VENUES = [
     title: "The Glass Pavilion",
     image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=600",
     capacity: "Up to 20 guests",
-    location: "Sanctuary Center",
+    location: "Retreat Garden",
     highlight: "Framed gorge viewline with cozy slate under-floor heat.",
     vibe: "Editorial, Celestial",
     tags: ["Pine Forest Views", "Heated Stone Slabs", "Ambient Chandeliers"],
@@ -183,7 +183,7 @@ const DEFAULT_WEDDINGS_VENUES = [
     title: "Deodar Forest Garden",
     image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600",
     capacity: "Up to 20 guests",
-    location: "West Sanctuary Ridge",
+    location: "West Forest Ridge",
     highlight: "Deep forest whispers, warm pathway fire cups, zero plastic.",
     vibe: "Mystical, Eco-Luxury",
     tags: ["Tall Pines Sieve", "Fallen Spruce Bark Path", "Candle Glow Only"],
@@ -196,7 +196,7 @@ const DEFAULT_WEDDINGS_OFFERINGS = [
     num: "01",
     badge: "CAPACITY LIMITS",
     title: "Up to 20 Guests",
-    description: "Exclusively limited to 20 guests for exquisite mountain buyouts. Host a deeply intimate, sacred micro-destination wedding with full retreat access.",
+    description: "Limited to 20 guests. Host a private family destination wedding with full retreat access.",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
     bgClass: "bg-[#0f2822]",
     textClass: "text-[#FAF9F5]",
@@ -364,7 +364,7 @@ const DEFAULT_NEARBY_SLIDES = [
     category: "ALPINE MEADOW REFUGE",
     title: "Chopta Valley",
     subtitle: "The legendary mini switzerland of Uttarakhand",
-    description: "Nestled within Kedarnath Wild Forest Sanctuary, this scenic meadow is surrounded by dense, mossy pine, spruce, and pink cedar. Home to rare monal pheasants, Chopta offers pristine winds and clean stars.",
+    description: "Set within Kedarnath Wild Forest Reserve, this scenic meadow is surrounded by dense, mossy pine, spruce, and pink cedar. Home to rare monal pheasants, Chopta offers pristine winds and clean stars.",
     image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=2000",
     icon: "Trees",
     altitude: "2,680m",
@@ -376,7 +376,7 @@ const DEFAULT_NEARBY_SLIDES = [
     id: "kartikswami",
     category: "RIDGE-TOP SHIELD",
     title: "Kartik Swami Mandir",
-    subtitle: "A floating cliff haven on narrow vertical spires",
+    subtitle: "A cliff-top temple on narrow vertical spires",
     description: "Dramatically built on a sharp, vertical knife-edge ridge at 3,050 meters. Accessible via a scenic 3km trail from Kanakchauri village, the approach is wreathed by hundreds of ringing bell bells offered by travelers.",
     image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=2000",
     icon: "Mountain",
@@ -863,16 +863,16 @@ export default function AdminPages() {
         story_btn_link: getValue('home', 'story_btn_link', '/rooms'),
         why_choose_tagline: getValue('home', 'why_choose_tagline', 'THE VEDIC HIMALAYA DIFFERENCE'),
         why_choose_heading: getValue('home', 'why_choose_heading', 'Why Guests Choose'),
-        why_choose_heading_italic: getValue('home', 'why_choose_heading_italic', 'Our Sanctuary'),
+        why_choose_heading_italic: getValue('home', 'why_choose_heading_italic', 'Our Retreat'),
         why_choose_desc1: getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.'),
         why_choose_desc2: getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Village Dewar, Guptkashi, Kedarnath Route. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps."),
         home_gallery_badge: getValue('home', 'home_gallery_badge', 'Gallery'),
         home_gallery_heading: getValue('home', 'home_gallery_heading', 'Our Visual Journal'),
-        home_gallery_desc: getValue('home', 'home_gallery_desc', 'Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.'),
-        home_cta_badge: getValue('home', 'home_cta_badge', 'Your Himalayan Haven Awaits'),
+        home_gallery_desc: getValue('home', 'home_gallery_desc', 'Capturing moments of morning light, quiet silence, and devotion across our retreat garden.'),
+        home_cta_badge: getValue('home', 'home_cta_badge', 'A peaceful Himalayan stay awaits'),
         home_cta_heading: getValue('home', 'home_cta_heading', 'Ready to Experience the'),
         home_cta_heading_italic: getValue('home', 'home_cta_heading_italic', 'Pinewood Calm?'),
-        home_cta_desc: getValue('home', 'home_cta_desc', 'Secure your sanctuary space high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.'),
+        home_cta_desc: getValue('home', 'home_cta_desc', 'Secure your room high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.'),
         home_cta_btn_text: getValue('home', 'home_cta_btn_text', 'Book Your Stay Today'),
         home_cta_btn_link: getValue('home', 'home_cta_btn_link', '/rooms'),
         social_proof_tagline: getValue('home', 'social_proof_tagline', 'GUEST TESTIMONIALS'),
@@ -943,7 +943,7 @@ export default function AdminPages() {
       }
     } else if (activePageId === 'rooms') {
       setFormFields({
-        rooms_heading: getValue('rooms', 'rooms_heading', 'Sanctuary Suites'),
+        rooms_heading: getValue('rooms', 'rooms_heading', 'Mountain View Rooms'),
         rooms_subheading: getValue('rooms', 'rooms_subheading', 'Luxury Mountain Lodging'),
         rooms_image: getValue('rooms', 'rooms_image', ''),
         rooms_notice: getValue('rooms', 'rooms_notice', 'Important Booking Notice...'),
@@ -982,7 +982,7 @@ export default function AdminPages() {
         dining_rituals_desc: getValue('dining', 'dining_rituals_desc', 'Our meals follow the rhythm of the mountain day. View how we structure dining throughout your stay.'),
         dining_pavilion_tagline: getValue('dining', 'dining_pavilion_tagline', 'THE MAIN SALON'),
         dining_pavilion_heading: getValue('dining', 'dining_pavilion_heading', 'The Slate Pavilion'),
-        dining_pavilion_desc1: getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Sit inside a secure warm sanctuary with uninterrupted views of the majestic snowline of Chaukhamba peaks.'),
+        dining_pavilion_desc1: getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Enjoy your meal in a warm indoor dining space with clear views of the majestic snowline of Chaukhamba peaks.'),
         dining_pavilion_desc2: getValue('dining', 'dining_pavilion_desc2', 'Guests gather around cold-slab slate fireplace tables while foods are slow-cooked using traditional wood fuel. We avoid processed white sugars, chemical vegetable oils, and commercial steel pans—cooking inside clay pots and raw regional iron vessels.'),
         dining_pavilion_image: getValue('dining', 'dining_pavilion_image', ''),
         dining_pavilion_dresscode: getValue('dining', 'dining_pavilion_dresscode', 'Casual Resort Comfort'),
@@ -1053,7 +1053,7 @@ export default function AdminPages() {
         weddings_offerings_tagline: getValue('weddings', 'weddings_offerings_tagline', 'Wedding Specifications'),
         weddings_offerings_heading: getValue('weddings', 'weddings_offerings_heading', 'Sacred'),
         weddings_offerings_heading_italic: getValue('weddings', 'weddings_offerings_heading_italic', 'Aesthetics'),
-        weddings_offerings_desc: getValue('weddings', 'weddings_offerings_desc', 'Bespoke Arrangements & Sanctuary parameters'),
+        weddings_offerings_desc: getValue('weddings', 'weddings_offerings_desc', 'Custom arrangements & local services'),
         weddings_gallery_tagline: getValue('weddings', 'weddings_gallery_tagline', 'PHOTO CAPTURES'),
         weddings_gallery_heading: getValue('weddings', 'weddings_gallery_heading', 'Celebration'),
         weddings_gallery_heading_italic: getValue('weddings', 'weddings_gallery_heading_italic', 'Aesthetics'),
@@ -1101,7 +1101,7 @@ export default function AdminPages() {
         experiences_scenes_desc: getValue('experiences', 'experiences_scenes_desc', 'Real photographic glances of our pinewood interiors, high-altitude yoga shala, Sattvik mountain dining, and misty cedar surroundings. Click any image to expand.'),
         experiences_cta_badge: getValue('experiences', 'experiences_cta_badge', 'Plan Your Trip'),
         experiences_cta_heading: getValue('experiences', 'experiences_cta_heading', 'Book Your'),
-        experiences_cta_heading_italic: getValue('experiences', 'experiences_cta_heading_italic', 'Vedic Stay'),
+        experiences_cta_heading_italic: getValue('experiences', 'experiences_cta_heading_italic', 'Himalayan Stay'),
         experiences_cta_desc: getValue('experiences', 'experiences_cta_desc', 'Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.'),
         experiences_cta_btn_text: getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation'),
         experiences_cta_btn_link: getValue('experiences', 'experiences_cta_btn_link', '/rooms'),
@@ -1135,7 +1135,7 @@ export default function AdminPages() {
         nearby_scenes_heading: getValue('nearby', 'nearby_scenes_heading', 'Rudraprayag'),
         nearby_scenes_heading_italic: getValue('nearby', 'nearby_scenes_heading_italic', 'Scenes'),
         nearby_scenes_desc: getValue('nearby', 'nearby_scenes_desc', 'Photographic captures of the sacred Mandakini valley surroundings, ancient temples, and alpine landscapes.'),
-        nearby_cta_badge: getValue('nearby', 'nearby_cta_badge', 'Your Sacred Sanctuary awaits'),
+        nearby_cta_badge: getValue('nearby', 'nearby_cta_badge', 'A peaceful stay awaits you'),
         nearby_cta_heading: getValue('nearby', 'nearby_cta_heading', 'Plan Your'),
         nearby_cta_heading_italic: getValue('nearby', 'nearby_cta_heading_italic', 'Sacred Journey'),
         nearby_cta_desc: getValue('nearby', 'nearby_cta_desc', 'Let us coordinate your temple circuits, trail guides, and vehicle transfers from our base in Guptkashi.'),
@@ -1198,7 +1198,7 @@ export default function AdminPages() {
       setFormFields({
         booking_heading: getValue('booking', 'booking_heading', 'Reserve Your'),
         booking_heading_italic: getValue('booking', 'booking_heading_italic', 'Stay'),
-        booking_badge: getValue('booking', 'booking_badge', 'Guaranteed sanctuary booking'),
+        booking_badge: getValue('booking', 'booking_badge', 'Guaranteed room booking'),
         booking_subheading: getValue('booking', 'booking_subheading', 'Elevate your Himalayan ascent with a direct direct-booking premium rate.'),
       });
     } else if (['privacy', 'terms'].includes(activePageId)) {
@@ -1808,7 +1808,7 @@ export default function AdminPages() {
                           title="Verified Guest Testimonials Catalogue"
                           items={socialProofReviews}
                           onChange={setSocialProofReviews}
-                          createDefaultItem={() => ({ name: 'New Pilgrim', date: 'May 2026', rating: 5, state: 'State', text: 'Stunning pine sanctuary...', approved: true })}
+                          createDefaultItem={() => ({ name: 'New Pilgrim', date: 'May 2026', rating: 5, state: 'State', text: 'Beautiful mountain stay...', approved: true })}
                           getItemLabel={(item) => `${item.name} (${item.state})`}
                           renderItemEditor={(item, idx, updateField) => (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">

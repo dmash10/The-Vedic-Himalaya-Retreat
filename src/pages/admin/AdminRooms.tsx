@@ -239,7 +239,7 @@ export default function AdminRooms() {
             {/* Dynamic Multi-Images Array List Editor */}
             <div className="text-left space-y-2">
               <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1">
-                Sanctuary Gallery Images (Multiple Slides)
+                Room Gallery Images (Multiple Slides)
               </label>
               
               {/* Miniature Image Thumbnails */}

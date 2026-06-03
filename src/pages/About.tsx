@@ -19,7 +19,7 @@ export default function About() {
   if (loading && content.length === 0) return <PageLoader />;
 
   const aboutHeading = getValue('about', 'about_heading', 'Rooted in the');
-  const aboutSubheading = getValue('about', 'about_subheading', 'Kedarnath Sanctuary');
+  const aboutSubheading = getValue('about', 'about_subheading', 'Kedarnath Retreat');
   const aboutMainText = getValue('about', 'about_main_text', 'The Vedic Himalaya Retreat is more than luxury lodging. It is an extension of the Uttarakhand soul, designed purely to ground and restore the high-altitude voyager. Our structures pay humble homage to the traditional deodar wood and black mountain stone masonry of Uttarakhand. Every pillar is hand-fitted by local artisans, embedding regional spirit into every joint.');
   const aboutHighlights = getValue('about', 'about_highlights', 'We believe true luxury is found in the deep forest silence, the cold slate underfoot, and the monumental scale of the peaks towering outside your window.');
   const aboutImage = getValue('about', 'about_image', 'https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=1200');
@@ -101,7 +101,7 @@ export default function About() {
               >
                 <h2 className="text-2xl md:text-3xl font-heading font-medium tracking-tight text-slate-charcoal">
                   Ancient Architecture, <br />
-                  <span className="italic font-serif font-normal text-[#A88C52]">Modern Sanctuary Care</span>
+                  <span className="italic font-serif font-normal text-[#A88C52]">Modern Mountain Care</span>
                 </h2>
                 <p className="text-xs md:text-sm text-slate-charcoal/75 leading-relaxed font-sans whitespace-pre-line">
                   {aboutMainText}

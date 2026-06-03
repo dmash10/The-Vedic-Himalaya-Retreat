@@ -44,7 +44,7 @@ export default function Experiences() {
 
   const experiencesCtaBadge = getValue('experiences', 'experiences_cta_badge', 'Plan Your Trip');
   const experiencesCtaHeading = getValue('experiences', 'experiences_cta_heading', 'Book Your');
-  const experiencesCtaHeadingItalic = getValue('experiences', 'experiences_cta_heading_italic', 'Sanctuary Stay');
+  const experiencesCtaHeadingItalic = getValue('experiences', 'experiences_cta_heading_italic', 'Himalayan Stay');
   const experiencesCtaDesc = getValue('experiences', 'experiences_cta_desc', 'Our retreat in Guptkashi features limited rooms to maintain a quiet atmosphere. Reserve your stay for the upcoming season.');
   const experiencesCtaBtnText = getValue('experiences', 'experiences_cta_btn_text', 'Confirm Your Reservation');
   const experiencesCtaBtnLink = getValue('experiences', 'experiences_cta_btn_link', '/rooms');

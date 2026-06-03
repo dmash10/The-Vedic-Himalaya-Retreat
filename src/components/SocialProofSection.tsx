@@ -534,7 +534,7 @@ export default function SocialProofSection() {
                         {/* Upper Header Metadata */}
                         <div className="flex justify-between items-center mb-6">
                             <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-slate-charcoal/45">
-                                Verified Sanctuary Journals • Slide {currentIndex + 1} of {Math.max(1, activeReviews.length - visibleCount + 1)}
+                                Verified Guest Reviews • Slide {currentIndex + 1} of {Math.max(1, activeReviews.length - visibleCount + 1)}
                             </span>
                         </div>
 

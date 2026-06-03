@@ -24,14 +24,14 @@ export function Footer() {
               </span>
             </div>
             <p className="text-[#F6F4EF]/70 text-xs sm:text-sm leading-relaxed max-w-xs font-normal font-sans">
-              A premium, atmospheric mountain sanctuary on the sacred Kedarnath Route, offering cinematic view portals and Himalayan calm.
+              A quiet mountain retreat on the Kedarnath Route, offering panoramic views and warm Himalayan hospitality.
             </p>
           </div>
 
           {/* Column 2: Quick Navigation */}
           <div className="space-y-4 col-span-1">
             <h4 className="font-heading uppercase tracking-[0.18em] text-xs text-[#D8CBB8] font-semibold">
-              The Sanctuary
+              The Retreat
             </h4>
             <div className="flex flex-col space-y-2.5 text-sm text-[#F6F4EF]/80">
               <Link to="/about" className="hover:text-[#A88C52] transition-colors duration-300 w-fit">The Retreat</Link>

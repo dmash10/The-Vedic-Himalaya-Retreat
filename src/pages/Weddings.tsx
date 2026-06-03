@@ -283,7 +283,7 @@ export default function Weddings() {
   const weddingsOfferingsTagline = getValue('weddings', 'weddings_offerings_tagline', 'Wedding Specifications');
   const weddingsOfferingsHeading = getValue('weddings', 'weddings_offerings_heading', 'Sacred');
   const weddingsOfferingsHeadingItalic = getValue('weddings', 'weddings_offerings_heading_italic', 'Aesthetics');
-  const weddingsOfferingsDesc = getValue('weddings', 'weddings_offerings_desc', 'Bespoke Arrangements & Sanctuary parameters');
+  const weddingsOfferingsDesc = getValue('weddings', 'weddings_offerings_desc', 'Custom arrangements & local services');
 
   const weddingsGalleryTagline = getValue('weddings', 'weddings_gallery_tagline', 'PHOTO CAPTURES');
   const weddingsGalleryHeading = getValue('weddings', 'weddings_gallery_heading', 'Celebration');
@@ -342,7 +342,7 @@ export default function Weddings() {
         title: "Sacred Canopy Lawn",
         image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
         capacity: "Up to 20 guests",
-        location: "East Sanctuary Facing",
+        location: "East Forest Facing",
         highlight: "Kedarnath peaks backdrop during golden sunset hours.",
         vibe: "Intimate, Sacred Open Sky",
         tags: ["Panoramic Vistas", "Open Wood Hearth", "Custom Carpets"]
@@ -352,7 +352,7 @@ export default function Weddings() {
         title: "The Glass Pavilion",
         image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=600",
         capacity: "Up to 20 guests",
-        location: "Sanctuary Center",
+        location: "Retreat Garden",
         highlight: "Framed gorge viewline with cozy slate under-floor heat.",
         vibe: "Editorial, Celestial",
         tags: ["Pine Forest Views", "Heated Stone Slabs", "Ambient Chandeliers"]
@@ -372,7 +372,7 @@ export default function Weddings() {
         title: "Deodar Forest Garden",
         image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600",
         capacity: "Up to 20 guests",
-        location: "West Sanctuary Ridge",
+        location: "West Forest Ridge",
         highlight: "Deep forest whispers, warm pathway fire cups, zero plastic.",
         vibe: "Mystical, Eco-Luxury",
         tags: ["Tall Pines Sieve", "Fallen Spruce Bark Path", "Candle Glow Only"]
@@ -391,7 +391,7 @@ export default function Weddings() {
         num: "01",
         badge: "CAPACITY LIMITS",
         title: "Up to 20 Guests",
-        description: "Exclusively limited to 20 guests for exquisite mountain buyouts. Host a deeply intimate, sacred micro-destination wedding with full retreat access.",
+        description: "Limited to 20 guests. Host a private family destination wedding with full retreat access.",
         image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
         bgClass: "bg-[#0f2822]",
         textClass: "text-[#FAF9F5]",
@@ -442,7 +442,7 @@ export default function Weddings() {
     weddingsGallery = [
       { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Altar under the Snowpeaks", category: "CANOPY VOWS", is_visible: true },
       { image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800", title: "Long table woodland banquets", category: "OUTDOOR SLATES", is_visible: true },
-      { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS SANCTUARY", is_visible: true },
+      { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=1200", title: "Starlit fireplace gatherings", category: "GLASS PAVILION", is_visible: true },
       { image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800", title: "Deodar twilight trail entrance", category: "WOODEN TORCHES", is_visible: true },
       { image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", title: "Hand raised local millet thalis", category: "VEGETARIAN FEASTS", is_visible: true },
       { image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&q=80&w=800", title: "Lawn cocktails & quiet embers", category: "TWILIGHT SPIRIT", is_visible: true }

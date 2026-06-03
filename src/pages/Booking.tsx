@@ -32,7 +32,7 @@ export default function Booking() {
 
   const bookingHeading = getValue('booking', 'booking_heading', 'Reserve Your');
   const bookingHeadingItalic = getValue('booking', 'booking_heading_italic', 'Stay');
-  const bookingBadge = getValue('booking', 'booking_badge', 'Guaranteed sanctuary booking');
+  const bookingBadge = getValue('booking', 'booking_badge', 'Guaranteed room booking');
   const bookingSubheading = getValue('booking', 'booking_subheading', 'Elevate your Himalayan ascent with a direct direct-booking premium rate.');
   const bookingVisible = getValue('booking', 'booking_visible', 'true') !== 'false' && settings.booking_enabled !== false;
 
@@ -319,7 +319,7 @@ export default function Booking() {
 
               <div className="pt-4">
                 <Button size="lg" className="w-full uppercase tracking-[0.2em] font-extrabold text-[10px]" variant="primary">
-                  Verify &amp; Book Sanctuary Suite
+                  Verify &amp; Book Room
                 </Button>
               </div>
               
@@ -363,7 +363,7 @@ export default function Booking() {
               </div>
               <Check className="mx-auto text-amber-400 bg-white/10 p-2 rounded-full w-12 h-12 mb-2" strokeWidth={2.5} />
               <span className="text-[10px] uppercase font-black tracking-[0.3em] font-mono block text-amber-400">Ledger Reservation Locked</span>
-              <h2 className="text-xl font-heading font-normal">Sanctuary Voucher E-Ticket</h2>
+              <h2 className="text-xl font-heading font-normal">Room Voucher E-Ticket</h2>
             </div>
 
             {/* Ticket Body with dashed tear line */}

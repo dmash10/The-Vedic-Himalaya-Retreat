@@ -21,7 +21,7 @@ export default function TermsOfStay() {
             className="group inline-flex items-center gap-2 text-[10px] sm:text-xs text-[#1B4C44] uppercase tracking-widest font-extrabold font-sans hover:text-[#A88C52] transition-colors"
           >
             <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Sanctuary</span>
+            <span>Return to Home</span>
           </Link>
         </div>
 
@@ -58,7 +58,7 @@ export default function TermsOfStay() {
             <>
               {/* Introduction */}
               <p className="text-xs sm:text-sm text-slate-charcoal/80 leading-relaxed font-sans italic border-l-2 border-[#A88C52] pl-4 py-1">
-                Welcome to The Vedic Himalaya Retreat. By scheduling a reservation, executing payments, or entering our sanctuary boundaries at Village Dewar, Guptkashi, you unconditionally agree to respect the physical, environmental, and ethical principles outlined below. These parameters ensure the safety, spiritual frequency, and serene environment of all residents and pilgrims.
+                Welcome to The Vedic Himalaya Retreat. By scheduling a reservation, executing payments, or entering our retreat grounds at Village Dewar, Guptkashi, you unconditionally agree to respect the physical, environmental, and ethical principles outlined below. These rules ensure the safety and quiet environment of all residents and pilgrims.
               </p>
 
               {/* Section 1: Pure Vegetarian Codes */}
@@ -124,7 +124,7 @@ export default function TermsOfStay() {
               <section className="space-y-4">
                 <h2 className="text-xl sm:text-2xl font-serif text-[#1B4C44] font-normal tracking-wide flex items-center gap-2">
                   <Flame size={18} className="text-[#A88C52] shrink-0" />
-                  <span>4. Silent Sanctuary Hours</span>
+                  <span>4. Quiet Hours</span>
                 </h2>
                 <p>
                   We honor the mountain stillness. Quiet hours are implemented starting from <strong className="font-semibold">10:00 PM to 7:00 AM</strong>. Media devices, speakers, high-decibel chatter, or structural gatherings must be transitioned into complete silence or enjoyed in private, isolated suites during these intervals to safeguard the resting cycle of the surrounding wildlife and meditation schedules.
@@ -158,7 +158,7 @@ export default function TermsOfStay() {
                   Our luxury cabins are handcrafted using aromatic natural pinewood and custom Himalayan slate stones. Guests are requested to respect these high-end materials.
                 </p>
                 <p>
-                  Any structural damage, staining of organic linen, breakage of custom Vaastu patterns, or vandalism to the property will be appraised by the sanctuary management upon check-out, and the guest will be fully liable for recovery, material sourcing, and specialized mountain craftsmanship labor costs.
+                  Any structural damage, staining of organic linen, breakage of custom Vaastu patterns, or vandalism to the property will be appraised by the resort management upon check-out, and the guest will be fully liable for recovery, material sourcing, and specialized mountain craftsmanship labor costs.
                 </p>
               </section>
 

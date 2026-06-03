@@ -61,10 +61,10 @@ export function CookieConsent() {
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold tracking-wider uppercase text-[#1B4C44] font-sans flex items-center gap-1.5">
-                    <span>Sanctuary Cookies</span>
+                    <span>Website Cookies</span>
                   </h4>
                   <p className="text-[11px] sm:text-xs text-[#2E3438]/85 leading-relaxed font-light font-sans">
-                    We use cookies to improve booking performance, respect navigation parameters, and support the peaceful digital flow of our sanctuary retreat.
+                    We use cookies to improve booking performance, respect navigation parameters, and support the smooth digital experience of our mountain retreat.
                   </p>
                 </div>
               </div>

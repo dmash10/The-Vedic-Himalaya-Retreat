@@ -290,7 +290,7 @@ export default function Home() {
     title: "Pinewood Family Suite",
     badge: "Signature Reserve",
     price: 11500,
-    description: "Our ultimate high-altitude sanctuary thoughtfully completed using aromatic natural pinewood and mountain craftsmanship. Guided by sacred Vaastu patterns, this spacious suite features heated master bedding with 2 premium double beds, pristine slate baths, and panoramic window portals framing starlit snowpeak ranges.",
+    description: "Our premium family suite crafted with fragrant pinewood and mountain stonework. This spacious room features heated master bedding with 2 double beds, clean stone baths, and large window panels showing clear views of the snow-capped Himalayan ranges.",
     images: [
       "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
       "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000"
@@ -495,9 +495,9 @@ export default function Home() {
   if (marqueeItems.length === 0) {
     marqueeItems = [
       "The Vedic Himalaya Retreat",
-      "Semi Guptkashi Sanctuary",
+      "Semi Guptkashi Stay",
       "Kedarnath Guest Rest",
-      "Semi Guptkashi Haven",
+      "Semi Guptkashi Room",
       "Misty Peak Vistas",
       "Luxury Mountain Suites"
     ];
@@ -505,7 +505,7 @@ export default function Home() {
 
   const storyLine1 = getValue('home', 'story_line1', 'Casual Elegance');
   const storyLine2 = getValue('home', 'story_line2', 'Meets Alpine Charm');
-  const storyDesc = getValue('home', 'story_desc', 'Inspired by our pristine cedar forest surroundings, experience a serene state of mind from the distinct wood-and-stone design and elevated luxury of our sanctuary guest suites.');
+  const storyDesc = getValue('home', 'story_desc', 'Inspired by our cedar forest surroundings, enjoy a quiet escape with a distinct wood-and-stone design and comfortable guest suites.');
   const storyBtnName = getValue('home', 'story_btn_name', 'VIEW ALL ROOMS & SUITES');
   const storyBtnLink = getValue('home', 'story_btn_link', '/rooms');
 
@@ -519,7 +519,7 @@ export default function Home() {
   if (homePolaroids.length === 0) {
     homePolaroids = [
       { id: 0, image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800", title: "Double Pine Suite", desc: "ELEVATED ALPINE LIVING", is_visible: true },
-      { id: 1, image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", title: "Sanctuary Comforts", desc: "COZY HEARTH COMPANIONSHIP", is_visible: true },
+      { id: 1, image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600", title: "Cozy Comforts", desc: "COZY HEARTH COMPANIONSHIP", is_visible: true },
       { id: 2, image: "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800", title: "Chaukhamba Peak", desc: "MISTY GOLDEN RANGE VISTAS", is_visible: true },
       { id: 3, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600", title: "Hearthside Breads", desc: "ORGANIC FRESH BREADS", is_visible: true }
     ];
@@ -536,7 +536,7 @@ export default function Home() {
   if (homeOfferings.length === 0) {
     homeOfferings = [
       { num: "01", badge: "CELESTIAL MEMORIES", title: "Destination Weddings", description: "Exchange eternal vows on elegant stone cedar terraces wreathed in soft misty breeze and sacred Himalayan aesthetics.", image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#3A1412]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 10\" // E 79° 04' 40\"", icon: "Heart", is_visible: true },
-      { num: "02", badge: "RETREAT BASECAMP", title: "Kedarnath Yatra Stay", description: "Your premium high-altitude rest sanctuary base. Retreat to comfortable modern pine wood cabins nestled along the sacred pilgrimage route.", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#0f2822]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 12\" // E 79° 04' 45\"", icon: "Mountain", is_visible: true },
+      { num: "02", badge: "RETREAT BASECAMP", title: "Kedarnath Yatra Stay", description: "Your premium high-altitude rest stay. Rest in comfortable modern pine wood cabins built along the Kedarnath pilgrimage route.", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#0f2822]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 12\" // E 79° 04' 45\"", icon: "Mountain", is_visible: true },
       { num: "03", badge: "INNER WELLNESS", title: "Yoga & Prana Studio", description: "Tune your physical vessel with high-altitude breathing alignment, meditative pine forest morning walks, and sunset sound bowls.", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#EFEAE1]", textClass: "text-[#0B1714]", coords: "N 30° 16' 15\" // E 79° 04' 50\"", icon: "Wind", is_visible: true },
       { num: "04", badge: "VILLAGE RETREAT", title: "Himalayan Village Life", description: "Uncover quiet mountain paths, pure riverbeds, organic farming cycles, and the timeless warmth of authentic local communities.", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200", bgClass: "bg-[#09100e]", textClass: "text-[#FAF9F5]", coords: "N 30° 16' 18\" // E 79° 04' 52\"", icon: "Compass", is_visible: true }
     ];
@@ -568,7 +568,7 @@ export default function Home() {
   const whyChooseVisible = getValue('home', 'why_choose_visible', 'true') !== 'false';
   const whyChooseTagline = getValue('home', 'why_choose_tagline', 'THE VEDIC HIMALAYA DIFFERENCE');
   const whyChooseHeading = getValue('home', 'why_choose_heading', 'Why Guests Choose');
-  const whyChooseHeadingItalic = getValue('home', 'why_choose_heading_italic', 'Our Sanctuary');
+  const whyChooseHeadingItalic = getValue('home', 'why_choose_heading_italic', 'Our Retreat');
   const whyChooseDesc1 = getValue('home', 'why_choose_desc1', 'Most commercial hotels are grouped near busy transit stations, introducing constant vehicle fumes, generator hums, and crowd noise.');
   const whyChooseDesc2 = getValue('home', 'why_choose_desc2', "The Vedic Himalaya Retreat sits high on the scenic, quiet shelf of Village Dewar, Guptkashi, Kedarnath Route. Here, you are beautifully elevated into the silent pines, looking straight out onto snowy Chaukhamba sweeps.");
 
@@ -591,7 +591,7 @@ export default function Home() {
   const homeGalleryVisible = getValue('home', 'home_gallery_visible', 'true') !== 'false';
   const homeGalleryBadge = getValue('home', 'home_gallery_badge', 'Gallery');
   const homeGalleryHeading = getValue('home', 'home_gallery_heading', 'Our Visual Journal');
-  const homeGalleryDesc = getValue('home', 'home_gallery_desc', 'Capturing moments of alpine light, tranquil silence, and devotion across our sacred sanctuary garden.');
+  const homeGalleryDesc = getValue('home', 'home_gallery_desc', 'Capturing moments of morning light, quiet silence, and devotion across our retreat garden.');
 
   const bentoGalleryItemsStr = getValue('home', 'bento_gallery_items', '');
   let bentoGalleryItems: any[] = [];
@@ -612,10 +612,10 @@ export default function Home() {
   }
 
   const homeCtaVisible = getValue('home', 'home_cta_visible', 'true') !== 'false';
-  const homeCtaBadge = getValue('home', 'home_cta_badge', 'Your Himalayan Haven Awaits');
+  const homeCtaBadge = getValue('home', 'home_cta_badge', 'Your Himalayan Escape Awaits');
   const homeCtaHeading = getValue('home', 'home_cta_heading', 'Ready to Experience the');
   const homeCtaHeadingItalic = getValue('home', 'home_cta_heading_italic', 'Pinewood Calm?');
-  const homeCtaDesc = getValue('home', 'home_cta_desc', 'Secure your sanctuary space high in the mountain evergreens ahead of your sacred pilgrimage. Clean air, warm hospitality, and pure alpine peace.');
+  const homeCtaDesc = getValue('home', 'home_cta_desc', 'Book your stay high in the mountain evergreens ahead of your pilgrimage. Clean air, warm hospitality, and quiet alpine peace.');
   const homeCtaBtnText = getValue('home', 'home_cta_btn_text', 'Book Your Stay Today');
   const homeCtaBtnLink = getValue('home', 'home_cta_btn_link', '/rooms');
 
@@ -919,7 +919,7 @@ export default function Home() {
                   Signature <span className="italic font-serif text-[#1B4C44] font-normal">Offerings</span>
                 </h2>
                 <p className="text-[10px] text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
-                  Sacred Retreats & High-Altitude Sanctuary Bases
+                  Comfortable Rooms & High-Altitude Stays
                 </p>
               </div>
 
@@ -1001,7 +1001,7 @@ export default function Home() {
                     Signature <span className="italic font-serif text-[#1B4C44] font-normal">Offerings</span>
                   </h2>
                   <p className="text-[10px] md:text-xs text-slate-charcoal/50 uppercase tracking-[0.18em] font-mono">
-                    Sacred Retreats & High-Altitude Sanctuary Bases
+                    Comfortable Rooms & High-Altitude Stays
                   </p>
                 </div>
 
@@ -1027,7 +1027,7 @@ export default function Home() {
 
       {/* Aesthetic Center CTA Link - Scrolls up naturally right after the signature offerings card stack completes */}
       <div className="bg-[#FAF9F5] py-8 md:py-16 border-b border-[#D8CBB8]/15 flex flex-col items-center justify-center text-center px-6 relative z-10">
-        <p className="text-[9px] uppercase tracking-[0.2em] text-[#A88C52] font-mono mb-4">Experience More of Our Sacred Sanctuary</p>
+        <p className="text-[9px] uppercase tracking-[0.2em] text-[#A88C52] font-mono mb-4">Experience More of Our Mountain Retreat</p>
         <Link 
           to="/experiences" 
           className="group inline-flex items-center gap-3 text-[#1B4C44] hover:text-[#A88C52] text-xs sm:text-sm font-bold uppercase tracking-[0.2em] font-heading transition-colors duration-300 cursor-pointer border-b border-dashed border-[#1B4C44]/30 pb-1.5"
@@ -1085,11 +1085,11 @@ export default function Home() {
             <span className="uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold text-deep-teal">Accommodation</span>
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal">Our <span className="italic text-deep-teal font-normal">{roomData.name}</span></h2>
             <p className="text-[11px] sm:text-sm text-slate-charcoal/70 max-w-sm mx-auto text-center font-sans">
-              {roomData.description ? roomData.description.slice(0, 100) + "..." : "Boutique high-altitude sanctuary crafted with fragrant native pinewood and pristine valley vistas."}
+              {roomData.description ? roomData.description.slice(0, 100) + "..." : "Cozy high-altitude rooms crafted with fragrant pinewood and pristine valley vistas."}
             </p>
           </div>
           
-          {/* Stunning, high-end 2-column wide layout for the Single Signature Sanctuary */}
+          {/* Stunning, high-end 2-column wide layout for the Single Signature Suite */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
