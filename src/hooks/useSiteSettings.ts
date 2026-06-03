@@ -18,6 +18,10 @@ export interface SiteSettings {
   maintenance_mode: boolean;
   announcement_text: string;
   announcement_enabled: boolean;
+  share_title?: string;
+  share_description?: string;
+  share_image?: string;
+  site_favicon?: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -36,6 +40,10 @@ const defaultSettings: SiteSettings = {
   maintenance_mode: false,
   announcement_text: '',
   announcement_enabled: false,
+  share_title: '',
+  share_description: '',
+  share_image: '',
+  site_favicon: '',
 };
 
 export const useSiteSettings = () => {

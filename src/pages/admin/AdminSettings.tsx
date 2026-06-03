@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useSiteSettings, SiteSettings } from '@/hooks/useSiteSettings';
 import {
   Save, Phone, Globe, MessageSquare, Bell,
-  Loader2, ShieldCheck, AlertTriangle, MapPin, Mail, Tag
+  Loader2, ShieldCheck, AlertTriangle, MapPin, Mail, Tag,
+  Share2
 } from 'lucide-react';
 import { toast } from 'sonner';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 // Premium aligned input component for settings
 interface SettingInputProps {
@@ -133,6 +135,53 @@ export default function AdminSettings() {
               onChange={(val) => handleChange('tagline', val)}
               placeholder="Peace in the Pines"
             />
+          </div>
+        </div>
+
+        {/* SEO & Social Sharing Settings */}
+        <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl overflow-hidden shadow-none">
+          <h2 className="text-xs font-bold text-[#F8FAFC] p-4 bg-[#0D1412]/50 border-b border-[#1C2E2A] flex items-center gap-2 uppercase tracking-wider">
+            <Share2 className="h-4.5 w-4.5 text-[#C4A665]" />
+            SEO & Browser Icon Settings
+          </h2>
+          <div className="p-5 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <SettingInput
+                  label="Search / Share Title"
+                  icon={Share2}
+                  value={localSettings.share_title || ''}
+                  onChange={(val) => handleChange('share_title', val)}
+                  placeholder="The Vedic Himalaya Retreat | Peace in the Pines"
+                />
+                <div className="relative">
+                  <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">
+                    Search / Share Description
+                  </label>
+                  <textarea
+                    value={localSettings.share_description || ''}
+                    onChange={(e) => handleChange('share_description', e.target.value)}
+                    rows={4}
+                    placeholder="Brief description showing on Google search and when sharing links (e.g. WhatsApp, Slack)..."
+                    className="w-full px-4 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665] transition-all resize-none leading-relaxed font-medium"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ImageUploader
+                  label="Browser Tab Icon (Favicon)"
+                  currentImage={localSettings.site_favicon || ''}
+                  onImageChange={(path) => handleChange('site_favicon', path)}
+                  aspectRatio="aspect-square w-full max-w-[140px] mx-auto"
+                />
+                <ImageUploader
+                  label="Social Preview Card Image"
+                  currentImage={localSettings.share_image || ''}
+                  onImageChange={(path) => handleChange('share_image', path)}
+                  aspectRatio="aspect-video w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
