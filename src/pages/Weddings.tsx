@@ -265,12 +265,12 @@ export default function Weddings() {
   const weddingsImage = getValue('weddings', 'weddings_image', '');
   const weddingsHeroBadge = getValue('weddings', 'weddings_hero_badge', 'SACRED WEDDINGS & CELEBRATIONS');
   const weddingsHeroDesc = getValue('weddings', 'weddings_hero_desc', '');
-  const weddingsStoryTitle = getValue('weddings', 'weddings_story_title', 'Ancestral Purity');
-  const weddingsStorySubtitle = getValue('weddings', 'weddings_story_subtitle', 'In Sacred Commemoration');
+  const weddingsStoryTitle = getValue('weddings', 'weddings_story_title', 'Mountain Wedding');
+  const weddingsStorySubtitle = getValue('weddings', 'weddings_story_subtitle', 'A quiet Himalayan ceremony');
   const weddingsStoryDesc = getValue('weddings', 'weddings_story_desc', 'Take part in customizable celebratory layouts where the alpine air remains whispery and crisp. Let our stone-hearth specialists and organic culinary designers assemble beautiful tables decorated exclusively with wild mountain flowers.');
 
   const weddingsStoryScript = getValue('weddings', 'weddings_story_script', 'Himalayan Pure Blessings');
-  const weddingsStoryHeading = getValue('weddings', 'weddings_story_heading', 'Intimate, Cinematic');
+  const weddingsStoryHeading = getValue('weddings', 'weddings_story_heading', 'Small, Personal');
   const weddingsStoryHeadingItalic = getValue('weddings', 'weddings_story_heading_italic', '&');
   const weddingsStorySubheading = getValue('weddings', 'weddings_story_subheading', 'Unforgettable');
   const weddingsStoryParagraph = getValue('weddings', 'weddings_story_paragraph', 'From beautiful pre-marriage morning rituals on our mountain-sky deodar terraces to customized wedding lawns set before a majestic valley backdrop, The Vedic Himalaya Retreat coordinates an exceptional blend of premium hospitality, local Garhwali flavor thalis, and pure mountain atmosphere.');
@@ -280,7 +280,7 @@ export default function Weddings() {
   const weddingsVenuesHeadingItalic = getValue('weddings', 'weddings_venues_heading_italic', 'Spaces');
   const weddingsVenuesDesc = getValue('weddings', 'weddings_venues_desc', 'Choose from our hand-selected indoor and outdoor spaces, each featuring high altitude forest views and traditional wood hearth configurations.');
 
-  const weddingsOfferingsTagline = getValue('weddings', 'weddings_offerings_tagline', 'Wedding Specifications');
+  const weddingsOfferingsTagline = getValue('weddings', 'weddings_offerings_tagline', 'What We Offer');
   const weddingsOfferingsHeading = getValue('weddings', 'weddings_offerings_heading', 'Sacred');
   const weddingsOfferingsHeadingItalic = getValue('weddings', 'weddings_offerings_heading_italic', 'Aesthetics');
   const weddingsOfferingsDesc = getValue('weddings', 'weddings_offerings_desc', 'Custom arrangements & local services');

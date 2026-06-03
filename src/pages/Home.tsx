@@ -499,12 +499,12 @@ export default function Home() {
       "Kedarnath Guest Rest",
       "Semi Guptkashi Room",
       "Misty Peak Vistas",
-      "Luxury Mountain Suites"
+      "Mountain View Rooms",
     ];
   }
 
-  const storyLine1 = getValue('home', 'story_line1', 'Casual Elegance');
-  const storyLine2 = getValue('home', 'story_line2', 'Meets Alpine Charm');
+  const storyLine1 = getValue('home', 'story_line1', 'Wake Up to the');
+  const storyLine2 = getValue('home', 'story_line2', 'Himalayan Snowline');
   const storyDesc = getValue('home', 'story_desc', 'Inspired by our cedar forest surroundings, enjoy a quiet escape with a distinct wood-and-stone design and comfortable guest suites.');
   const storyBtnName = getValue('home', 'story_btn_name', 'VIEW ALL ROOMS & SUITES');
   const storyBtnLink = getValue('home', 'story_btn_link', '/rooms');

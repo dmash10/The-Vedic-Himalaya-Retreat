@@ -82,22 +82,22 @@ export default function Dining() {
   const diningRitualsHeading = getValue('dining', 'dining_rituals_heading', 'Daily Meal Cycles');
   const diningRitualsDesc = getValue('dining', 'dining_rituals_desc', 'Our meals follow the rhythm of the mountain day. View how we structure dining throughout your stay.');
   
-  const diningPavilionTagline = getValue('dining', 'dining_pavilion_tagline', 'THE MAIN SALON');
-  const diningPavilionHeading = getValue('dining', 'dining_pavilion_heading', 'The Slate Pavilion');
+  const diningPavilionTagline = getValue('dining', 'dining_pavilion_tagline', 'Our Dining Room');
+  const diningPavilionHeading = getValue('dining', 'dining_pavilion_heading', 'The Mountain Table');
   const diningPavilionDesc1 = getValue('dining', 'dining_pavilion_desc1', 'Framed by massive floor-to-ceiling panoramic glass panes, our signature interior space hovers above the misty Guptkashi gorge. Enjoy your meal in a warm indoor dining space with clear views of the majestic snowline of Chaukhamba peaks.');
   const diningPavilionDesc2 = getValue('dining', 'dining_pavilion_desc2', 'Guests gather around cold-slab slate fireplace tables while foods are slow-cooked using traditional wood fuel. We avoid processed white sugars, chemical vegetable oils, and commercial steel pans—cooking inside clay pots and raw regional iron vessels.');
   const diningPavilionImage = getValue('dining', 'dining_pavilion_image', '');
   const diningPavilionDresscode = getValue('dining', 'dining_pavilion_dresscode', 'Casual Resort Comfort');
   
   const diningVowsTagline = getValue('dining', 'dining_vows_tagline', 'OUR DINING PHILOSOPHY');
-  const diningVowsHeading1 = getValue('dining', 'dining_vows_heading1', 'Earth to Soul');
-  const diningVowsHeading2 = getValue('dining', 'dining_vows_heading2', 'Purity Vows');
+  const diningVowsHeading1 = getValue('dining', 'dining_vows_heading1', 'Food and Honesty');
+  const diningVowsHeading2 = getValue('dining', 'dining_vows_heading2', 'What We Promise');
   const diningVowsDesc1 = getValue('dining', 'dining_vows_desc1', 'True physical restoration lies in complete resonance with the terrain. High high-altitude hiking requires provisions that digest lightly, hydrate cells thoroughly, and calm mental distraction.');
   const diningVowsDesc2 = getValue('dining', 'dining_vows_desc2', 'We strictly discard industrial white sugars, synthesized chemical salts, processed lard oils, and preserving chemicals. Every kitchen process is pure, steady, and completed by hand.');
   
-  const diningSpecialtyTagline = getValue('dining', 'dining_specialty_tagline', 'Daily Provisions Menu');
+  const diningSpecialtyTagline = getValue('dining', 'dining_specialty_tagline', 'What Is On The Menu');
   const diningSpecialtyHeading1 = getValue('dining', 'dining_specialty_heading1', 'The Daily');
-  const diningSpecialtyHeading2 = getValue('dining', 'dining_specialty_heading2', 'Harvest Communion');
+  const diningSpecialtyHeading2 = getValue('dining', 'dining_specialty_heading2', 'Meal Spread');
   const diningSpecialtyDesc = getValue('dining', 'dining_specialty_desc', 'Slowly constructed dishes prepared fresh each sunrise and twilight, complementary to all resident guests of our hillside valleys.');
   
   const diningMenuTagline = getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING');
@@ -219,7 +219,7 @@ export default function Dining() {
       },
       {
         image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
-        title: "The Main Salon",
+        title: "Dining Room",
         desc: "PANORAMIC CHALET WINDOW VIEWS"
       }
     ];
