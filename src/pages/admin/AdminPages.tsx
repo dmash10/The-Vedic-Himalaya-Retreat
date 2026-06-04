@@ -785,6 +785,34 @@ function ListEditor<T>({
   );
 }
 
+const DEFAULT_CONTACT_FAQS = [
+  {
+    question: "What is the maximum guest capacity for hosting weddings and corporate retreats at the resort?",
+    answer: "We can comfortably accommodate up to 60+ guests across our luxury pinewood family suites, cottages, and Swiss camps. For larger day-events and weddings, our outdoor pine lawns and garden setups can easily host up to 150-200 guests.",
+    is_visible: true
+  },
+  {
+    question: "Do you provide in-house catering, decorations, and event coordination for weddings?",
+    answer: "Yes, we offer complete end-to-end event planning. This includes premium Sattvik and multi-cuisine in-house catering, traditional and modern Himalayan floral decors, local folk musicians (Mangal Geet), audio-visual setups, and coordination with local priests for sacred ceremonies.",
+    is_visible: true
+  },
+  {
+    question: "Can we book the entire resort exclusively for a private event?",
+    answer: "Absolutely. We highly recommend full buyout reservations for weddings, family reunions, and yoga retreats. This guarantees complete privacy of our garden lawns, pine pathways, indoor dining areas, and all accommodations for your guests.",
+    is_visible: true
+  },
+  {
+    question: "How far is the resort from the main Kedarnath route and nearest helipads?",
+    answer: "We are located in the peaceful village of Dewar, Guptkashi, right along the scenic route. Guptkashi Helipad is only a 10-minute drive (4.7 km) from us, Phata is 15 minutes away, and Sonprayag is about 30 km, making us the perfect premium base for event hosting and temple pilgrimages.",
+    is_visible: true
+  },
+  {
+    question: "What is your cancellation and booking policy for large group events or weddings?",
+    answer: "For group buyouts and events, we require a 30% advance deposit to secure the dates. Balance payments are structured in stages leading up to the event. Cancellations made more than 45 days prior to the event date receive a full refund, minus minor processing fees.",
+    is_visible: true
+  }
+];
+
 export default function AdminPages() {
   const { content, loading: contentLoading, getValue, updateContent, updateMultipleContent } = useContent();
   const { zones, loading: zonesLoading, uploadImageDirect } = useImageZones();
@@ -822,6 +850,7 @@ export default function AdminPages() {
   const [whyChooseItems, setWhyChooseItems] = useState<any[]>([]);
   const [bentoGalleryItems, setBentoGalleryItems] = useState<any[]>([]);
   const [socialProofReviews, setSocialProofReviews] = useState<any[]>([]);
+  const [contactFaqs, setContactFaqs] = useState<any[]>([]);
 
   // Load effect
   useEffect(() => {
@@ -1197,6 +1226,12 @@ export default function AdminPages() {
         contact_instagram_url: getValue('contact', 'contact_instagram_url', 'https://instagram.com/thevedichimalayaretreat'),
         contact_form_title: getValue('contact', 'contact_form_title', 'Send an Inquiry'),
       });
+      try {
+        const val = JSON.parse(getValue('contact', 'contact_faqs', '[]'));
+        setContactFaqs(Array.isArray(val) && val.length > 0 ? val : DEFAULT_CONTACT_FAQS);
+      } catch {
+        setContactFaqs(DEFAULT_CONTACT_FAQS);
+      }
     } else if (activePageId === 'booking') {
       setFormFields({
         booking_heading: getValue('booking', 'booking_heading', 'Reserve Your'),
@@ -1351,6 +1386,8 @@ export default function AdminPages() {
     } else if (activePageId === 'gallery') {
       updates.push({ section: 'gallery', key: 'gallery_images', value: JSON.stringify(galleryImages) });
       updates.push({ section: 'home', key: 'bento_gallery_items', value: JSON.stringify(bentoGalleryItems) });
+    } else if (activePageId === 'contact') {
+      updates.push({ section: 'contact', key: 'contact_faqs', value: JSON.stringify(contactFaqs) });
     }
 
     const r = await updateMultipleContent(updates);
@@ -3031,6 +3068,22 @@ export default function AdminPages() {
                         <TextInputGroup label="Inquiry Form Section Title" icon={Type} value={formFields.contact_form_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, contact_form_title: v }))} />
                       </div>
                     )}
+
+                    <ListEditor
+                      title="Contact Page FAQs"
+                      items={contactFaqs}
+                      onChange={setContactFaqs}
+                      createDefaultItem={() => ({ question: 'New Question?', answer: 'Answer here.', is_visible: true })}
+                      getItemLabel={(item) => item.question}
+                      renderItemEditor={(item, idx, updateField) => (
+                        <div className="space-y-4 text-left">
+                          <TextInputGroup label="FAQ Question" icon={Type} value={item.question} onChange={(v) => updateField('question', v)} />
+                          <TextAreaGroup label="FAQ Answer" value={item.answer} onChange={(v) => updateField('answer', v)} rows={3} />
+                        </div>
+                      )}
+                      onSave={handleSavePage}
+                      isSaving={isSaving !== null}
+                    />
 
                     <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Contact Details" />
                   </div>

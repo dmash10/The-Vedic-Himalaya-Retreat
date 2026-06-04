@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Phone, Mail, Instagram, MapPin, Sparkles, Send, Check } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/hooks/useContent";
@@ -12,6 +12,7 @@ export default function Contact() {
   const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [activeFaqIdx, setActiveFaqIdx] = useState<number | null>(null);
 
   const easePremium = [0.22, 1, 0.36, 1] as const;
 
@@ -36,6 +37,45 @@ export default function Contact() {
   const contactFormTitle = getValue('contact', 'contact_form_title', 'Send an Inquiry');
 
   const whatsappNumber = settings.whatsapp_number || "918126573560";
+
+  const contactFaqs = useMemo(() => {
+    try {
+      const val = JSON.parse(getValue('contact', 'contact_faqs', '[]'));
+      return Array.isArray(val) && val.length > 0 ? val : [
+        {
+          question: "What is the maximum guest capacity for hosting weddings and corporate retreats at the resort?",
+          answer: "We can comfortably accommodate up to 60+ guests across our luxury pinewood family suites, cottages, and Swiss camps. For larger day-events and weddings, our outdoor pine lawns and garden setups can easily host up to 150-200 guests.",
+          is_visible: true
+        },
+        {
+          question: "Do you provide in-house catering, decorations, and event coordination for weddings?",
+          answer: "Yes, we offer complete end-to-end event planning. This includes premium Sattvik and multi-cuisine in-house catering, traditional and modern Himalayan floral decors, local folk musicians (Mangal Geet), audio-visual setups, and coordination with local priests for sacred ceremonies.",
+          is_visible: true
+        },
+        {
+          question: "Can we book the entire resort exclusively for a private event?",
+          answer: "Absolutely. We highly recommend full buyout reservations for weddings, family reunions, and yoga retreats. This guarantees complete privacy of our garden lawns, pine pathways, indoor dining areas, and all accommodations for your guests.",
+          is_visible: true
+        },
+        {
+          question: "How far is the resort from the main Kedarnath route and nearest helipads?",
+          answer: "We are located in the peaceful village of Dewar, Guptkashi, right along the scenic route. Guptkashi Helipad is only a 10-minute drive (4.7 km) from us, Phata is 15 minutes away, and Sonprayag is about 30 km, making us the perfect premium base for event hosting and temple pilgrimages.",
+          is_visible: true
+        },
+        {
+          question: "What is your cancellation and booking policy for large group events or weddings?",
+          answer: "For group buyouts and events, we require a 30% advance deposit to secure the dates. Balance payments are structured in stages leading up to the event. Cancellations made more than 45 days prior to the event date receive a full refund, minus minor processing fees.",
+          is_visible: true
+        }
+      ];
+    } catch (e) {
+      return [];
+    }
+  }, [content]);
+
+  const visibleFaqs = useMemo(() => {
+    return contactFaqs.filter((faq: any) => faq.is_visible !== false);
+  }, [contactFaqs]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,7 +290,7 @@ export default function Contact() {
                          <textarea 
                            rows={4} 
                            required
-                           placeholder="Tell us about your Kedarnath puja date or special accommodation requests..." 
+                           placeholder="Tell us about your wedding plans, event details, group bookings, or special accommodation requests..." 
                            value={message}
                            onChange={e => setMessage(e.target.value)}
                            className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300 resize-none placeholder:text-white/20"
@@ -330,6 +370,45 @@ export default function Contact() {
             </div>
           </div>
         </motion.div>
+
+        {/* Minimal Accordion FAQ Section */}
+        {visibleFaqs.length > 0 && (
+          <div className="mt-24 max-w-4xl mx-auto text-left">
+            <div className="text-center mb-12 space-y-3">
+              <span className="text-[10px] uppercase tracking-[0.25em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
+                Common Queries
+              </span>
+              <h2 className="text-3xl md:text-5xl font-heading text-[#2E3438] tracking-tight font-light leading-none">
+                Frequently Asked <span className="italic font-serif text-[#1B4C44] font-normal">Questions</span>
+              </h2>
+            </div>
+
+            <div className="border-t border-[#D8CBB8]/40 divide-y divide-[#D8CBB8]/30">
+              {visibleFaqs.map((faq: any, idx: number) => {
+                const isOpen = activeFaqIdx === idx;
+                return (
+                  <div key={idx} className="py-4">
+                    <button
+                      type="button"
+                      onClick={() => setActiveFaqIdx(isOpen ? null : idx)}
+                      className="w-full flex items-center justify-between text-left py-4 text-base md:text-lg font-heading text-slate-charcoal hover:text-[#1B4C44] transition-colors focus:outline-none cursor-pointer"
+                    >
+                      <span className="font-semibold pr-4">{faq.question}</span>
+                      <span className="text-[#A88C52] text-xl shrink-0 font-light">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div className="pb-6 text-sm md:text-base text-slate-charcoal/70 leading-relaxed font-sans animate-fadeIn">
+                        {faq.answer}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
