@@ -5,7 +5,7 @@ import {
   ArrowLeft, Bed, BedDouble, Fan, Tv, Bath, Wifi, Coffee, Sparkles, 
   ShieldCheck, Star, Check, Calendar, Users, Lock, 
   CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, X, MessageSquare,
-  Flame, Compass, Utensils, Mountain, Info, Zap, Droplets
+  Flame, Compass, Utensils, Mountain, Info, Zap, Droplets, Minus, Plus, Moon, Phone
 } from "lucide-react";
 import { useRooms } from "@/hooks/useRooms";
 import { useContent } from "@/hooks/useContent";
@@ -311,6 +311,7 @@ export default function Rooms() {
   const [checkOut, setCheckOut] = useState("");
   const [guestCount, setGuestCount] = useState("2 Guests");
   const [guestName, setGuestName] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
   const [bookingStep, setBookingStep] = useState<"idle" | "loading" | "success">("idle");
   const [loadingText, setLoadingText] = useState("");
   const [generatedTicket, setGeneratedTicket] = useState<any>(null);
@@ -320,6 +321,42 @@ export default function Rooms() {
   const [addSpecialPooja, setAddSpecialPooja] = useState(false);
   const [addCompulsoryBreakfast, setAddCompulsoryBreakfast] = useState(true);
   const [viewersCount, setViewersCount] = useState(3);
+
+  // Helper functions for Nights & Guests Counters
+  const getNightsCount = () => {
+    if (!checkIn || !checkOut) return 1;
+    const d1 = new Date(checkIn);
+    const d2 = new Date(checkOut);
+    if (d2 <= d1) return 1;
+    return Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 3600 * 24)) || 1;
+  };
+
+  const handleNightsChange = (newNights: number) => {
+    if (!checkIn) return;
+    const d1 = new Date(checkIn);
+    d1.setDate(d1.getDate() + newNights);
+    setCheckOut(d1.toISOString().split("T")[0]);
+  };
+
+  const handleCheckInChange = (newCheckIn: string) => {
+    setCheckIn(newCheckIn);
+    if (newCheckIn) {
+      const currentNights = getNightsCount();
+      const d1 = new Date(newCheckIn);
+      d1.setDate(d1.getDate() + currentNights);
+      setCheckOut(d1.toISOString().split("T")[0]);
+    } else {
+      setCheckOut("");
+    }
+  };
+
+  const getGuestsCountNum = () => {
+    return parseInt(guestCount) || 1;
+  };
+
+  const handleGuestsChange = (newGuests: number) => {
+    setGuestCount(`${newGuests} Guest${newGuests > 1 ? 's' : ''}`);
+  };
 
   // Dynamic realistic viewers simulator
   useEffect(() => {
@@ -340,8 +377,8 @@ export default function Rooms() {
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!checkIn || !checkOut || !guestName) {
-      alert("Please fill in your name and both check-in/checkout dates.");
+    if (!checkIn || !checkOut || !guestName || !guestPhone) {
+      alert("Please fill in all details (name, phone, and booking dates).");
       return;
     }
 
@@ -372,6 +409,7 @@ export default function Rooms() {
       `• *Nights*: ${nights} night(s)`,
       `• *Guests*: ${guestCount}`,
       `• *Guest Name*: ${guestName}`,
+      `• *Phone*: ${guestPhone}`,
       addSpecialPooja ? `• *Pooja Arrangement*: Yes` : '',
       addCompulsoryBreakfast ? `• *Breakfast*: Included` : '',
       `• *Total Stay Cost*: ${settings.show_prices ? `₹${finalCalculatedTotal.toLocaleString("en-IN")}` : "Pricing on Request"}`,
@@ -431,6 +469,7 @@ export default function Rooms() {
     setCheckIn("");
     setCheckOut("");
     setGuestName("");
+    setGuestPhone("");
     setGeneratedTicket(null);
     setAddSpecialPooja(false);
     setAddCompulsoryBreakfast(true);
@@ -885,182 +924,224 @@ export default function Rooms() {
                       </div>
                     ) : (
                       <form className="space-y-5" onSubmit={handleBookingSubmit}>
-                                     {/* Dates Selector Group */}
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5 min-w-0">
-                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
-                            <Calendar size={12} className="text-[#D8CBB8] shrink-0" /> Check-In
+                        {/* Name Field */}
+                        <div className="space-y-1.5 text-left">
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
+                            <Users size={12} className="text-[#D8CBB8] shrink-0" /> Full Name
                           </label>
-                          <input 
-                            type="date" 
-                            required
-                            value={checkIn}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setCheckIn(val);
-                              if (checkOut && new Date(checkOut) <= new Date(val)) {
-                                setCheckOut("");
-                              }
-                            }}
-                            min={new Date().toISOString().split("T")[0]}
-                            className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
-                            style={{ minWidth: 0, width: '100%' }}
-                          />
-                        </div>
-                        <div className="space-y-1.5 min-w-0">
-                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
-                            <Calendar size={12} className="text-[#D8CBB8] shrink-0" /> Check-Out
-                          </label>
-                          <input 
-                            type="date" 
-                            required
-                            value={checkOut}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (checkIn && new Date(val) <= new Date(checkIn)) {
-                                alert("Check-out date must be after check-in date.");
-                                setCheckOut("");
-                              } else {
-                                setCheckOut(val);
-                              }
-                            }}
-                            min={checkIn || new Date().toISOString().split("T")[0]}
-                            className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
-                            style={{ minWidth: 0, width: '100%' }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Guest Count */}
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
-                          <Users size={12} className="text-[#D8CBB8]" /> Number of Guests
-                        </label>
-                        <input 
-                          type="number"
-                          min={1}
-                          max={20}
-                          required
-                          value={parseInt(guestCount) || 1}
-                          onChange={(e) => setGuestCount(`${e.target.value} Guest${parseInt(e.target.value) > 1 ? 's' : ''}`)}
-                          className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 transition-all duration-200 font-medium" 
-                        />
-                      </div>
-
-
-                      {/* Live Valuation Breakdowns */}
-                      {checkIn && checkOut && new Date(checkOut) > new Date(checkIn) && (
-                        <div className="p-4 bg-[#0D1C1E]/60 border border-[#D8CBB8]/20 rounded-xl space-y-3.5 text-xs text-warm-white/90 relative">
-                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-stone-sand/15 text-stone-sand text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-stone-sand/25">
-                            Low Web Rate
-                          </div>
-                          
-                          <span className="text-[10px] uppercase tracking-wider font-bold text-[#D8CBB8] block font-heading">
-                            Stay Breakdown
-                          </span>
-                          
-                          {(() => {
-                            const nightsCount = Math.ceil(Math.abs(new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 3600 * 24)) || 1;
-                            const guestsNum = parseInt(guestCount) || 1;
-                            const baseCost = selectedRoom.price * nightsCount;
-                            const discountCost = 1200;
-                            const poojaCost = addSpecialPooja ? 2500 : 0;
-                            const breakfastCost = 0;
-                            const finalStayTotal = baseCost - discountCost + poojaCost + breakfastCost;
-                            
-                            return (
-                              <>
-                                <div className="flex justify-between items-center text-warm-white/90 font-medium border-b border-warm-white/10 pb-2.5">
-                                  {settings.show_prices ? (
-                                    <>
-                                      <div>
-                                        <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
-                                        <span className="text-[10px] text-warm-white/70 block">
-                                          ₹{selectedRoom.price.toLocaleString("en-IN")} × {nightsCount} night(s)
-                                        </span>
-                                      </div>
-                                      <span className="font-heading font-medium text-warm-white text-sm">₹{baseCost.toLocaleString("en-IN")}</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <div>
-                                        <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
-                                        <span className="text-[10px] text-warm-white/70 block">
-                                          Stay Plan for {nightsCount} night(s)
-                                        </span>
-                                      </div>
-                                      <span className="font-heading font-medium text-warm-white text-sm">—</span>
-                                    </>
-                                  )}
-                                </div>
-                                
-                                <div className="space-y-1.5">
-                                  <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
-                                    <span>• Electric Cozy Heating</span>
-                                    <span className="text-[9px] uppercase tracking-widest bg-[#D8CBB8]/15 px-1.5 py-0.5 rounded text-[#D8CBB8] border border-[#D8CBB8]/10">Free</span>
-                                  </div>
-
-                                  <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
-                                    <span>• Complimentary Breakfast</span>
-                                    <span className="font-semibold text-stone-sand">Free</span>
-                                  </div>
-
-                                  {addSpecialPooja && (
-                                    <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
-                                      <span>• Special Pooja arrangements</span>
-                                      <span className="font-semibold text-warm-white">+ ₹{poojaCost.toLocaleString("en-IN")}</span>
-                                    </div>
-                                  )}
-
-                                  <div className="flex justify-between items-center text-warm-white/80 text-[11px] font-semibold">
-                                    <span>• Direct Member Discount</span>
-                                    <span className="font-semibold text-stone-sand">
-                                      {settings.show_prices ? "- ₹1,200" : "Active Member Perks"}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <div className="flex justify-between items-baseline text-sm font-bold text-warm-white border-t border-dashed border-warm-white/15 pt-3">
-                                  <span className="font-heading uppercase tracking-wide text-xs">Total Stay:</span>
-                                  <div className="text-right">
-                                    <span className="text-xl text-stone-sand font-semibold">
-                                      {settings.show_prices ? `₹${finalStayTotal.toLocaleString("en-IN")}` : "Pricing on Request"}
-                                    </span>
-                                    <p className="text-[9px] text-[#FAF9F5]/60 font-normal">All taxes & hot water showers included</p>
-                                  </div>
-                                </div>
-                              </>
-                            );
-                          })()}
-                        </div>
-                      )}
-
-                      {/* Guest Verification */}
-                      <div className="space-y-3 pt-3 border-t border-warm-white/10">
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8] block">
-                          Guest Information
-                        </span>
-                        
-                        <div className="space-y-1">
                           <input 
                             type="text"
                             required
-                            placeholder="Full Name"
+                            placeholder="Enter your name"
                             value={guestName}
                             onChange={(e) => setGuestName(e.target.value)}
-                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200"
+                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
                           />
                         </div>
-                      </div>
 
-                      {/* Premium Secure Booking CTA Button in Stone Sand and Slate-Charcoal text */}
-                      <button
-                        type="submit"
-                        className="w-full relative overflow-hidden py-3.5 px-6 rounded-lg bg-stone-sand hover:bg-[#E5D7C3] text-slate-charcoal font-sans font-bold text-xs uppercase tracking-[0.18em] cursor-pointer shadow-md select-none outline-none hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 group border border-stone-sand/15"
-                      >
-                        <MessageSquare size={16} className="text-slate-charcoal/85 transition-transform duration-300 group-hover:scale-110 shrink-0" strokeWidth={2.5} />
-                        <span>BOOK SUITE VIA WHATSAPP</span>
-                      </button>
+                        {/* Phone Field */}
+                        <div className="space-y-1.5 text-left">
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
+                            <Phone size={12} className="text-[#D8CBB8] shrink-0" /> WhatsApp Number
+                          </label>
+                          <input 
+                            type="tel"
+                            required
+                            placeholder="Enter your number"
+                            value={guestPhone}
+                            onChange={(e) => setGuestPhone(e.target.value)}
+                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                          />
+                        </div>
+
+                        {/* Check-In & Room Type Row */}
+                        <div className="grid grid-cols-2 gap-3 text-left">
+                          <div className="space-y-1.5 min-w-0">
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                              <Calendar size={12} className="text-[#D8CBB8] shrink-0" /> Check-In
+                            </label>
+                            <input 
+                              type="date" 
+                              required
+                              value={checkIn}
+                              onChange={(e) => handleCheckInChange(e.target.value)}
+                              min={new Date().toISOString().split("T")[0]}
+                              className="w-full min-w-0 h-10 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                              style={{ minWidth: 0, width: '100%' }}
+                            />
+                          </div>
+                          <div className="space-y-1.5 min-w-0">
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                              <BedDouble size={12} className="text-[#D8CBB8] shrink-0" /> Room
+                            </label>
+                            <select
+                              value={selectedRoom.id}
+                              onChange={(e) => setSearchParams({ room: e.target.value })}
+                              className="w-full h-10 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium cursor-pointer"
+                              style={{ minWidth: 0, width: '100%' }}
+                            >
+                              {rooms.map((r) => (
+                                <option key={r.id} value={r.id} className="bg-[#122A2D] text-warm-white">
+                                  {r.title} {settings.show_prices ? `(₹${r.price.toLocaleString("en-IN")})` : ""}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Counters Group (Nights & Guests) */}
+                        <div className="grid grid-cols-2 gap-3 text-left">
+                          {/* Nights Counter */}
+                          <div className="space-y-1.5 min-w-0">
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                              <Moon size={12} className="text-[#D8CBB8] shrink-0" /> Nights
+                            </label>
+                            <div className="flex items-center h-10 rounded-xl border border-warm-white/10 bg-[#0D1C1E]/55 overflow-hidden">
+                              <button
+                                type="button"
+                                onClick={() => handleNightsChange(Math.max(1, getNightsCount() - 1))}
+                                disabled={getNightsCount() <= 1 || !checkIn}
+                                className="h-full px-3 flex items-center justify-center text-[#D8CBB8] hover:text-warm-white hover:bg-white/5 disabled:opacity-30 transition-all cursor-pointer bg-transparent border-none"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="flex-1 text-center text-xs font-bold text-warm-white select-none">
+                                {getNightsCount()}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleNightsChange(getNightsCount() + 1)}
+                                disabled={getNightsCount() >= 30 || !checkIn}
+                                className="h-full px-3 flex items-center justify-center text-[#D8CBB8] hover:text-warm-white hover:bg-white/5 disabled:opacity-30 transition-all cursor-pointer bg-transparent border-none"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Guests Counter */}
+                          <div className="space-y-1.5 min-w-0">
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                              <Users size={12} className="text-[#D8CBB8] shrink-0" /> Guests
+                            </label>
+                            <div className="flex items-center h-10 rounded-xl border border-warm-white/10 bg-[#0D1C1E]/55 overflow-hidden">
+                              <button
+                                type="button"
+                                onClick={() => handleGuestsChange(Math.max(1, getGuestsCountNum() - 1))}
+                                disabled={getGuestsCountNum() <= 1}
+                                className="h-full px-3 flex items-center justify-center text-[#D8CBB8] hover:text-warm-white hover:bg-white/5 disabled:opacity-30 transition-all cursor-pointer bg-transparent border-none"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="flex-1 text-center text-xs font-bold text-warm-white select-none">
+                                {getGuestsCountNum()}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleGuestsChange(getGuestsCountNum() + 1)}
+                                disabled={getGuestsCountNum() >= 20}
+                                className="h-full px-3 flex items-center justify-center text-[#D8CBB8] hover:text-warm-white hover:bg-white/5 disabled:opacity-30 transition-all cursor-pointer bg-transparent border-none"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Live Valuation Breakdowns */}
+                        {checkIn && checkOut && new Date(checkOut) > new Date(checkIn) && (
+                          <div className="p-4 bg-[#0D1C1E]/60 border border-[#D8CBB8]/20 rounded-xl space-y-3.5 text-xs text-warm-white/90 relative text-left">
+                            <div className="absolute top-3 right-3 flex items-center gap-1 bg-stone-sand/15 text-stone-sand text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-stone-sand/25">
+                              Low Web Rate
+                            </div>
+                            
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-[#D8CBB8] block font-heading">
+                              Stay Breakdown
+                            </span>
+                            
+                            {(() => {
+                              const nightsCount = Math.ceil(Math.abs(new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 3600 * 24)) || 1;
+                              const baseCost = selectedRoom.price * nightsCount;
+                              const discountCost = 1200;
+                              const poojaCost = addSpecialPooja ? 2500 : 0;
+                              const breakfastCost = 0;
+                              const finalStayTotal = baseCost - discountCost + poojaCost + breakfastCost;
+                              
+                              return (
+                                <>
+                                  <div className="flex justify-between items-center text-warm-white/90 font-medium border-b border-warm-white/10 pb-2.5">
+                                    {settings.show_prices ? (
+                                      <>
+                                        <div>
+                                          <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
+                                          <span className="text-[10px] text-warm-white/70 block">
+                                            ₹{selectedRoom.price.toLocaleString("en-IN")} × {nightsCount} night(s)
+                                          </span>
+                                        </div>
+                                        <span className="font-heading font-medium text-warm-white text-sm">₹{baseCost.toLocaleString("en-IN")}</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div>
+                                          <span className="font-semibold block text-warm-white">{selectedRoom.title}</span>
+                                          <span className="text-[10px] text-warm-white/70 block">
+                                            Stay Plan for {nightsCount} night(s)
+                                          </span>
+                                        </div>
+                                        <span className="font-heading font-medium text-warm-white text-sm">—</span>
+                                      </>
+                                    )}
+                                  </div>
+                                  
+                                  <div className="space-y-1.5">
+                                    <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
+                                      <span>• Electric Cozy Heating</span>
+                                      <span className="text-[9px] uppercase tracking-widest bg-[#D8CBB8]/15 px-1.5 py-0.5 rounded text-[#D8CBB8] border border-[#D8CBB8]/10">Free</span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
+                                      <span>• Complimentary Breakfast</span>
+                                      <span className="font-semibold text-stone-sand">Free</span>
+                                    </div>
+
+                                    {addSpecialPooja && (
+                                      <div className="flex justify-between items-center text-[#D8CBB8] text-[11px] font-semibold">
+                                        <span>• Special Pooja arrangements</span>
+                                        <span className="font-semibold text-warm-white">+ ₹{poojaCost.toLocaleString("en-IN")}</span>
+                                      </div>
+                                    )}
+
+                                    <div className="flex justify-between items-center text-warm-white/80 text-[11px] font-semibold">
+                                      <span>• Direct Member Discount</span>
+                                      <span className="font-semibold text-stone-sand">
+                                        {settings.show_prices ? "- ₹1,200" : "Active Member Perks"}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex justify-between items-baseline text-sm font-bold text-warm-white border-t border-dashed border-warm-white/15 pt-3">
+                                    <span className="font-heading uppercase tracking-wide text-xs">Total Stay:</span>
+                                    <div className="text-right">
+                                      <span className="text-xl text-stone-sand font-semibold">
+                                        {settings.show_prices ? `₹${finalStayTotal.toLocaleString("en-IN")}` : "Pricing on Request"}
+                                      </span>
+                                      <p className="text-[9px] text-[#FAF9F5]/60 font-normal">All taxes & hot water showers included</p>
+                                    </div>
+                                  </div>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
+
+                        {/* Premium Secure Booking CTA Button */}
+                        <button
+                          type="submit"
+                          className="w-full relative overflow-hidden py-3.5 px-6 rounded-lg bg-stone-sand hover:bg-[#E5D7C3] text-slate-charcoal font-sans font-bold text-xs uppercase tracking-[0.18em] cursor-pointer shadow-md select-none outline-none hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 group border border-stone-sand/15"
+                        >
+                          <MessageSquare size={16} className="text-slate-charcoal/85 transition-transform duration-300 group-hover:scale-110 shrink-0" strokeWidth={2.5} />
+                          <span>BOOK SUITE VIA WHATSAPP</span>
+                        </button>
                       
                       {/* Safety Badges with elegant design */}
                       <div className="pt-4 border-t border-warm-white/10 flex flex-col gap-2 text-xs text-warm-white/70">
