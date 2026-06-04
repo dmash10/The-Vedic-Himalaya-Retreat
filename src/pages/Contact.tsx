@@ -339,7 +339,7 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.2, ease: easePremium }}
           className="mt-16 max-w-4xl mx-auto"
         >
-          <div className="bg-white border border-[#D8CBB8]/30 shadow-xl rounded-2xl p-6 md:p-8 space-y-6">
+          <div className="bg-white border border-[#D8CBB8]/30 rounded-2xl p-6 md:p-8 space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-black text-[#A88C52] font-mono block mb-1">Interactive Map</span>
