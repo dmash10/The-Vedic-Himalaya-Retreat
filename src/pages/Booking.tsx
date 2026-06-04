@@ -77,14 +77,17 @@ export default function Booking() {
     // Build ticket data synchronously so we can open WhatsApp immediately (bypasses popup blockers)
     const d1 = new Date(checkIn);
     const d2 = new Date(checkOut);
-    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    if (d2 <= d1) {
+      alert("Check-out date must be after check-in date.");
+      return;
+    }
+    const timeDiff = d2.getTime() - d1.getTime();
     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
     
     const basePrice = roomType === "Deodar Imperial Suite" ? 9500 : roomType === "Kedar View Balcony Room" ? 7200 : 5800;
     const baseCost = basePrice * nights;
-    const guestsNum = parseInt(guests) || 1;
     const poojaCost = addSpecialPooja ? 2500 : 0;
-    const breakfastCost = 350 * guestsNum * nights;
+    const breakfastCost = 0;
     const total = baseCost + poojaCost + breakfastCost - 1200;
 
     const ticketId = `KED-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -201,6 +204,7 @@ export default function Booking() {
                     required
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
+                    min={new Date().toISOString().split("T")[0]}
                     className="w-full min-w-0 bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-2 py-2.5 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
                     style={{ minWidth: 0, width: '100%' }}
                   />
@@ -214,6 +218,7 @@ export default function Booking() {
                     required
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
+                    min={checkIn || new Date().toISOString().split("T")[0]}
                     className="w-full min-w-0 bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-2 py-2.5 text-[#1e3a1e] focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
                     style={{ minWidth: 0, width: '100%' }}
                   />
