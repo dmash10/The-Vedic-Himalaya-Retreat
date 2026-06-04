@@ -887,8 +887,8 @@ export default function Home() {
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
           <motion.div 
             style={{ 
-              y: y1,
-              willChange: "transform",
+              y: isMobile ? "0%" : y1,
+              willChange: isMobile ? "auto" : "transform",
               WebkitBackfaceVisibility: "hidden",
               backfaceVisibility: "hidden",
               transformStyle: "flat"
@@ -929,8 +929,8 @@ export default function Home() {
           
           <motion.div 
             style={{ 
-              opacity: opacity1,
-              willChange: "opacity",
+              opacity: isMobile ? 1 : opacity1,
+              willChange: isMobile ? "auto" : "opacity",
               WebkitBackfaceVisibility: "hidden",
               backfaceVisibility: "hidden"
             }}
@@ -945,8 +945,8 @@ export default function Home() {
               {heroSubtitle}
             </motion.p>
             <motion.h1 
-              initial={{ opacity: 0, filter: "blur(10px)", y: 25 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              initial={{ opacity: 0, filter: isMobile ? "none" : "blur(10px)", y: 25 }}
+              animate={{ opacity: 1, filter: "none", y: 0 }}
               transition={{ duration: 1.5, ease: easePremium, delay: 0.4 }}
               style={{ 
                 willChange: "filter, transform, opacity",
