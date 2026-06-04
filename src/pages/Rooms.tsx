@@ -895,7 +895,13 @@ export default function Rooms() {
                             type="date" 
                             required
                             value={checkIn}
-                            onChange={(e) => setCheckIn(e.target.value)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setCheckIn(val);
+                              if (checkOut && new Date(checkOut) <= new Date(val)) {
+                                setCheckOut("");
+                              }
+                            }}
                             min={new Date().toISOString().split("T")[0]}
                             className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
                             style={{ minWidth: 0, width: '100%' }}
@@ -909,7 +915,15 @@ export default function Rooms() {
                             type="date" 
                             required
                             value={checkOut}
-                            onChange={(e) => setCheckOut(e.target.value)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (checkIn && new Date(val) <= new Date(checkIn)) {
+                                alert("Check-out date must be after check-in date.");
+                                setCheckOut("");
+                              } else {
+                                setCheckOut(val);
+                              }
+                            }}
                             min={checkIn || new Date().toISOString().split("T")[0]}
                             className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
                             style={{ minWidth: 0, width: '100%' }}
@@ -935,7 +949,7 @@ export default function Rooms() {
 
 
                       {/* Live Valuation Breakdowns */}
-                      {checkIn && checkOut && (
+                      {checkIn && checkOut && new Date(checkOut) > new Date(checkIn) && (
                         <div className="p-4 bg-[#0D1C1E]/60 border border-[#D8CBB8]/20 rounded-xl space-y-3.5 text-xs text-warm-white/90 relative">
                           <div className="absolute top-3 right-3 flex items-center gap-1 bg-stone-sand/15 text-stone-sand text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-stone-sand/25">
                             Low Web Rate

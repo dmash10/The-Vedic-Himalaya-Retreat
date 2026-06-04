@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useContent } from '@/hooks/useContent';
 import { useImageZones } from '@/hooks/useImageZones';
 import { motion } from 'framer-motion';
@@ -520,21 +520,65 @@ interface SectionSaveButtonProps {
 
 function SectionSaveButton({ onSave, isSaving, label = "Save Section Changes" }: SectionSaveButtonProps) {
   return (
-    <div className="flex justify-end pt-3 mt-4 border-t border-[#1C2E2A]/20">
+    <div className="flex justify-end pt-4 mt-6 border-t border-[#C4A665]/20">
       <button
         type="button"
         onClick={onSave}
         disabled={isSaving}
-        className="relative group overflow-hidden px-5 py-2.5 bg-gradient-to-r from-[#C4A665] to-[#E2C58A] hover:from-[#FAF9F5] hover:to-[#FAF9F5] text-black font-extrabold text-[10px] uppercase tracking-[0.2em] rounded-lg transition-all shadow-md active:scale-95 disabled:opacity-50 hover:shadow-xl hover:shadow-[#C4A665]/10 cursor-pointer flex items-center gap-2 border border-[#C4A665]/20"
+        className="relative group overflow-hidden px-7 py-3.5 bg-gradient-to-r from-[#C4A665] to-[#E2C58A] hover:from-[#FAF9F5] hover:to-[#FAF9F5] text-black font-extrabold text-xs uppercase tracking-[0.2em] rounded-xl transition-all shadow-lg shadow-[#C4A665]/20 active:scale-95 disabled:opacity-50 hover:shadow-xl hover:shadow-[#C4A665]/30 cursor-pointer flex items-center gap-2.5 border border-[#C4A665]/30"
       >
         {isSaving ? (
-          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          <Loader2 className="w-4 h-4 animate-spin" />
         ) : (
-          <Save className="w-3.5 h-3.5" />
+          <Save className="w-4 h-4" />
         )}
         <span>{isSaving ? 'SAVING CHANGES...' : label}</span>
-        <div className="absolute inset-0 border border-white/30 rounded-lg group-hover:scale-105 transition-transform duration-500 pointer-events-none" />
+        <div className="absolute inset-0 border border-white/30 rounded-xl group-hover:scale-105 transition-transform duration-500 pointer-events-none" />
       </button>
+    </div>
+  );
+}
+
+// Floating persistent save bar that sticks to the bottom of the viewport
+function FloatingSaveBar({ onSave, isSaving, hasChanges, pageLabel }: { onSave: () => void; isSaving: boolean; hasChanges: boolean; pageLabel: string }) {
+  return (
+    <div
+      className={`fixed bottom-0 left-0 lg:left-[260px] right-0 z-50 transition-all duration-500 ease-out ${
+        hasChanges
+          ? 'translate-y-0 opacity-100'
+          : 'translate-y-full opacity-0 pointer-events-none'
+      }`}
+    >
+      <div className="bg-gradient-to-r from-[#0D1412] via-[#111A17] to-[#0D1412] border-t-2 border-[#C4A665]/60 backdrop-blur-xl shadow-[0_-8px_32px_rgba(196,166,101,0.15)] px-6 py-3.5">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
+          {/* Left: Unsaved indicator */}
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#C4A665]" />
+            </span>
+            <div>
+              <span className="text-[10px] font-extrabold text-[#C4A665] uppercase tracking-[0.2em] block">⚠ Unsaved Changes</span>
+              <span className="text-[9px] text-[#8E9F96] block mt-0.5">Your edits to <strong className="text-white/80">{pageLabel}</strong> have not been saved yet</span>
+            </div>
+          </div>
+          {/* Right: Save CTA */}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isSaving}
+            className="relative group overflow-hidden px-8 py-3 bg-gradient-to-r from-[#C4A665] to-[#E2C58A] hover:from-[#FAF9F5] hover:to-[#FAF9F5] text-black font-extrabold text-xs uppercase tracking-[0.15em] rounded-xl transition-all shadow-lg shadow-[#C4A665]/25 active:scale-95 disabled:opacity-50 hover:shadow-xl hover:shadow-[#C4A665]/40 cursor-pointer flex items-center gap-2.5 border border-[#C4A665]/30 shrink-0"
+          >
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            <span>{isSaving ? 'SAVING...' : `SAVE ${pageLabel.toUpperCase()}`}</span>
+            <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:scale-[1.02] transition-transform duration-500 pointer-events-none" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -824,6 +868,8 @@ export default function AdminPages() {
 
   const [activePageId, setActivePageId] = useState('home');
   const [isSaving, setIsSaving] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const initialLoadRef = useRef(true);
 
   // States
   const [visibilities, setVisibilities] = useState<any>({});
@@ -857,9 +903,16 @@ export default function AdminPages() {
   const [socialProofReviews, setSocialProofReviews] = useState<any[]>([]);
   const [contactFaqs, setContactFaqs] = useState<any[]>([]);
 
+  // Mark changes as unsaved whenever form data changes (skip initial load)
+  useEffect(() => {
+    if (initialLoadRef.current) return;
+    setHasUnsavedChanges(true);
+  }, [formFields, visibilities, polaroids, offerings, amenities, pillars, specialtyDishes, alchemies, diningPolaroids, dailyRituals, diningVows, roomsAmenities, roomsReviews, weddingPolaroids, weddingsGallery, venues, weddingOfferings, experienceSlides, experiencePhotos, nearbySlides, treksDirectory, nearbyPhotos, galleryImages, marqueeSlogans, whyChooseItems, bentoGalleryItems, socialProofReviews, contactFaqs]);
+
   // Load effect
   useEffect(() => {
     if (contentLoading) return;
+    initialLoadRef.current = true;
 
     // Load general values
     const textVal = (key: string, def = '') => getValue(activePageId, key, def);
@@ -1250,6 +1303,8 @@ export default function AdminPages() {
         content: getValue(activePageId, `${activePageId}_content`, '')
       });
     }
+    // Allow a brief delay then enable change tracking
+    setTimeout(() => { initialLoadRef.current = false; }, 300);
   }, [activePageId, contentLoading, content]);
 
   // Bulk Upload State & Methods
@@ -1331,6 +1386,17 @@ export default function AdminPages() {
   };
 
   // Unified Save Method
+  // Warn on page switch with unsaved changes
+  const handlePageSwitch = useCallback((newPageId: string) => {
+    if (hasUnsavedChanges) {
+      const confirmed = confirm('You have unsaved changes. Switch pages without saving?');
+      if (!confirmed) return;
+    }
+    setHasUnsavedChanges(false);
+    initialLoadRef.current = true;
+    setActivePageId(newPageId);
+  }, [hasUnsavedChanges]);
+
   const handleSavePage = async () => {
     setIsSaving(activePageId);
     const updates: { section: string; key: string; value: string }[] = [];
@@ -1398,6 +1464,7 @@ export default function AdminPages() {
     const r = await updateMultipleContent(updates);
     setIsSaving(null);
     if (r.success) {
+      setHasUnsavedChanges(false);
       toast.success(`${PAGES_LIST.find(p => p.id === activePageId)?.label} saved successfully!`);
     } else {
       toast.error('Failed to save page contents. Check database connection.');
@@ -1416,7 +1483,7 @@ export default function AdminPages() {
             return (
               <button
                 key={page.id}
-                onClick={() => setActivePageId(page.id)}
+                onClick={() => handlePageSwitch(page.id)}
                 className={`relative whitespace-nowrap text-[11px] uppercase font-bold tracking-widest transition-all duration-300 cursor-pointer pb-1.5 ${
                   isActive
                     ? 'text-[#C4A665] scale-105 font-extrabold'
@@ -1446,19 +1513,32 @@ export default function AdminPages() {
           <Loader2 className="h-8 w-8 animate-spin text-[#C4A665]" />
         </div>
       ) : (
+        <>
         <div className="w-full space-y-6">
-          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl overflow-hidden shadow-none">
+          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-2xl overflow-hidden shadow-none pb-20">
               <div className="p-5 border-b border-[#1C2E2A] flex items-center justify-between bg-[#0D1412]/50">
-                <h2 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
-                  {PAGES_LIST.find(p => p.id === activePageId)?.label} Contents
-                </h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
+                    {PAGES_LIST.find(p => p.id === activePageId)?.label} Contents
+                  </h2>
+                  {hasUnsavedChanges && (
+                    <span className="flex items-center gap-1.5 text-[9px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-full border border-amber-400/20 animate-pulse">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      UNSAVED
+                    </span>
+                  )}
+                </div>
                 <button
                   onClick={handleSavePage}
                   disabled={isSaving !== null}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-[#C4A665] text-black font-bold text-xs rounded hover:bg-[#FAF9F5] transition-colors cursor-pointer disabled:opacity-50"
+                  className={`flex items-center gap-2 px-5 py-2.5 font-extrabold text-xs rounded-xl transition-all cursor-pointer disabled:opacity-50 uppercase tracking-wider border ${
+                    hasUnsavedChanges
+                      ? 'bg-gradient-to-r from-[#C4A665] to-[#E2C58A] text-black border-[#C4A665]/30 shadow-lg shadow-[#C4A665]/20 hover:shadow-xl hover:shadow-[#C4A665]/30 hover:from-[#FAF9F5] hover:to-[#FAF9F5]'
+                      : 'bg-[#1C2E2A] text-[#8E9F96] border-[#1C2E2A] hover:bg-[#C4A665] hover:text-black'
+                  }`}
                 >
-                  {isSaving !== null ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                  SAVE CHANGES
+                  {isSaving !== null ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {hasUnsavedChanges ? 'SAVE CHANGES' : 'ALL SAVED ✓'}
                 </button>
               </div>
 
@@ -3127,6 +3207,15 @@ export default function AdminPages() {
               </div>
             </div>
           </div>
+
+          {/* Floating persistent save bar */}
+          <FloatingSaveBar
+            onSave={handleSavePage}
+            isSaving={isSaving !== null}
+            hasChanges={hasUnsavedChanges}
+            pageLabel={PAGES_LIST.find(p => p.id === activePageId)?.label || 'Page'}
+          />
+        </>
         )}
       </div>
   );
