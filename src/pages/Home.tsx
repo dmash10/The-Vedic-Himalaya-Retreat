@@ -886,8 +886,14 @@ export default function Home() {
       {heroVisible && (
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
           <motion.div 
-            style={{ y: y1 }}
-            className="absolute inset-0 w-full h-full bg-[#1E2229]"
+            style={{ 
+              y: y1,
+              willChange: "transform",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden",
+              transformStyle: "flat"
+            }}
+            className="absolute inset-0 w-full h-full bg-[#1E2229] transform-gpu"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#1E2229] via-black/15 to-[#1E2229]/40 z-10" />
             {heroImage && (
@@ -897,14 +903,24 @@ export default function Home() {
                   <img
                     src={heroImage}
                     alt=""
-                    className="absolute inset-0 w-full h-full object-cover object-center filter blur-xl scale-105 opacity-60"
+                    className="absolute inset-0 w-full h-full object-cover object-center filter blur-xl scale-105 opacity-60 transform-gpu"
+                    style={{ 
+                      willChange: "transform",
+                      WebkitBackfaceVisibility: "hidden",
+                      backfaceVisibility: "hidden"
+                    }}
                   />
                 )}
                 {/* Crisp image loads naturally top-to-bottom over the blur */}
                 <img 
                   src={heroImage} 
                   alt="Foggy Himalayan Mountains" 
-                  className="absolute inset-0 w-full h-full object-cover object-center"
+                  className="absolute inset-0 w-full h-full object-cover object-center transform-gpu"
+                  style={{ 
+                    willChange: "transform",
+                    WebkitBackfaceVisibility: "hidden",
+                    backfaceVisibility: "hidden"
+                  }}
                   onLoad={() => setHeroLoaded(true)}
                 />
               </div>
@@ -912,8 +928,13 @@ export default function Home() {
           </motion.div>
           
           <motion.div 
-            style={{ opacity: opacity1 }}
-            className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 pt-20"
+            style={{ 
+              opacity: opacity1,
+              willChange: "opacity",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden"
+            }}
+            className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 pt-20 transform-gpu"
           >
             <motion.p 
               initial={{ opacity: 0, y: 15 }}
@@ -927,7 +948,13 @@ export default function Home() {
               initial={{ opacity: 0, filter: "blur(10px)", y: 25 }}
               animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               transition={{ duration: 1.5, ease: easePremium, delay: 0.4 }}
-              className="text-[3.5rem] leading-[0.9] md:text-8xl lg:text-9xl font-heading tracking-tighter text-warm-white mb-8 group"
+              style={{ 
+                willChange: "filter, transform, opacity",
+                WebkitBackfaceVisibility: "hidden",
+                backfaceVisibility: "hidden",
+                transformStyle: "flat"
+              }}
+              className="text-[3.5rem] leading-[0.9] md:text-8xl lg:text-9xl font-heading tracking-tighter text-warm-white mb-8 group transform-gpu"
             >
               {heroTitleLine1} <br className="md:hidden"/>
               <span className="italic font-normal text-stone-sand/90">{heroTitleLine2}</span>
