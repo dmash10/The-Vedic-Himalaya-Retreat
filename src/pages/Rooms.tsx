@@ -915,7 +915,7 @@ export default function Rooms() {
                       {/* Guest Count */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
-                          <Users size={12} className="text-[#D8CBB8]" /> Suite Occupants
+                          <Users size={12} className="text-[#D8CBB8]" /> Number of Guests
                         </label>
                         <input 
                           type="number"
@@ -1047,11 +1047,11 @@ export default function Rooms() {
                       <div className="pt-4 border-t border-warm-white/10 flex flex-col gap-2 text-xs text-warm-white/70">
                         <div className="flex items-start gap-2">
                           <CheckCircle2 size={13} className="text-[#D8CBB8] shrink-0 mt-0.5" />
-                          <span>Direct Price Policy: We match any verified lower rates.</span>
+                          <span>Direct Booking Perks: Best available resort rates.</span>
                         </div>
                         <div className="flex items-start gap-2">
                           <CheckCircle2 size={13} className="text-[#D8CBB8] shrink-0 mt-0.5" />
-                          <span>No deposit requested today. Simple pay on arrival.</span>
+                          <span>Flexible Booking: Deposit or full payment options.</span>
                         </div>
                         <div className="flex items-center gap-1.5 justify-center text-warm-white/40 text-[9.5px] pt-2 border-t border-warm-white/10 font-sans">
                           <Lock size={10} />
@@ -1146,7 +1146,7 @@ export default function Rooms() {
                       {/* Post Booking Resets & Info */}
                       <div className="text-center space-y-4">
                         <p className="text-xs text-warm-white/80 leading-relaxed font-sans">
-                          Your reservation voucher, access credentials, and precise driving coordinates have been dispatched to your email address. No pre-payments are required.
+                          Your reservation hold has been registered. Direct confirmation via our WhatsApp desk is required to issue your reservation check-in voucher.
                         </p>
                         <button
                           type="button"

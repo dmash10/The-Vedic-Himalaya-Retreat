@@ -224,7 +224,7 @@ export default function Booking() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono">
-                    <Users size={12} className="text-[#A88C52]" /> Occupants
+                    <Users size={12} className="text-[#A88C52]" /> Number of Guests
                   </label>
                   <input 
                     type="number"
@@ -397,7 +397,7 @@ export default function Booking() {
               <div className="p-4 bg-[#1B4C44]/5 border-t border-b border-dashed border-[#1B4C44]/20 flex justify-between items-center">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] block font-mono">Ledger Valuation Total</span>
-                  <span className="text-[9px] text-[#A88C52] font-semibold uppercase font-mono">No pre-payment required</span>
+                  <span className="text-[9px] text-[#A88C52] font-semibold uppercase font-mono">Payment terms coordinated</span>
                 </div>
                 <div className="text-right">
                   <span className="text-xl font-bold font-heading text-slate-charcoal">
