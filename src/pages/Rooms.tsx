@@ -186,7 +186,7 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
           <button
             type="button"
             onClick={() => setSearchParams({ room: room.id })}
-            className="text-[12px] sm:text-xs font-bold tracking-wider uppercase text-deep-teal hover:text-deep-teal/80 underline sm:no-underline cursor-pointer sm:bg-deep-teal sm:text-[#FAF9F5] sm:hover:bg-slate-charcoal sm:rounded-md sm:px-4 sm:py-2.5 sm:inline-flex sm:items-center sm:justify-center sm:gap-1 transition-all"
+            className="text-[12px] sm:text-xs font-bold tracking-wider uppercase text-deep-teal hover:text-deep-teal/80 underline sm:no-underline cursor-pointer sm:bg-deep-teal sm:text-[#FAF9F5] sm:hover:text-[#FAF9F5] sm:hover:bg-slate-charcoal sm:rounded-md sm:px-4 sm:py-2.5 sm:inline-flex sm:items-center sm:justify-center sm:gap-1 transition-all"
           >
             <span className="sm:hidden">View</span>
             <span className="hidden sm:inline">View Room</span>
