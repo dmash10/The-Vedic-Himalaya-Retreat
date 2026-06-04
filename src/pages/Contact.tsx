@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Phone, Mail, Instagram, MapPin, Sparkles, Send, Check } from "lucide-react";
+import { Phone, Mail, Instagram, MapPin, Sparkles, Send, Check, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/hooks/useContent";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
@@ -378,39 +378,50 @@ export default function Contact() {
 
         {/* Minimal Accordion FAQ Section */}
         {visibleFaqs.length > 0 && (
-          <div className="mt-24 max-w-4xl mx-auto text-left">
-            <div className="text-center mb-12 space-y-3">
-              <span className="text-[10px] uppercase tracking-[0.25em] font-extrabold text-[#A88C52] bg-[#1B4C44]/5 border border-[#1B4C44]/10 px-4 py-1.5 rounded-full inline-block">
-                Common Queries
-              </span>
-              <h2 className="text-3xl md:text-5xl font-heading text-[#2E3438] tracking-tight font-light leading-none">
-                Frequently Asked <span className="italic font-serif text-[#1B4C44] font-normal">Questions</span>
-              </h2>
-            </div>
+          <div className="mt-24 border-t border-[#D8CBB8]/30 pt-20">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+              
+              {/* Left Side: Heading */}
+              <div className="lg:col-span-5 text-left">
+                <h2 className="font-heading text-4xl md:text-[44px] font-medium text-slate-charcoal leading-[1.15] tracking-tight">
+                  Frequently asked <br className="hidden md:block" />
+                  questions, <br className="hidden md:block" />
+                  answered.
+                </h2>
+              </div>
 
-            <div className="border-t border-[#D8CBB8]/40 divide-y divide-[#D8CBB8]/30">
-              {visibleFaqs.map((faq: any, idx: number) => {
-                const isOpen = activeFaqIdx === idx;
-                return (
-                  <div key={idx} className="py-4">
-                    <button
-                      type="button"
-                      onClick={() => setActiveFaqIdx(isOpen ? null : idx)}
-                      className="w-full flex items-center justify-between text-left py-4 text-base md:text-lg font-heading text-slate-charcoal hover:text-[#1B4C44] transition-colors focus:outline-none cursor-pointer"
-                    >
-                      <span className="font-semibold pr-4">{faq.question}</span>
-                      <span className="text-[#A88C52] text-xl shrink-0 font-light">
-                        {isOpen ? "−" : "+"}
-                      </span>
-                    </button>
-                    {isOpen && (
-                      <div className="pb-6 text-sm md:text-base text-slate-charcoal/70 leading-relaxed font-sans animate-fadeIn">
-                        {faq.answer}
+              {/* Right Side: Accordion */}
+              <div className="lg:col-span-7 text-left">
+                <div className="border-t border-b border-[#D8CBB8]/40 divide-y divide-[#D8CBB8]/40">
+                  {visibleFaqs.map((faq: any, idx: number) => {
+                    const isOpen = activeFaqIdx === idx;
+                    return (
+                      <div key={idx} className="py-0">
+                        <button
+                          type="button"
+                          onClick={() => setActiveFaqIdx(isOpen ? null : idx)}
+                          className="w-full flex items-center justify-between text-left py-6 text-[16px] md:text-[17px] font-sans font-medium text-slate-charcoal hover:text-slate-charcoal/80 transition-colors focus:outline-none cursor-pointer group"
+                        >
+                          <span className="flex-1 pr-4">{faq.question}</span>
+                          <ChevronDown 
+                            size={18} 
+                            strokeWidth={1.5}
+                            className={`text-slate-charcoal/60 shrink-0 transition-transform duration-300 ${
+                              isOpen ? "rotate-180" : ""
+                            }`} 
+                          />
+                        </button>
+                        {isOpen && (
+                          <div className="pb-6 text-sm md:text-[15px] text-slate-charcoal/70 leading-relaxed font-sans animate-fadeIn">
+                            {faq.answer}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              </div>
+
             </div>
           </div>
         )}
