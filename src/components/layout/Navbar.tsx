@@ -45,7 +45,7 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const isTransparentPage = location.pathname === "/" || location.pathname === "/weddings";
+  const isTransparentPage = ["/", "/weddings", "/dining", "/experiences", "/nearby"].includes(location.pathname);
   // Maintain beautiful warm white / mist text for premium visual contrast against dark backgrounds
   const textColor = "text-warm-white";
   const overlayBg = isScrolled || !isTransparentPage ? "bg-[#10231E]/95 backdrop-blur-md border-b border-[#D8CBB8]/15 shadow-xl" : "bg-transparent";

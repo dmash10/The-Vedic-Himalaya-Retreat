@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/Button";
 import { Link } from "react-router-dom";
 import SocialProofSection from "@/components/SocialProofSection";
-import { ArrowRight, Maximize2, BedDouble, Bath, Mountain, Flame, Sparkles, Compass, Bed, Fan, Tv, Wifi, Wind, Leaf, MapPin, Droplets, Zap, Car, Utensils, ShieldCheck, Briefcase, Users, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ArrowRight, Maximize2, BedDouble, Bath, Mountain, Flame, Sparkles, Compass, Bed, Fan, Tv, Wifi, Wind, Leaf, MapPin, Droplets, Zap, Car, Utensils, ShieldCheck, Briefcase, Users, ChevronLeft, ChevronRight, Star, Coffee } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useRooms } from "@/hooks/useRooms";
@@ -180,13 +180,13 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile, readyToLoa
         visibility,
         transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
-        // Desktop-specific anti-blur optimizations
-        willChange: isMobile ? "transform, opacity" : "auto",
-        transformStyle: isMobile ? "flat" : "preserve-3d",
-        WebkitBackfaceVisibility: isMobile ? "visible" : "hidden",
-        backfaceVisibility: isMobile ? "visible" : "hidden",
-        WebkitFontSmoothing: isMobile ? "antialiased" : "subpixel-antialiased",
-        MozOsxFontSmoothing: isMobile ? "grayscale" : "auto",
+        // Standard anti-blur optimizations for hardware-accelerated transforms
+        willChange: "transform, opacity",
+        transformStyle: "flat",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
         outline: "1px solid transparent",
       }}
       className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}
@@ -235,6 +235,177 @@ function OfferingCard({ offer, idx, total, scrollYProgress, isMobile, readyToLoa
           />
           {/* Gentle overlay gradient to soften image edges */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+interface RoomCardProps {
+  room: any;
+  index: number;
+  easePremium: any;
+  settings: any;
+}
+
+function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
+  const [currentImageIdx, setCurrentImageIdx] = useState(0);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-15px" }}
+      transition={{ duration: 0.7, delay: index * 0.12, ease: easePremium }}
+      className={`group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden text-left ${
+        index === 2 
+          ? "col-span-2 col-start-2 md:col-span-1 md:col-start-auto" 
+          : "col-span-2 md:col-span-1"
+      }`}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF9F5] cursor-pointer">
+        <Link to={`/rooms?room=${room.id}`}>
+          <img 
+            src={room.images[currentImageIdx]} 
+            alt={room.title}
+            className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103"
+          />
+        </Link>
+        
+        {/* Quiet Float Label */}
+        <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono pointer-events-none hidden sm:inline-block">
+          {room.badge}
+        </span>
+
+        {/* Navigation Arrows */}
+        {room.images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setCurrentImageIdx(prev => (prev > 0 ? prev - 1 : room.images.length - 1));
+              }}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setCurrentImageIdx(prev => (prev < room.images.length - 1 ? prev + 1 : 0));
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-charcoal/80 hover:bg-[#FAF9F5] text-white hover:text-slate-charcoal flex items-center justify-center border border-white/15 opacity-75 hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight size={14} />
+            </button>
+
+            {/* Mini Slide Dots Indicators */}
+            <div className="absolute bottom-4 left-4 flex gap-1 z-10 pointer-events-none">
+              {room.images.map((_, i) => (
+                <span 
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    currentImageIdx === i ? "bg-white w-3" : "bg-white/45"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        
+        {/* Quiet Float Price */}
+        {settings.show_prices && (
+          <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans pointer-events-none hidden sm:flex">
+            <span className="text-[10px] text-[#FAF9F5]/70 font-normal">from</span>
+            <span className="text-[13px] font-heading font-bold text-[#FAF9F5]">₹{room.price.toLocaleString("en-IN")}</span>
+            <span className="text-[9px] text-[#FAF9F5]/60 lowercase font-normal italic">/nt</span>
+          </div>
+        )}
+      </div>
+      
+      {/* Narrative body & detailed selections */}
+      <div className="flex-grow p-3.5 sm:p-5 flex flex-col justify-between">
+        <div className="space-y-1.5 mb-3">
+          <div className="flex items-center gap-1.5 text-amber-700 text-[10px] font-bold">
+            <Star size={10} className="fill-amber-400 text-amber-500" />
+            <span>4.9 Index Rating</span>
+          </div>
+          <Link to={`/rooms?room=${room.id}`}>
+            <h2 className="text-[17px] sm:text-xl font-heading font-medium tracking-tight text-slate-charcoal group-hover:text-deep-teal transition-colors duration-300 line-clamp-1 leading-tight">
+              {room.title}
+            </h2>
+          </Link>
+          <p className="text-slate-charcoal/80 text-xs sm:text-sm leading-relaxed font-sans font-normal line-clamp-2 hidden sm:block">
+            {room.description}
+          </p>
+        </div>
+
+        {/* Row of Amenity Icons - Only icons, visible on both phone and PC */}
+        <div className="flex flex-wrap gap-1.5 py-1.5 border-t border-[#D8CBB8]/30 my-1 justify-start">
+          {(room.amenities || [])
+            .filter((a: any) => {
+              const label = (a.label || "").toLowerCase();
+              return !label.includes("bath") && !label.includes("washroom") && !label.includes("dining");
+            })
+            .sort((a: any, b: any) => {
+              const aLabel = (a.label || "").toLowerCase();
+              const bLabel = (b.label || "").toLowerCase();
+              const order = ["wifi", "fiber", "tv", "sound", "water", "geyser", "heat", "bed", "fan"];
+              
+              const getIndex = (lbl: string) => {
+                for (let i = 0; i < order.length; i++) {
+                  if (lbl.includes(order[i])) return i;
+                }
+                return 999;
+              };
+              
+              return getIndex(aLabel) - getIndex(bLabel);
+            })
+            .slice(0, 4)
+            .map((amenity: any, i: number) => {
+              const IconComponent = amenity.icon || Sparkles;
+              return (
+                <div 
+                  key={i} 
+                  className="w-6 h-6 rounded-full bg-[#FAF9F5]/90 border border-[#D8CBB8]/45 flex items-center justify-center text-deep-teal shadow-3xs" 
+                  title={amenity.label}
+                >
+                  <IconComponent size={10} className="shrink-0" />
+                </div>
+              );
+            })}
+        </div>
+        
+        {/* Pricing and Action navigation */}
+        <div className="flex items-center justify-between pt-2.5 border-t border-[#D8CBB8]/30">
+          <div className="flex flex-col">
+            <span className="text-[8px] uppercase tracking-wider font-bold text-slate-charcoal/55 leading-none">Nightly Rate</span>
+            <span className="font-heading font-bold text-[14px] sm:text-[17px] text-slate-charcoal flex items-baseline gap-0.5 mt-0.5">
+              {settings.show_prices ? (
+                <>
+                  ₹{room.price.toLocaleString("en-IN")}
+                  <span className="text-[9px] font-normal text-slate-charcoal/60 font-sans">/night</span>
+                </>
+              ) : (
+                <span className="text-xs uppercase tracking-wider text-[#1B4C44] font-bold">Pricing on Request</span>
+              )}
+            </span>
+          </div>
+          <Link
+            to={`/rooms?room=${room.id}`}
+            className="inline-flex items-center justify-center gap-0.5 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-deep-teal sm:text-warm-white bg-transparent sm:bg-deep-teal hover:text-emerald-800 sm:hover:text-warm-white sm:hover:bg-slate-charcoal rounded-none sm:rounded-md px-0 sm:px-4 py-0 sm:py-2.5 transition-colors duration-350 cursor-pointer hover:underline sm:hover:no-underline"
+          >
+            <span className="sm:hidden">View</span>
+            <span className="hidden sm:inline">View Room</span>
+            <ArrowRight size={11} className="hidden sm:inline-block transition-transform group-hover:translate-x-0.5 duration-300" strokeWidth={2.5} />
+          </Link>
         </div>
       </div>
     </motion.div>
@@ -639,6 +810,65 @@ export default function Home() {
     real_price: suiteData.price,
     card_image_url: suiteData.images[0]
   };
+
+  const getIconComponent = (iconName: any) => {
+    if (!iconName) return Bed;
+    if (typeof iconName !== 'string') return iconName;
+    const map: { [key: string]: any } = {
+      Bed, BedDouble, Fan, Tv, Bath, Wifi, Coffee, Sparkles, ShieldCheck, Star, ChevronLeft, ChevronRight, ArrowRight, Mountain, Users, Flame, Droplets, Zap
+    };
+    return map[iconName] || Bed;
+  };
+
+  const cmsAmenities = useMemo(() => {
+    let list = [];
+    try {
+      list = JSON.parse(getValue('rooms', 'rooms_amenities', '[]'));
+    } catch (e) {}
+    if (!list || list.length === 0) {
+      list = [
+        { label: "2 Double Beds", icon: "Bed", desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
+        { label: "Whisper Cool Fan", icon: "Fan", desc: "High-capacity whisper silent designer cooling and ventilation fan" },
+        { label: "Hot Water Geyser", icon: "Flame", desc: "Luxury geyser and hot rain shower supply in stone bathroom" },
+        { label: "Smart Sound Hub", icon: "Tv", desc: "Massive 55\" cinematic display with premium room audio" },
+        { label: "Ultimate Fiber", icon: "Wifi", desc: "Ultra performance high-speed complimentary internet" },
+        { label: "Hot Beverage Station", icon: "Coffee", desc: "Premium electric hot kettle and regional herbal tea blends" }
+      ];
+    }
+    return list.filter((a: any) => a.is_visible !== false);
+  }, [content]);
+
+  const displayRooms = useMemo(() => {
+    if (!rooms || rooms.length === 0) return [];
+    return rooms.filter((r: any) => r.is_visible !== false).map((r: any) => {
+      const getBadge = (name: string) => {
+        if (name.includes("Family")) return "Signature Reserve";
+        if (name.includes("Cottage")) return "Pinewood Cottage";
+        if (name.includes("Camp")) return "Swiss Camp";
+        return "Premium Suite";
+      };
+      const dbImages = Array.isArray(r.images) ? r.images.filter(Boolean) : [];
+      return {
+        id: r.slug || r.id,
+        title: r.name,
+        badge: getBadge(r.name),
+        price: r.real_price || 11500,
+        fake_price: r.fake_price || 15000,
+        description: r.description || "Himalayan luxury Suite wreathed in pines.",
+        images: dbImages.length > 0 ? dbImages : [
+          r.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200",
+          "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000",
+          "https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=1000",
+          "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&q=80&w=800"
+        ],
+        amenities: cmsAmenities.map((a: any) => ({
+          label: a.label,
+          icon: getIconComponent(a.icon),
+          desc: a.desc
+        }))
+      };
+    });
+  }, [rooms, cmsAmenities]);
 
   const nextSlide = () => {
     setPolaroidsInteracted(true);
@@ -1081,121 +1311,26 @@ export default function Home() {
       {/* Rooms Peek */}
       <section ref={roomSectionRef} className="py-10 md:py-24 bg-[#EFEAE1]/45 overflow-hidden">
         <div className="container mx-auto px-4 md:px-4 max-w-6xl">
-          <div className="flex flex-col items-center text-center mb-6 md:mb-16 space-y-2 md:space-y-4">
+          <div className="flex flex-col items-center text-center mb-10 md:mb-16 space-y-2 md:space-y-4">
             <span className="uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold text-deep-teal">Accommodation</span>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal">Our <span className="italic text-deep-teal font-normal">{roomData.name}</span></h2>
-            <p className="text-[11px] sm:text-sm text-slate-charcoal/70 max-w-sm mx-auto text-center font-sans">
-              {roomData.description ? roomData.description.slice(0, 100) + "..." : "Cozy high-altitude rooms crafted with fragrant pinewood and pristine valley vistas."}
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading tracking-tight text-slate-charcoal">Our <span className="italic text-deep-teal font-normal">Rooms & Suites</span></h2>
+            <p className="text-[11px] sm:text-sm text-slate-charcoal/70 max-w-md mx-auto text-center font-sans">
+              Boutique high-altitude lodging crafted with fragrant native pinewood and pristine valley vistas.
             </p>
           </div>
           
-          {/* Stunning, high-end 2-column wide layout for the Single Signature Suite */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, ease: easePremium }}
-            className="bg-[#FAF9F5] border border-[#D8CBB8]/60 hover:border-deep-teal transition-all duration-500 overflow-hidden rounded-2xl grid grid-cols-1 md:grid-cols-12 max-w-5xl mx-auto"
-          >
-            {/* Visual Column */}
-            <div className="md:col-span-6 relative aspect-[16/9] md:aspect-auto overflow-hidden bg-[#FAF9F5]">
-              <img 
-                src={loadRemaining ? (roomData.card_image_url || "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&q=80&w=1200") : ""} 
-                alt={roomData.name} 
-                className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-1000 ease-out"
-                loading="lazy"
-                referrerPolicy="no-referrer"
+          {/* Grid with Compact Suite Cards - Grid-cols-4 on mobile (2 top, 1 centered bottom) */}
+          <div className="grid grid-cols-4 md:grid-cols-3 gap-2 md:gap-8 max-w-5xl mx-auto">
+            {displayRooms.map((room, index) => (
+              <RoomCard
+                key={room.id}
+                room={room}
+                index={index}
+                easePremium={easePremium}
+                settings={settings}
               />
-              {/* Luxury Transparent Glass Badge */}
-              <span className="absolute top-3 left-3 bg-slate-charcoal/90 backdrop-blur-md text-[#ffffff] text-[7.5px] sm:text-[9px] uppercase font-bold tracking-[0.15em] px-3 py-1.5 rounded-md border border-white/10">
-                ★ Signature Selection
-              </span>
-            </div>
-
-            {/* Description & Specs Column */}
-            <div className="md:col-span-6 p-4 sm:p-10 flex flex-col justify-between">
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex items-center gap-1.5 text-amber-700 text-[10px] sm:text-[11px] font-bold">
-                  <Star size={10} className="fill-amber-400 text-amber-500 hover:scale-110 transition-transform cursor-pointer" />
-                  <span>4.9 Index Rating • Triple Verified</span>
-                </div>
-                
-                <h3 className="text-xl sm:text-3xl lg:text-4xl font-heading font-medium tracking-tight text-slate-charcoal leading-tight">
-                  {roomData.name}
-                </h3>
-                
-                <p className="text-[11px] sm:text-sm text-slate-charcoal/75 leading-relaxed font-sans">
-                  {roomData.description}
-                </p>
-
-                {/* Specs list */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 pt-3 pb-3 border-t border-b border-[#D8CBB8]/30 text-xs text-slate-charcoal">
-                  <div className="flex items-center gap-2">
-                    <span className="p-1 sm:p-1.5 rounded-md bg-stone-sand/20 text-deep-teal">
-                      <Bed size={12} strokeWidth={2} />
-                    </span>
-                    <div>
-                      <span className="text-[8px] uppercase text-slate-charcoal/50 font-bold block leading-none">Layout</span>
-                      <span className="font-semibold text-slate-charcoal text-[11px] sm:text-xs">2 Double Beds</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="p-1 sm:p-1.5 rounded-md bg-stone-sand/20 text-[#A88C52]">
-                      <Mountain size={12} strokeWidth={2} />
-                    </span>
-                    <div>
-                      <span className="text-[8px] uppercase text-slate-charcoal/50 font-bold block leading-none">Scenic View</span>
-                      <span className="font-semibold text-slate-charcoal text-[11px] sm:text-xs">Snowpeak Vista</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="p-1 sm:p-1.5 rounded-md bg-stone-sand/20 text-deep-teal">
-                      <Bath size={12} strokeWidth={2} />
-                    </span>
-                    <div>
-                      <span className="text-[8px] uppercase text-slate-charcoal/50 font-bold block leading-none">Bathing</span>
-                      <span className="font-semibold text-slate-charcoal text-[11px] sm:text-xs">Slate Bath</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="p-1 sm:p-1.5 rounded-md bg-stone-sand/20 text-deep-teal">
-                      <Wifi size={12} strokeWidth={2} />
-                    </span>
-                    <div>
-                      <span className="text-[8px] uppercase text-slate-charcoal/50 font-bold block leading-none">Internet</span>
-                      <span className="font-semibold text-slate-charcoal text-[11px] sm:text-xs">Free Fiber WiFi</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Action Buttons & Rate Info */}
-              <div className="flex flex-row items-center justify-between w-full mt-4 pt-3 border-t border-stone-200/50 gap-3">
-                <div className="flex flex-col">
-                  <span className="text-[7.5px] sm:text-[9px] uppercase tracking-wider font-bold text-slate-charcoal/55 leading-none mb-0.5">Rate</span>
-                  <span className="font-heading font-medium text-base sm:text-2xl text-slate-charcoal flex items-baseline gap-0.5 sm:gap-1">
-                    {settings.show_prices ? (
-                      <>
-                        ₹{roomData.real_price?.toLocaleString('en-IN') || '11,500'}
-                        <span className="text-[10px] sm:text-xs text-slate-charcoal/50 font-sans font-normal italic">/night</span>
-                      </>
-                    ) : (
-                      <span className="text-xs sm:text-sm font-heading font-bold text-deep-teal uppercase tracking-wider">Pricing on Request</span>
-                    )}
-                  </span>
-                </div>
-                <Link to="/rooms">
-                  <button className="flex items-center justify-center h-9 sm:h-11 px-4 sm:px-6 bg-deep-teal hover:bg-slate-charcoal text-warm-white rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors shadow-none gap-1 sm:gap-2 cursor-pointer font-sans duration-300">
-                    Book Suite <ArrowRight size={10} className="sm:w-3 sm:h-3" strokeWidth={2.5} />
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

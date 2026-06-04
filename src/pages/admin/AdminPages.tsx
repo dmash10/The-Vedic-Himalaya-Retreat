@@ -934,6 +934,9 @@ export default function AdminPages() {
         about_main_text: getValue('about', 'about_main_text', ''),
         about_highlights: getValue('about', 'about_highlights', ''),
         about_image: getValue('about', 'about_image', ''),
+        about_second_image: getValue('about', 'about_second_image', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200'),
+        about_second_image_location: getValue('about', 'about_second_image_location', 'Village Dewar, Guptkashi, Uttarakhand'),
+        about_second_image_title: getValue('about', 'about_second_image_title', 'Facing the Divine Peaks of Chaukhamba'),
       });
       try {
         const val = JSON.parse(getValue('about', 'pillars', '[]'));
@@ -1853,6 +1856,17 @@ export default function AdminPages() {
                         <ImageUploader label="Section Image" currentImage={formFields.about_image} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, about_image: p }))} aspectRatio="aspect-video w-full" />
                       </div>
                     )}
+
+                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Second Cinematic Visual</div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2 space-y-4">
+                          <TextInputGroup label="Location Text" icon={Type} value={formFields.about_second_image_location || ''} onChange={(v) => setFormFields((prev: any) => ({ ...prev, about_second_image_location: v }))} />
+                          <TextInputGroup label="Visual Title" icon={Type} value={formFields.about_second_image_title || ''} onChange={(v) => setFormFields((prev: any) => ({ ...prev, about_second_image_title: v }))} />
+                        </div>
+                        <ImageUploader label="Second Visual Image" currentImage={formFields.about_second_image || ''} onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, about_second_image: p }))} aspectRatio="aspect-video w-full" />
+                      </div>
+                    </div>
 
                     <SectionToggle label="Pillars Section" checked={visibilities.pillars_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, pillars_visible: v }))} />
                     {visibilities.pillars_visible && (

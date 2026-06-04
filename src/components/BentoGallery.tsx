@@ -41,6 +41,7 @@ export default function BentoGallery({
   readyToLoad = true
 }: BentoGalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
   const [loadedMap, setLoadedMap] = useState<Record<string, boolean>>({});
 
   const handleCardClick = (index: number) => {
@@ -51,8 +52,14 @@ export default function BentoGallery({
     }
   };
 
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    setIsZoomed(false);
+  };
+
   const handlePrev = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
+    setIsZoomed(false);
     if (lightboxIndex !== null) {
       setLightboxIndex(prev => (prev !== null && prev > 0 ? prev - 1 : items.length - 1));
     }
@@ -60,6 +67,7 @@ export default function BentoGallery({
 
   const handleNext = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
+    setIsZoomed(false);
     if (lightboxIndex !== null) {
       setLightboxIndex(prev => (prev !== null && prev < items.length - 1 ? prev + 1 : 0));
     }
@@ -74,7 +82,7 @@ export default function BentoGallery({
       } else if (e.key === "ArrowLeft") {
         handlePrev();
       } else if (e.key === "Escape") {
-        setLightboxIndex(null);
+        closeLightbox();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -167,12 +175,12 @@ export default function BentoGallery({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setLightboxIndex(null)}
+            onClick={closeLightbox}
             className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
           >
             {/* Close button */}
             <button 
-              onClick={() => setLightboxIndex(null)}
+              onClick={closeLightbox}
               className="absolute top-6 right-6 text-white/70 hover:text-white p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 cursor-pointer md:hover:scale-105 z-50"
               aria-label="Close Lightbox"
             >
@@ -184,21 +192,30 @@ export default function BentoGallery({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image display viewport with drag swiping */}
-              <div className="relative max-w-full max-h-[75vh] flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black/40">
+              <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[65vh] flex items-center justify-center overflow-hidden">
                 <motion.img 
                   key={lightboxIndex}
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.95, opacity: 0 }}
-                  transition={{ type: "spring", damping: 25, stiffness: 180 }}
+                  initial={{ opacity: 0.3 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: isZoomed ? 1.5 : 1
+                  }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
                   src={items[lightboxIndex].image} 
                   alt={items[lightboxIndex].title} 
-                  className="max-w-full max-h-[75vh] object-contain rounded-xl select-none"
+                  className={`max-w-full max-h-full object-contain rounded-xl select-none ${
+                    isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
+                  }`}
                   referrerPolicy="no-referrer"
-                  drag="x"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsZoomed(!isZoomed);
+                  }}
+                  drag={isZoomed ? false : "x"}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.2}
                   onDragEnd={(e, info) => {
+                    if (isZoomed) return;
                     const swipeThreshold = 50;
                     if (info.offset.x < -swipeThreshold) {
                       handleNext();
@@ -207,42 +224,50 @@ export default function BentoGallery({
                     }
                   }}
                 />
-                
-                {/* Navigation controls */}
-                <button 
-                  onClick={handlePrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-
-                <button 
-                  onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={20} />
-                </button>
               </div>
 
-              {/* Caption details underneath image */}
-              <div className="text-center text-white mt-5 max-w-lg space-y-2 px-4">
-                {items[lightboxIndex].category && (
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#D8CBB8] font-mono block">
-                    {items[lightboxIndex].category}
-                  </span>
-                )}
-                {items[lightboxIndex].title && items[lightboxIndex].title.trim() !== "" && (
-                  <h4 className="text-base font-heading tracking-wide font-medium">
-                    {items[lightboxIndex].title}
-                  </h4>
-                )}
-                {items[lightboxIndex].description && items[lightboxIndex].description.trim() !== "" && (
-                  <p className="text-xs text-stone-300 leading-relaxed font-sans font-light">
-                    {items[lightboxIndex].description}
-                  </p>
-                )}
+              {/* Navigation controls - Outside the image div so they stay fixed relative to viewport */}
+              <button 
+                onClick={handlePrev}
+                className="absolute left-2 md:-left-16 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none z-10"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              <button 
+                onClick={handleNext}
+                className="absolute right-2 md:-right-16 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-black/40 border border-white/10 hover:border-white/30 hover:bg-black/75 transition-all duration-300 cursor-pointer md:hover:scale-110 active:scale-95 select-none z-10"
+                aria-label="Next image"
+              >
+                <ChevronRight size={24} />
+              </button>
+
+              {/* Caption details underneath image with stable height container */}
+              <div className="h-[100px] sm:h-[120px] flex items-center justify-center mt-5 w-full">
+                <motion.div
+                  key={lightboxIndex}
+                  initial={{ opacity: 0.3 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  className="text-center text-white max-w-lg space-y-2 px-4"
+                >
+                  {items[lightboxIndex].category && (
+                    <span className="text-[9px] uppercase tracking-widest font-bold text-[#D8CBB8] font-mono block">
+                      {items[lightboxIndex].category}
+                    </span>
+                  )}
+                  {items[lightboxIndex].title && items[lightboxIndex].title.trim() !== "" && (
+                    <h4 className="text-base font-heading tracking-wide font-medium">
+                      {items[lightboxIndex].title}
+                    </h4>
+                  )}
+                  {items[lightboxIndex].description && items[lightboxIndex].description.trim() !== "" && (
+                    <p className="text-xs text-stone-300 leading-relaxed font-sans font-light line-clamp-2 md:line-clamp-none">
+                      {items[lightboxIndex].description}
+                    </p>
+                  )}
+                </motion.div>
               </div>
             </div>
           </motion.div>

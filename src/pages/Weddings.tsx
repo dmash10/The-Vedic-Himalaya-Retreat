@@ -178,13 +178,13 @@ function WeddingOfferingCard({ offer, idx, total, scrollYProgress, isMobile }: W
         visibility,
         transformOrigin: isMobile ? "center center" : "bottom center",
         zIndex: total - idx,
-        // Desktop-specific anti-blur optimizations
-        willChange: isMobile ? "transform, opacity" : "auto",
-        transformStyle: isMobile ? "flat" : "preserve-3d",
-        WebkitBackfaceVisibility: isMobile ? "visible" : "hidden",
-        backfaceVisibility: isMobile ? "visible" : "hidden",
-        WebkitFontSmoothing: isMobile ? "antialiased" : "subpixel-antialiased",
-        MozOsxFontSmoothing: isMobile ? "grayscale" : "auto",
+        // Standard anti-blur optimizations for hardware-accelerated transforms
+        willChange: "transform, opacity",
+        transformStyle: "flat",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
         outline: "1px solid transparent",
       }}
       className={`absolute inset-0 rounded-[1.6rem] sm:rounded-[2.2rem] border border-[#D8CBB8]/30 shadow-md sm:shadow-[0_12px_30px_rgba(0,0,0,0.12)] ${offer.bgClass} ${offer.textClass} flex flex-col md:flex-row p-3.5 sm:p-5 lg:p-7 gap-3 sm:gap-6`}

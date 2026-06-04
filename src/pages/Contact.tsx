@@ -10,7 +10,6 @@ import { getMapEmbedUrl } from "@/lib/utils";
 export default function Contact() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -40,7 +39,7 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !email || !message) {
+    if (!firstName || !message) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -52,7 +51,6 @@ export default function Contact() {
       `Namaste! I would like to send an inquiry:`,
       ``,
       `• *Name*: ${fullName}`,
-      `• *Email*: ${email}`,
       `• *Message*: ${message}`,
     ].join('\n');
 
@@ -64,7 +62,6 @@ export default function Contact() {
       id: `INQ-${Math.floor(10000 + Math.random() * 90000)}`,
       firstName,
       lastName,
-      email,
       message,
       createdAt: new Date().toISOString(),
       status: "Unread"
@@ -78,7 +75,6 @@ export default function Contact() {
     setSubmitted(true);
     setFirstName("");
     setLastName("");
-    setEmail("");
     setMessage("");
 
     setTimeout(() => {
@@ -113,15 +109,18 @@ export default function Contact() {
           </header>
         )}
 
-        <div className={`grid grid-cols-1 gap-12 md:gap-16 max-w-4xl mx-auto items-start ${contactFormVisible ? 'lg:grid-cols-2' : 'max-w-xl'}`}>
+        <div className={`grid grid-cols-1 gap-12 md:gap-16 max-w-5xl mx-auto items-center ${contactFormVisible ? 'lg:grid-cols-2' : 'max-w-xl'}`}>
           
-          {/* Brand Contact Card Grid */}
-          <div className="space-y-8">
-            <h2 className="text-2xl font-heading font-medium tracking-tight text-slate-charcoal">
-              {settings.hotel_name || "The Vedic Himalaya Retreat"}
-            </h2>
+          {/* Brand Contact Info */}
+          <div className="space-y-8 lg:pr-4">
+            <div className="space-y-3">
+              <h2 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-slate-charcoal">
+                {settings.hotel_name || "The Vedic Himalaya Retreat"}
+              </h2>
+              <div className="h-0.5 w-12 bg-[#A88C52] rounded-full" />
+            </div>
             
-            <div className="space-y-8">
+            <div className="space-y-6">
               
               {/* Location */}
               <div className="flex gap-4 items-start group">
@@ -152,6 +151,30 @@ export default function Contact() {
                 </div>
               </div>
 
+              {/* WhatsApp */}
+              <div className="flex gap-4 items-start group">
+                <span className="p-2 bg-[#25D366]/10 border border-[#25D366]/20 rounded-xl text-[#25D366] block shrink-0">
+                  <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                </span>
+                <div>
+                  <h4 className="uppercase tracking-[0.15em] text-[10px] font-extrabold text-slate-charcoal mb-1">Direct WhatsApp</h4>
+                  <p className="text-xs text-slate-charcoal/75 leading-relaxed font-sans font-medium">
+                    <a 
+                      href={`https://wa.me/${whatsappNumber}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="hover:text-[#1B4C44] transition-colors border-b border-dashed border-[#D8CBB8] pb-0.5"
+                    >
+                      +{whatsappNumber}
+                    </a>
+                    <br />
+                    Click to chat with us directly
+                  </p>
+                </div>
+              </div>
+
               {/* Email */}
               <div className="flex gap-4 items-start group">
                 <span className="p-2 bg-white border border-[#D8CBB8]/30 rounded-xl text-[#1B4C44] block shrink-0">
@@ -166,7 +189,7 @@ export default function Contact() {
               </div>
               
               {/* Instagram */}
-              <div className="flex gap-4 items-start group pt-6 border-t border-[#D8CBB8]/20">
+              <div className="flex gap-4 items-start group">
                 <span className="p-2 bg-white border border-[#D8CBB8]/30 rounded-xl text-[#6D7A71] block shrink-0">
                   <Instagram size={18} strokeWidth={1.5} />
                 </span>
@@ -183,7 +206,7 @@ export default function Contact() {
 
           {/* Form Card */}
           {contactFormVisible && (
-            <div className="bg-[#0B1714] border border-[#D8CBB8]/20 shadow-2xl p-6 md:p-10 rounded-2xl relative overflow-hidden text-white min-h-[420px] flex flex-col justify-center">
+            <div className="bg-[#0B1714] border border-[#D8CBB8]/20 shadow-2xl p-8 md:p-12 lg:p-14 rounded-3xl relative overflow-hidden text-white flex flex-col justify-center w-full">
                <div className="absolute top-0 right-0 w-64 h-64 bg-[#1B4C44]/13 rounded-full blur-3xl pointer-events-none" />
                
                <AnimatePresence mode="wait">
@@ -195,59 +218,47 @@ export default function Contact() {
                      exit={{ opacity: 0 }}
                      transition={{ duration: 0.3 }}
                    >
-                     <h3 className="text-xl font-heading font-medium tracking-tight mb-6 relative z-10 text-white">{contactFormTitle}</h3>
+                     <h3 className="text-3xl md:text-4xl font-heading font-medium tracking-tight mb-8 relative z-10 text-white">{contactFormTitle}</h3>
                      
-                     <form className="space-y-4 relative z-10" onSubmit={handleSubmit}>
-                       <div className="grid grid-cols-2 gap-4">
-                         <div className="space-y-1.5">
-                           <label className="text-[9px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">First Name</label>
+                     <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+                       <div className="grid grid-cols-2 gap-6">
+                         <div className="space-y-2">
+                           <label className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">First Name</label>
                            <input 
                              type="text" 
                              required
                              placeholder="Arjun" 
                              value={firstName}
                              onChange={e => setFirstName(e.target.value)}
-                             className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300" 
+                             className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300 placeholder:text-white/20" 
                            />
                          </div>
-                         <div className="space-y-1.5">
-                           <label className="text-[9px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">Last Name</label>
+                         <div className="space-y-2">
+                           <label className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">Last Name</label>
                            <input 
                              type="text" 
                              placeholder="Sharma" 
                              value={lastName}
                              onChange={e => setLastName(e.target.value)}
-                             className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300" 
+                             className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300 placeholder:text-white/20" 
                            />
                          </div>
                        </div>
-                       
-                       <div className="space-y-1.5">
-                         <label className="text-[9px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">Email Address</label>
-                         <input 
-                           type="email" 
-                           required
-                           placeholder="arjun@pilgrim.com" 
-                           value={email}
-                           onChange={e => setEmail(e.target.value)}
-                           className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300" 
-                         />
-                       </div>
-
-                       <div className="space-y-1.5">
-                         <label className="text-[9px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">Message</label>
+                      
+                       <div className="space-y-2">
+                         <label className="text-[10px] uppercase font-bold tracking-widest text-[#D8CBB8]/80 font-mono">Message</label>
                          <textarea 
-                           rows={3} 
+                           rows={4} 
                            required
                            placeholder="Tell us about your Kedarnath puja date or special accommodation requests..." 
                            value={message}
                            onChange={e => setMessage(e.target.value)}
-                           className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300 resize-none"
+                           className="w-full font-medium bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-[#D8CBB8] focus:ring-1 focus:ring-[#D8CBB8] transition-all duration-300 resize-none placeholder:text-white/20"
                          ></textarea>
                        </div>
-
-                       <button type="submit" className="w-full py-3.5 px-6 rounded-xl bg-[#D8CBB8] hover:bg-[#E5D7C3] text-[#0B1714] font-sans font-extrabold text-[10px] uppercase tracking-[0.2em] cursor-pointer shadow-md transition-all duration-350 border border-[#D8CBB8]/15 active:scale-98 inline-flex items-center justify-center gap-2">
-                         <Send size={12} />
+ 
+                       <button type="submit" className="w-full py-4 px-8 rounded-xl bg-[#D8CBB8] hover:bg-[#E5D7C3] text-[#0B1714] font-sans font-extrabold text-xs uppercase tracking-[0.2em] cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border border-[#D8CBB8]/15 active:scale-98 inline-flex items-center justify-center gap-2">
+                         <Send size={14} />
                          <span>Send Inquiry</span>
                        </button>
                      </form>
@@ -272,8 +283,9 @@ export default function Contact() {
                    </motion.div>
                  )}
                </AnimatePresence>
-            </div>
-          )}  </div>
+             </div>
+           )}
+        </div>
 
         {/* Location Map Preview Section */}
         <motion.div

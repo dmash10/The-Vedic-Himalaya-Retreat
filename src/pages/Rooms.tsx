@@ -2,10 +2,10 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSearchParams, Link } from "react-router-dom";
 import { 
-  ArrowLeft, Bed, Fan, Tv, Bath, Wifi, Coffee, Sparkles, 
+  ArrowLeft, Bed, BedDouble, Fan, Tv, Bath, Wifi, Coffee, Sparkles, 
   ShieldCheck, Star, Check, Calendar, Users, Lock, 
   CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, X, MessageSquare,
-  Flame, Compass, Utensils, Mountain, Info
+  Flame, Compass, Utensils, Mountain, Info, Zap, Droplets
 } from "lucide-react";
 import { useRooms } from "@/hooks/useRooms";
 import { useContent } from "@/hooks/useContent";
@@ -46,7 +46,11 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15px" }}
       transition={{ duration: 0.7, delay: index * 0.12, ease: easePremium }}
-      className="group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden"
+      className={`group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden ${
+        index === 2 
+          ? "col-span-2 col-start-2 md:col-span-1 md:col-start-auto" 
+          : "col-span-2 md:col-span-1"
+      }`}
     >
       
       <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF9F5] cursor-pointer">
@@ -58,7 +62,7 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
         />
         
         {/* Quiet Float Label */}
-        <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono pointer-events-none">
+        <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono pointer-events-none hidden sm:inline-block">
           {room.badge}
         </span>
 
@@ -105,7 +109,7 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
         
         {/* Quiet Float Price */}
         {settings.show_prices && (
-          <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans pointer-events-none">
+          <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans pointer-events-none hidden sm:flex">
             <span className="text-[10px] text-[#FAF9F5]/70 font-normal">from</span>
             <span className="text-[13px] font-heading font-bold text-[#FAF9F5]">₹{room.price.toLocaleString("en-IN")}</span>
             <span className="text-[9px] text-[#FAF9F5]/60 lowercase font-normal italic">/nt</span>
@@ -114,45 +118,65 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
       </div>
       
       {/* Narrative body & detailed selections */}
-      <div className="flex-grow p-5 sm:p-7 flex flex-col justify-between">
-        <div className="space-y-3 mb-5">
-          <div className="flex items-center gap-1.5 text-amber-700 text-[11px] font-bold">
-            <Star size={11} className="fill-amber-400 text-amber-500" />
+      <div className="flex-grow p-3.5 sm:p-5 flex flex-col justify-between">
+        <div className="space-y-1.5 mb-3">
+          <div className="flex items-center gap-1.5 text-amber-700 text-[10px] font-bold">
+            <Star size={10} className="fill-amber-400 text-amber-500" />
             <span>4.9 Index Rating</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-heading font-medium tracking-tight text-slate-charcoal group-hover:text-deep-teal transition-colors duration-300">
+          <h2 className="text-[17px] sm:text-xl font-heading font-medium tracking-tight text-slate-charcoal group-hover:text-deep-teal transition-colors duration-300 line-clamp-1 leading-tight">
             {room.title}
           </h2>
-          <p className="text-slate-charcoal/80 text-xs sm:text-sm leading-relaxed font-sans font-normal">
+          <p className="text-slate-charcoal/80 text-xs sm:text-sm leading-relaxed font-sans font-normal line-clamp-2 hidden sm:block">
             {room.description}
           </p>
         </div>
 
-        {/* Quiet list of experiences inclusions */}
-        <div className="border-t border-[#D8CBB8]/40 pt-4 mb-4 space-y-2.5 flex flex-col">
-          <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-slate-charcoal/60">Included Experiences</span>
-          <div className="flex flex-wrap gap-1.5 text-zinc-650">
-            {room.amenities.slice(0, 4).map((amenity: any, i: number) => {
-              const IconComponent = amenity.icon;
+        {/* Row of Amenity Icons - Only icons, visible on both phone and PC */}
+        <div className="flex flex-wrap gap-1.5 py-1.5 border-t border-[#D8CBB8]/30 my-1 justify-start">
+          {(room.amenities || [])
+            .filter((a: any) => {
+              const label = (a.label || "").toLowerCase();
+              return !label.includes("bath") && !label.includes("washroom") && !label.includes("dining");
+            })
+            .sort((a: any, b: any) => {
+              const aLabel = (a.label || "").toLowerCase();
+              const bLabel = (b.label || "").toLowerCase();
+              const order = ["wifi", "fiber", "tv", "sound", "water", "geyser", "heat", "bed", "fan"];
+              
+              const getIndex = (lbl: string) => {
+                for (let i = 0; i < order.length; i++) {
+                  if (lbl.includes(order[i])) return i;
+                }
+                return 999;
+              };
+              
+              return getIndex(aLabel) - getIndex(bLabel);
+            })
+            .slice(0, 4)
+            .map((amenity: any, i: number) => {
+              const IconComponent = amenity.icon || Sparkles;
               return (
-                <div key={i} className="flex items-center gap-1 bg-[#FAF9F5]/70 text-slate-charcoal px-2.5 py-1 rounded-full border border-[#D8CBB8]/40 hover:border-deep-teal hover:bg-white transition-all cursor-default" title={amenity.desc}>
-                  <IconComponent size={11} className="text-deep-teal shrink-0" />
-                  <span className="text-[10px] sm:text-[11px] font-sans font-semibold leading-none">{amenity.label}</span>
+                <div 
+                  key={i} 
+                  className="w-6 h-6 rounded-full bg-[#FAF9F5]/90 border border-[#D8CBB8]/45 flex items-center justify-center text-deep-teal shadow-3xs" 
+                  title={amenity.label}
+                >
+                  <IconComponent size={10} className="shrink-0" />
                 </div>
               );
             })}
-          </div>
         </div>
         
         {/* Pricing and Action navigation */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#D8CBB8]/40">
+        <div className="flex items-center justify-between pt-2.5 border-t border-[#D8CBB8]/30">
           <div className="flex flex-col">
-            <span className="text-[9px] uppercase tracking-wider font-bold text-slate-charcoal/50">Nightly Rate</span>
-            <span className="font-heading font-bold text-base sm:text-lg text-slate-charcoal flex items-baseline gap-0.5">
+            <span className="text-[8px] uppercase tracking-wider font-bold text-slate-charcoal/55 leading-none">Nightly Rate</span>
+            <span className="font-heading font-bold text-[14px] sm:text-[17px] text-slate-charcoal flex items-baseline gap-0.5 mt-0.5">
               {settings.show_prices ? (
                 <>
                   ₹{room.price.toLocaleString("en-IN")}
-                  <span className="text-[10px] font-normal text-slate-charcoal/60 font-sans">/night</span>
+                  <span className="text-[9px] font-normal text-slate-charcoal/60 font-sans">/night</span>
                 </>
               ) : (
                 <span className="text-xs uppercase tracking-wider text-[#1B4C44] font-bold">Pricing on Request</span>
@@ -162,9 +186,11 @@ function RoomCard({ room, index, setSearchParams, setLightboxImage, easePremium,
           <button
             type="button"
             onClick={() => setSearchParams({ room: room.id })}
-            className="inline-flex items-center gap-1.5 text-[10.5px] sm:text-xs font-bold tracking-widest uppercase text-warm-white bg-deep-teal hover:bg-slate-charcoal rounded-xl px-3 sm:px-4.5 py-2.5 sm:py-3 transition-colors duration-350 cursor-pointer"
+            className="inline-flex items-center justify-center gap-0.5 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-deep-teal sm:text-warm-white bg-transparent sm:bg-deep-teal hover:text-emerald-800 sm:hover:text-warm-white sm:hover:bg-slate-charcoal rounded-none sm:rounded-md px-0 sm:px-4 py-0 sm:py-2.5 transition-colors duration-350 cursor-pointer hover:underline sm:hover:no-underline"
           >
-            View Room <ArrowRight size={13} className="transition-transform group-hover:translate-x-1 duration-300" />
+            <span className="sm:hidden">View</span>
+            <span className="hidden sm:inline">View Room</span>
+            <ArrowRight size={11} className="hidden sm:inline-block transition-transform group-hover:translate-x-0.5 duration-300" strokeWidth={2.5} />
           </button>
         </div>
       </div>
@@ -191,7 +217,7 @@ export default function Rooms() {
     if (!iconName) return Bed;
     if (typeof iconName !== 'string') return iconName;
     const map: { [key: string]: any } = {
-      Bed, Fan, Tv, Bath, Wifi, Coffee, Sparkles, ShieldCheck, Star, Check, Calendar, Users, Lock, CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, X, MessageSquare, Flame, Compass, Utensils, Mountain, Info
+      Bed, BedDouble, Fan, Tv, Bath, Wifi, Coffee, Sparkles, ShieldCheck, Star, Check, Calendar, Users, Lock, CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, X, MessageSquare, Flame, Compass, Utensils, Mountain, Info, Zap, Droplets
     };
     return map[iconName] || Bed;
   };
@@ -205,7 +231,7 @@ export default function Rooms() {
       list = [
         { label: "2 Double Beds", icon: "Bed", desc: "Two pristine premium double-sized mattresses with finest linens and duvets" },
         { label: "Whisper Cool Fan", icon: "Fan", desc: "High-capacity whisper silent designer cooling and ventilation fan" },
-        { label: "Spa Slate Bath", icon: "Bath", desc: "Luxury slate bathroom equipped with geyser and hot rain shower" },
+        { label: "Hot Water Geyser", icon: "Flame", desc: "Luxury geyser and hot rain shower supply in stone bathroom" },
         { label: "Smart Sound Hub", icon: "Tv", desc: "Massive 55\" cinematic display with premium room audio" },
         { label: "Ultimate Fiber", icon: "Wifi", desc: "Ultra performance high-speed complimentary internet" },
         { label: "Hot Beverage Station", icon: "Coffee", desc: "Premium electric hot kettle and regional herbal tea blends" }
@@ -233,12 +259,17 @@ export default function Rooms() {
   const rooms = useMemo(() => {
     if (!dbRooms || dbRooms.length === 0) return [];
     return dbRooms.filter((r: any) => r.is_visible !== false).map((r: any) => {
-      const isPinewood = r.slug === 'pinewood-family-suite' || r.slug === 'pinewood-suite';
+      const getBadge = (name: string) => {
+        if (name.includes("Family")) return "Signature Reserve";
+        if (name.includes("Cottage")) return "Pinewood Cottage";
+        if (name.includes("Camp")) return "Swiss Camp";
+        return "Premium Suite";
+      };
       const dbImages = Array.isArray(r.images) ? r.images.filter(Boolean) : [];
       return {
         id: r.slug || r.id,
         title: r.name,
-        badge: isPinewood ? "Signature Reserve" : "Premium Suite",
+        badge: getBadge(r.name),
         price: r.real_price || 11500,
         fake_price: r.fake_price || 15000,
         description: r.description || "Himalayan luxury Suite wreathed in pines.",
@@ -1185,8 +1216,8 @@ export default function Rooms() {
 
               </header>
 
-              {/* Grid with Pristine Multi-image Suite Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {/* Grid with Pristine Multi-image Suite Cards - Grid-cols-4 on mobile (2 top, 1 centered bottom) */}
+              <div className="grid grid-cols-4 md:grid-cols-3 gap-2 md:gap-8">
                 {rooms.map((room, index) => (
                   <RoomCard
                     key={room.id}

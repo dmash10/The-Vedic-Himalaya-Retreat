@@ -23,6 +23,9 @@ export default function About() {
   const aboutMainText = getValue('about', 'about_main_text', 'The Vedic Himalaya Retreat is more than luxury lodging. It is an extension of the Uttarakhand soul, designed purely to ground and restore the high-altitude voyager. Our structures pay humble homage to the traditional deodar wood and black mountain stone masonry of Uttarakhand. Every pillar is hand-fitted by local artisans, embedding regional spirit into every joint.');
   const aboutHighlights = getValue('about', 'about_highlights', 'We believe true luxury is found in the deep forest silence, the cold slate underfoot, and the monumental scale of the peaks towering outside your window.');
   const aboutImage = getValue('about', 'about_image', 'https://images.unsplash.com/photo-1443632864897-14973fa006cf?auto=format&fit=crop&q=80&w=1200');
+  const aboutSecondImage = getValue('about', 'about_second_image', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200');
+  const aboutSecondImageLocation = getValue('about', 'about_second_image_location', 'Village Dewar, Guptkashi, Uttarakhand');
+  const aboutSecondImageTitle = getValue('about', 'about_second_image_title', 'Facing the Divine Peaks of Chaukhamba');
 
   // Section Visibility Settings
   const storyVisible = getValue('about', 'about_story_visible', 'true') !== 'false';
@@ -121,16 +124,16 @@ export default function About() {
 
         {/* Four Pillars of Custodianship */}
         {pillarsVisible && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 py-14 border-t border-[#D8CBB8]/20 mb-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8 py-14 border-t border-[#D8CBB8]/20 mb-20">
             {visiblePillars.map((pillar, idx) => (
-              <div key={idx} className="space-y-4 text-center md:text-left">
-                <div className="w-12 h-12 rounded-full bg-white border border-[#D8CBB8]/30 flex items-center justify-center text-[#1B4C44] mx-auto md:mx-0 shadow-xs">
-                  <DynamicIcon name={pillar.icon || 'Sparkles'} className="h-5 w-5 text-[#A88C52]" />
+              <div key={idx} className="space-y-2.5 sm:space-y-4 text-center md:text-left">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-[#D8CBB8]/30 flex items-center justify-center text-[#1B4C44] mx-auto md:mx-0 shadow-xs">
+                  <DynamicIcon name={pillar.icon || 'Sparkles'} className="h-4 w-4 sm:h-5 sm:w-5 text-[#A88C52]" />
                 </div>
-                <h3 className="text-base font-heading font-bold uppercase tracking-wider text-slate-charcoal">
+                <h3 className="text-xs sm:text-sm md:text-base font-heading font-bold uppercase tracking-wider text-slate-charcoal">
                   {pillar.title}
                 </h3>
-                <p className="text-xs text-slate-charcoal/70 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-charcoal/70 leading-relaxed max-w-[200px] mx-auto md:mx-0">
                   {pillar.desc}
                 </p>
               </div>
@@ -141,14 +144,14 @@ export default function About() {
         {/* Second Cinematic Visual */}
         <div className="relative group overflow-hidden rounded-2xl border border-[#D8CBB8]/40 shadow-2xl bg-[#EFEAE1]/50 aspect-video max-w-4xl mx-auto">
           <img 
-            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200" 
+            src={aboutSecondImage} 
             alt="Majestic Kedarnath Range Peaks" 
             className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
           />
           <div className="absolute inset-0 bg-[#0B1714]/20 mix-blend-overlay pointer-events-none" />
           <div className="absolute bottom-0 inset-x-0 p-6 md:p-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
-            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">Village Dewar, Guptkashi, Uttarakhand</span>
-            <h4 className="text-xl md:text-2xl font-heading font-medium tracking-tight">Facing the Divine Peaks of Chaukhamba</h4>
+            <span className="text-[9px] uppercase tracking-[0.3em] font-extrabold text-[#D8CBB8] block mb-2 font-mono">{aboutSecondImageLocation}</span>
+            <h4 className="text-xl md:text-2xl font-heading font-medium tracking-tight">{aboutSecondImageTitle}</h4>
           </div>
         </div>
 
