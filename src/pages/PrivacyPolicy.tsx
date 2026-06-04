@@ -63,7 +63,7 @@ export default function PrivacyPolicy() {
                   <span>1. Commitment to Digital Serenity</span>
                 </h2>
                 <p>
-                  At <strong className="font-semibold text-slate-charcoal">The Green Hills Resort</strong>, we guard your personal information with the same reverence we hold for the pristine mountain air and ancient deodar woods surrounding our location. We believe that privacy is an essential dimension of spiritual calm.
+                  At <strong className="font-semibold text-slate-charcoal">The Vedic Himalaya Retreat</strong>, we guard your personal information with the same reverence we hold for the pristine mountain air and ancient deodar woods surrounding our location. We believe that privacy is an essential dimension of spiritual calm.
                 </p>
                 <p>
                   In compliance with global framework standards including the General Data Protection Regulation (GDPR), the California Consumer Privacy Act (CCPA), and the Digital Personal Data Protection Act (DPDPA) of India, this document details how we collect, process, secure, and respect your personal digital credentials. We strictly enforce a policy of zero commercial monetization, zero data leasing, and absolute transaction confidentiality.
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
                   Regardless of your place of residence, the retreat accords you absolute sovereignty over your digital footprint. You have the right to request access to the personal records we hold, request corrections to incomplete information, withdraw your consent for email updates, or request total erasure of your personal files from our servers.
                 </p>
                 <p>
-                  For all data requests, digital disclosures, or queries regarding immigration reporting, please coordinate with our privacy team at: <span className="italic font-semibold text-[#1B4C44] underline hover:text-[#A88C52] transition-colors">stay@greenhillsresort.com</span>. We pledge to address and satisfy all lawful requests within 30 business days.
+                  For all data requests, digital disclosures, or queries regarding immigration reporting, please coordinate with our privacy team at: <span className="italic font-semibold text-[#1B4C44] underline hover:text-[#A88C52] transition-colors">stay@vedichimalaya.com</span>. We pledge to address and satisfy all lawful requests within 30 business days.
                 </p>
               </section>
 
@@ -179,7 +179,7 @@ export default function PrivacyPolicy() {
 
         {/* Elegant Footer Details */}
         <div className="mt-16 pt-8 border-t border-[#D8CBB8]/20 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono tracking-widest text-slate-charcoal/40 gap-4">
-          <span>THE GREEN HILLS RESORT // VILLAGE DEWAR GUPTKASHI</span>
+          <span>THE VEDIC HIMALAYA RETREAT // VILLAGE DEWAR GUPTKASHI</span>
           <span>© {new Date().getFullYear()} ALL CITATIONS RESERVED</span>
         </div>
 
