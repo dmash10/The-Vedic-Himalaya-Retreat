@@ -253,10 +253,9 @@ function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-15px" }}
-      transition={{ duration: 0.7, delay: index * 0.12, ease: easePremium }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
       className={`group bg-[#EFEAE1] border border-[#D8CBB8]/60 hover:border-deep-teal rounded-xl shadow-xs transition-all duration-500 hover:-translate-y-1 flex flex-col h-full overflow-hidden text-left ${
         index === 2 
           ? "col-span-2 col-start-2 md:col-span-1 md:col-start-auto" 
@@ -268,11 +267,11 @@ function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
           <img 
             src={room.images[currentImageIdx]} 
             alt={room.title}
-            className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out md:group-hover:scale-103 group-hover:scale-100 transform-gpu"
           />
         </Link>
         
-        {/* Quiet Float Label */}
+        {/* Quiet Float Label - Hidden on mobile */}
         <span className="absolute top-4 left-4 bg-slate-charcoal text-[#FAF9F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1.5 rounded-lg border border-warm-white/10 shadow-md font-mono pointer-events-none hidden sm:inline-block">
           {room.badge}
         </span>
@@ -320,7 +319,7 @@ function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
           </>
         )}
         
-        {/* Quiet Float Price */}
+        {/* Quiet Float Price - Hidden on mobile */}
         {settings.show_prices && (
           <div className="absolute bottom-4 right-4 bg-slate-charcoal/90 backdrop-blur-xs text-[#FAF9F5] text-xs font-bold px-3 py-1.5 rounded-xl border border-warm-white/15 shadow-sm flex items-baseline gap-0.5 select-none font-sans pointer-events-none hidden sm:flex">
             <span className="text-[10px] text-[#FAF9F5]/70 font-normal">from</span>
@@ -333,7 +332,8 @@ function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
       {/* Narrative body & detailed selections */}
       <div className="flex-grow p-3.5 sm:p-5 flex flex-col justify-between">
         <div className="space-y-1.5 mb-3">
-          <div className="flex items-center gap-1.5 text-amber-700 text-[10px] font-bold">
+          {/* Rating Tag - Hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-1.5 text-amber-700 text-[10px] font-bold">
             <Star size={10} className="fill-amber-400 text-amber-500" />
             <span>4.9 Index Rating</span>
           </div>
@@ -400,7 +400,7 @@ function RoomCard({ room, index, easePremium, settings }: RoomCardProps) {
           </div>
           <Link
             to={`/rooms?room=${room.id}`}
-            className="inline-flex items-center justify-center gap-0.5 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-deep-teal sm:text-warm-white bg-transparent sm:bg-deep-teal hover:text-emerald-800 sm:hover:text-warm-white sm:hover:bg-slate-charcoal rounded-none sm:rounded-md px-0 sm:px-4 py-0 sm:py-2.5 transition-colors duration-350 cursor-pointer hover:underline sm:hover:no-underline"
+            className="text-[12px] sm:text-xs font-bold tracking-wider uppercase text-deep-teal hover:text-deep-teal/80 underline sm:no-underline cursor-pointer sm:bg-deep-teal sm:text-[#FAF9F5] sm:hover:bg-slate-charcoal sm:rounded-md sm:px-4 sm:py-2.5 sm:inline-flex sm:items-center sm:justify-center sm:gap-1 transition-all"
           >
             <span className="sm:hidden">View</span>
             <span className="hidden sm:inline">View Room</span>
