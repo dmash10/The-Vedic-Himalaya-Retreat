@@ -891,7 +891,7 @@ export default function Rooms() {
                     ) : (
                       <form className="space-y-5" onSubmit={handleBookingSubmit}>
                                      {/* Dates Selector Group */}
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                           <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
                             <Calendar size={12} className="text-[#D8CBB8]" /> Check-In
