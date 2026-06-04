@@ -887,8 +887,8 @@ export default function Home() {
         <section ref={heroRef} className="relative h-screen w-full overflow-hidden">
           <motion.div 
             style={{ 
-              y: isMobile ? "0%" : y1,
-              willChange: isMobile ? "auto" : "transform",
+              y: y1,
+              willChange: "transform",
               WebkitBackfaceVisibility: "hidden",
               backfaceVisibility: "hidden",
               transformStyle: "flat"
@@ -929,8 +929,9 @@ export default function Home() {
           
           <motion.div 
             style={{ 
-              opacity: isMobile ? 1 : opacity1,
-              willChange: isMobile ? "auto" : "opacity",
+              opacity: opacity1,
+              y: useTransform(heroScroll, [0, 1], [0, 100]),
+              willChange: "transform, opacity",
               WebkitBackfaceVisibility: "hidden",
               backfaceVisibility: "hidden"
             }}
