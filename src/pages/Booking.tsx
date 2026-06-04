@@ -15,8 +15,6 @@ export default function Booking() {
   const [guests, setGuests] = useState("2 Guests");
   const [roomType, setRoomType] = useState("Pinewood Family Suite");
   const [guestName, setGuestName] = useState("");
-  const [guestEmail, setGuestEmail] = useState("");
-  const [guestPhone, setGuestPhone] = useState("");
   const [addSpecialPooja, setAddSpecialPooja] = useState(false);
   
   const [bookingStep, setBookingStep] = useState<"idle" | "loading" | "success">("idle");
@@ -71,7 +69,7 @@ export default function Booking() {
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!checkIn || !checkOut || !guestName || !guestEmail || !guestPhone) {
+    if (!checkIn || !checkOut || !guestName) {
       alert("Please fill in all the required details to secure your reservation.");
       return;
     }
@@ -102,8 +100,6 @@ export default function Booking() {
       `• *Nights*: ${nights} night(s)`,
       `• *Guests*: ${guests}`,
       `• *Guest Name*: ${guestName}`,
-      `• *Email*: ${guestEmail}`,
-      `• *Contact*: ${guestPhone}`,
       addSpecialPooja ? `• *Pooja Arrangement*: Yes` : '',
       `• *Breakfast*: Included`,
       `• *Total Stay Cost*: ${settings.show_prices ? `₹${total.toLocaleString("en-IN")}` : "Pricing on Request"}`,
@@ -140,8 +136,6 @@ export default function Booking() {
           nights,
           total: settings.show_prices ? total : 0,
           guestName,
-          guestEmail,
-          guestPhone,
           addSpecialPooja,
           addCompulsoryBreakfast: true,
           status: "Pending",
@@ -164,8 +158,6 @@ export default function Booking() {
     setCheckIn("");
     setCheckOut("");
     setGuestName("");
-    setGuestEmail("");
-    setGuestPhone("");
     setAddSpecialPooja(false);
     setGeneratedTicket(null);
   };
@@ -199,29 +191,31 @@ export default function Booking() {
 
             <form className="space-y-5 relative z-10" onSubmit={handleBookingSubmit}>
               {/* Date Pickers */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono">
-                    <Calendar size={12} className="text-[#A88C52]" /> Check In
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5 min-w-0">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono truncate">
+                    <Calendar size={12} className="text-[#A88C52] shrink-0" /> Check In
                   </label>
                   <input 
                     type="date" 
                     required
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
-                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
+                    className="w-full min-w-0 bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-2 py-2.5 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
+                    style={{ minWidth: 0, width: '100%' }}
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono">
-                    <Calendar size={12} className="text-[#A88C52]" /> Check Out
+                <div className="space-y-1.5 min-w-0">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono truncate">
+                    <Calendar size={12} className="text-[#A88C52] shrink-0" /> Check Out
                   </label>
                   <input 
                     type="date" 
                     required
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-[#1e3a1e] focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
+                    className="w-full min-w-0 bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-2 py-2.5 text-[#1e3a1e] focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold" 
+                    style={{ minWidth: 0, width: '100%' }}
                   />
                 </div>
               </div>
@@ -232,16 +226,15 @@ export default function Booking() {
                   <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono">
                     <Users size={12} className="text-[#A88C52]" /> Occupants
                   </label>
-                  <select 
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold appearance-none"
-                  >
-                     <option>1 Guest</option>
-                     <option>2 Guests</option>
-                     <option>3 Guests</option>
-                     <option>4 Guests</option>
-                  </select>
+                  <input 
+                    type="number"
+                    min={1}
+                    max={20}
+                    required
+                    value={parseInt(guests) || 1}
+                    onChange={(e) => setGuests(`${e.target.value} Guest${parseInt(e.target.value) > 1 ? 's' : ''}`)}
+                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-2.5 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold"
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-[#1B4C44] flex items-center gap-1.5 font-mono">
@@ -250,7 +243,7 @@ export default function Booking() {
                   <select 
                     value={roomType}
                     onChange={(e) => setRoomType(e.target.value)}
-                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold appearance-none"
+                    className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-2.5 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-semibold appearance-none"
                   >
                      <option>Pinewood Family Suite</option>
                      <option>Deodar Imperial Suite</option>
@@ -273,31 +266,6 @@ export default function Booking() {
                     onChange={(e) => setGuestName(e.target.value)}
                     className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-medium" 
                   />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase font-bold tracking-widest text-rock-500 font-mono">Email Address</label>
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="arjun@sharma.com"
-                      value={guestEmail}
-                      onChange={(e) => setGuestEmail(e.target.value)}
-                      className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-medium" 
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase font-bold tracking-widest text-rock-500 font-mono">Contact Number</label>
-                    <input 
-                      type="tel" 
-                      required
-                      placeholder="+91 94563 96950"
-                      value={guestPhone}
-                      onChange={(e) => setGuestPhone(e.target.value)}
-                      className="w-full bg-[#FAF9F5] border border-[#D8CBB8]/30 rounded-xl px-4 py-3 text-xs text-rock-900 focus:outline-none focus:border-[#1B4C44] transition-colors font-medium" 
-                    />
-                  </div>
                 </div>
               </div>
 

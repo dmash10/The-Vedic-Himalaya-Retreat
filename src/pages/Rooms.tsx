@@ -311,8 +311,6 @@ export default function Rooms() {
   const [checkOut, setCheckOut] = useState("");
   const [guestCount, setGuestCount] = useState("2 Guests");
   const [guestName, setGuestName] = useState("");
-  const [guestEmail, setGuestEmail] = useState("");
-  const [guestPhone, setGuestPhone] = useState("");
   const [bookingStep, setBookingStep] = useState<"idle" | "loading" | "success">("idle");
   const [loadingText, setLoadingText] = useState("");
   const [generatedTicket, setGeneratedTicket] = useState<any>(null);
@@ -342,8 +340,8 @@ export default function Rooms() {
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!checkIn || !checkOut || !guestName || !guestEmail || !guestPhone) {
-      alert("Please fill in your name, email, phone number, and both check-in/checkout dates.");
+    if (!checkIn || !checkOut || !guestName) {
+      alert("Please fill in your name and both check-in/checkout dates.");
       return;
     }
 
@@ -371,8 +369,6 @@ export default function Rooms() {
       `• *Nights*: ${nights} night(s)`,
       `• *Guests*: ${guestCount}`,
       `• *Guest Name*: ${guestName}`,
-      `• *Email*: ${guestEmail}`,
-      `• *Contact*: ${guestPhone}`,
       addSpecialPooja ? `• *Pooja Arrangement*: Yes` : '',
       addCompulsoryBreakfast ? `• *Breakfast*: Included` : '',
       `• *Total Stay Cost*: ${settings.show_prices ? `₹${finalCalculatedTotal.toLocaleString("en-IN")}` : "Pricing on Request"}`,
@@ -384,7 +380,7 @@ export default function Rooms() {
     // Now run the loading animation on the current page
     setBookingStep("loading");
     
-    const phases = [
+    const phrases = [
       "Verifying seasonal calendar room spaces...",
       "Reserving holding keys in our ledger...",
       "Activating direct-booking harvest perks...",
@@ -392,12 +388,12 @@ export default function Rooms() {
     ];
 
     let currentPhase = 0;
-    setLoadingText(phases[0]);
+    setLoadingText(phrases[0]);
 
     const interval = setInterval(() => {
       currentPhase++;
-      if (currentPhase < phases.length) {
-        setLoadingText(phases[currentPhase]);
+      if (currentPhase < phrases.length) {
+        setLoadingText(phrases[currentPhase]);
       } else {
         clearInterval(interval);
 
@@ -410,8 +406,6 @@ export default function Rooms() {
           nights,
           total: settings.show_prices ? finalCalculatedTotal : 0,
           guestName,
-          guestEmail,
-          guestPhone,
           addSpecialPooja,
           addCompulsoryBreakfast,
           status: "Pending",
@@ -434,8 +428,6 @@ export default function Rooms() {
     setCheckIn("");
     setCheckOut("");
     setGuestName("");
-    setGuestEmail("");
-    setGuestPhone("");
     setGeneratedTicket(null);
     setAddSpecialPooja(false);
     setAddCompulsoryBreakfast(true);
@@ -891,29 +883,31 @@ export default function Rooms() {
                     ) : (
                       <form className="space-y-5" onSubmit={handleBookingSubmit}>
                                      {/* Dates Selector Group */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
-                            <Calendar size={12} className="text-[#D8CBB8]" /> Check-In
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5 min-w-0">
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                            <Calendar size={12} className="text-[#D8CBB8] shrink-0" /> Check-In
                           </label>
                           <input 
                             type="date" 
                             required
                             value={checkIn}
                             onChange={(e) => setCheckIn(e.target.value)}
-                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-3 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                            className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                            style={{ minWidth: 0, width: '100%' }}
                           />
                         </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
-                            <Calendar size={12} className="text-[#D8CBB8]" /> Check-Out
+                        <div className="space-y-1.5 min-w-0">
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5 truncate">
+                            <Calendar size={12} className="text-[#D8CBB8] shrink-0" /> Check-Out
                           </label>
                           <input 
                             type="date" 
                             required
                             value={checkOut}
                             onChange={(e) => setCheckOut(e.target.value)}
-                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-3 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                            className="w-full min-w-0 bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-2 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200 font-medium" 
+                            style={{ minWidth: 0, width: '100%' }}
                           />
                         </div>
                       </div>
@@ -923,16 +917,15 @@ export default function Rooms() {
                         <label className="text-[10px] uppercase font-bold tracking-widest text-[#FAF9F5]/75 flex items-center gap-1.5">
                           <Users size={12} className="text-[#D8CBB8]" /> Suite Occupants
                         </label>
-                        <select 
-                          value={guestCount}
-                          onChange={(e) => setGuestCount(e.target.value)}
-                          className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 rounded-xl px-3 py-3 text-xs text-warm-white focus:outline-none focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 transition-all duration-200 font-medium cursor-pointer"
-                        >
-                          <option className="text-[#2D3438]">1 Guest</option>
-                          <option className="text-[#2D3438]">2 Guests</option>
-                          <option className="text-[#2D3438]">3 Guests</option>
-                          <option className="text-[#2D3438]">4 Guests</option>
-                        </select>
+                        <input 
+                          type="number"
+                          min={1}
+                          max={20}
+                          required
+                          value={parseInt(guestCount) || 1}
+                          onChange={(e) => setGuestCount(`${e.target.value} Guest${parseInt(e.target.value) > 1 ? 's' : ''}`)}
+                          className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 transition-all duration-200 font-medium" 
+                        />
                       </div>
 
 
@@ -1036,25 +1029,6 @@ export default function Rooms() {
                             placeholder="Full Name"
                             value={guestName}
                             onChange={(e) => setGuestName(e.target.value)}
-                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <input 
-                            type="email"
-                            required
-                            placeholder="Email"
-                            value={guestEmail}
-                            onChange={(e) => setGuestEmail(e.target.value)}
-                            className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200"
-                          />
-                          <input 
-                            type="tel"
-                            required
-                            placeholder="Phone Number"
-                            value={guestPhone}
-                            onChange={(e) => setGuestPhone(e.target.value)}
                             className="w-full bg-[#0D1C1E]/55 border border-warm-white/10 hover:border-[#D8CBB8]/50 focus:border-[#D8CBB8] focus:bg-[#122A2D]/80 rounded-xl px-3 py-2.5 text-xs text-warm-white focus:outline-none transition-all duration-200"
                           />
                         </div>
