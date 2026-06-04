@@ -787,28 +787,33 @@ function ListEditor<T>({
 
 const DEFAULT_CONTACT_FAQS = [
   {
-    question: "What is the maximum guest capacity for hosting weddings and corporate retreats at the resort?",
-    answer: "We can comfortably accommodate up to 60+ guests across our luxury pinewood family suites, cottages, and Swiss camps. For larger day-events and weddings, our outdoor pine lawns and garden setups can easily host up to 150-200 guests.",
+    question: "What is the daily life and atmosphere like at the retreat?",
+    answer: "The retreat is designed for quiet, mindful mountain living. Guests wake up to clear peak views, practice morning yoga or meditation in our forest shala, walk through fragrant deodar paths, and gather around the outdoor slate fire bowl at twilight. We serve fresh, slow-cooked Sattvik vegetarian meals.",
     is_visible: true
   },
   {
-    question: "Do you provide in-house catering, decorations, and event coordination for weddings?",
-    answer: "Yes, we offer complete end-to-end event planning. This includes premium Sattvik and multi-cuisine in-house catering, traditional and modern Himalayan floral decors, local folk musicians (Mangal Geet), audio-visual setups, and coordination with local priests for sacred ceremonies.",
+    question: "What outdoor activities and treks can we experience nearby?",
+    answer: "We coordinate guided forest trail walks, ancient heritage temple treks, and day hikes to scenic meadows. For adventure seekers, we arrange trail guides for nearby coordinates. Inside the resort, we offer sunrise yoga sessions, deep breathing practices for high-altitude adjustment, and fireside musical gatherings.",
     is_visible: true
   },
   {
-    question: "Can we book the entire resort exclusively for a private event?",
-    answer: "Absolutely. We highly recommend full buyout reservations for weddings, family reunions, and yoga retreats. This guarantees complete privacy of our garden lawns, pine pathways, indoor dining areas, and all accommodations for your guests.",
+    question: "What peaks are visible from the retreat, and how are the views?",
+    answer: "The retreat sits on a scenic, elevated shelf in Village Dewar, offering panoramic views of the snow-capped Chaukhamba peaks and surrounding Himalayan ranges. Our luxury suites, garden lawns, and glass dining pavilion feature large glass panels facing directly towards the peaks.",
     is_visible: true
   },
   {
-    question: "How far is the resort from the main Kedarnath route and nearest helipads?",
-    answer: "We are located in the peaceful village of Dewar, Guptkashi, right along the scenic route. Guptkashi Helipad is only a 10-minute drive (4.7 km) from us, Phata is 15 minutes away, and Sonprayag is about 30 km, making us the perfect premium base for event hosting and temple pilgrimages.",
+    question: "How is the weather at Guptkashi throughout the season?",
+    answer: "April to June offers warm, pleasant days (18°C to 25°C) and cool evenings, ideal for events and pilgrimages. July to September brings the lush green monsoon mist, creating a serene, dreamy mountain vibe. October to December is crisp, sunny, and cold (down to 2°C at night), offering the clearest views of the snowy peaks.",
     is_visible: true
   },
   {
-    question: "What is your cancellation and booking policy for large group events or weddings?",
-    answer: "For group buyouts and events, we require a 30% advance deposit to secure the dates. Balance payments are structured in stages leading up to the event. Cancellations made more than 45 days prior to the event date receive a full refund, minus minor processing fees.",
+    question: "Why do pilgrims choose this retreat as a base for the Kedarnath Yatra?",
+    answer: "While staying right on the transit path can be congested and noisy, our location in Village Dewar is elevated into the quiet evergreens, completely free of traffic fumes. We are just a 10-minute drive (4.7 km) from Guptkashi Helipad, making us the perfect peaceful base for early helicopter departures or road transit to Sonprayag.",
+    is_visible: true
+  },
+  {
+    question: "Can the retreat accommodate group bookings, weddings, or private events?",
+    answer: "Yes, we can accommodate up to 60+ guests across our suites, cottages, and Swiss camps. We offer full buyout packages for weddings, yoga retreats, and events, including end-to-end catering, Himalayan floral decorations, and local folk ceremonies.",
     is_visible: true
   }
 ];
