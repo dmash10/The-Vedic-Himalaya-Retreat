@@ -82,17 +82,13 @@ export function WhatsAppButton() {
             </div>
 
             {/* Content Area */}
-            <div className="p-4 space-y-4">
-              <div className="bg-white/5 rounded-xl p-3 border border-white/5 relative">
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 bg-[#C4A665]/10 rounded-full border border-[#C4A665]/20">
-                  <Sparkles size={8} className="text-[#C4A665]" />
-                  <span className="text-[7px] font-bold text-[#C4A665] tracking-widest uppercase">Sacred stay</span>
-                </div>
-                <p className="text-xs text-slate-200/90 leading-relaxed font-medium">
-                  Namaste! 🙏 Welcome to The Vedic Himalaya Retreat. 
+            <div className="p-5 space-y-4.5">
+              <div className="space-y-2.5 text-slate-200/90 leading-relaxed text-xs font-medium">
+                <p>
+                  Namaste! 🙏 Welcome to {settings.hotel_name || "The Vedic Himalaya Retreat"}. 
                 </p>
-                <p className="text-xs text-slate-200/90 leading-relaxed mt-2.5 font-medium">
-                  How can we assist you with room bookings, Sattvik dining, or helicopter transfers today?
+                <p>
+                  How can we assist you with room bookings, Sattvik dining, or pilgrimage plans today?
                 </p>
               </div>
 
@@ -100,7 +96,7 @@ export function WhatsAppButton() {
                 onClick={handleChatClick}
                 className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:scale-98 text-white text-xs font-extrabold uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg transition-all duration-300 cursor-pointer"
               >
-                <Send size={13} />
+                <Send size={12} />
                 <span>Start WhatsApp Chat</span>
               </button>
             </div>
