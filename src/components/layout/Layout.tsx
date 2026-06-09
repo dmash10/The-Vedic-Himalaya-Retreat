@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { CookieConsent } from "../CookieConsent";
+import { WhatsAppButton } from "./WhatsAppButton";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { MessageSquare, Phone, Mail, Sparkles } from "lucide-react";
 
@@ -120,6 +121,7 @@ export function Layout() {
       </main>
       {pathname !== "/experiences" && pathname !== "/nearby" && <Footer />}
       <CookieConsent />
+      <WhatsAppButton />
     </div>
   );
 }
