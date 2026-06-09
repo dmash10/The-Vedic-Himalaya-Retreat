@@ -272,7 +272,7 @@ export default function AdminSettings() {
                 value={localSettings.address}
                 onChange={(e) => handleChange('address', e.target.value)}
                 rows={2}
-                placeholder="Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246495"
+                placeholder="Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246439"
                 className="w-full px-4 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665] transition-all resize-none leading-relaxed font-medium"
                 required
               />

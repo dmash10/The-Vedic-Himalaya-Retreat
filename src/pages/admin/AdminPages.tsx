@@ -1277,7 +1277,7 @@ export default function AdminPages() {
         contact_subheading: getValue('contact', 'contact_subheading', 'Reservations & coordinates'),
         contact_image: getValue('contact', 'contact_image', ''),
         contact_email: getValue('contact', 'contact_email', 'stay@vedichimalayaretreat.com'),
-        contact_map_pin: getValue('contact', 'contact_map_pin', 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246495'),
+        contact_map_pin: getValue('contact', 'contact_map_pin', 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246439'),
         contact_badge: getValue('contact', 'contact_badge', 'REACH OUT TO US'),
         contact_italic_text: getValue('contact', 'contact_italic_text', 'Sacred Arrival'),
         contact_instagram: getValue('contact', 'contact_instagram', '@thevedichimalayaretreat'),
