@@ -25,7 +25,7 @@ export default function Contact() {
   const contactHeading = getValue('contact', 'contact_heading', 'We Await Your');
   const contactSubheading = getValue('contact', 'contact_subheading', 'Prepare your pilgrimage plans beautifully. Our reservation crew is available 24/7 to orchestrate your luxury stay and pure Sattvik dining requirements.');
 
-  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246439');
+  const locationText = getValue('contact', 'contact_map_pin', settings.address || 'Village Dewar, Guptkashi, Kedarnath Route, Uttarakhand 246439').replace('246495', '246439');
   const contactEmailText = getValue('contact', 'contact_email', settings.email || 'stay@vedichimalaya.com');
 
   const contactHeroVisible = getValue('contact', 'contact_hero_visible', 'true') !== 'false';
