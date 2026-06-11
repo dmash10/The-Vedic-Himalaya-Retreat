@@ -1148,10 +1148,10 @@ export default function AdminPages() {
         weddings_gallery_heading: getValue('weddings', 'weddings_gallery_heading', 'Celebration'),
         weddings_gallery_heading_italic: getValue('weddings', 'weddings_gallery_heading_italic', 'Aesthetics'),
         weddings_gallery_desc: getValue('weddings', 'weddings_gallery_desc', 'A cinematic visual registry of tables decorated exclusively with wild mountain blooms and wooden embers.'),
-        weddings_cta_title: getValue('weddings', 'weddings_cta_title', 'Begin Your Sacred Journey'),
-        weddings_cta_desc: getValue('weddings', 'weddings_cta_desc', 'Request our wedding packages and discuss customized deodar-sky setups directly with our reservations supervisor.'),
+        weddings_cta_title: getValue('weddings', 'weddings_cta_title', 'Plan Your Destination Wedding'),
+        weddings_cta_desc: getValue('weddings', 'weddings_cta_desc', 'Contact our reservations team to check availability, request packages, or discuss private buyouts for your guests.'),
         weddings_cta_bg_image: getValue('weddings', 'weddings_cta_bg_image', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1800'),
-        weddings_cta_btn_text: getValue('weddings', 'weddings_cta_btn_text', 'Inquire for Events'),
+        weddings_cta_btn_text: getValue('weddings', 'weddings_cta_btn_text', 'Inquire for Packages'),
         weddings_cta_btn_link: getValue('weddings', 'weddings_cta_btn_link', '/contact'),
         weddings_cta_footnote: getValue('weddings', 'weddings_cta_footnote', 'Booking open for 2026/2027 Himalayan Seasons'),
       });
