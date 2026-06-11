@@ -239,6 +239,52 @@ export default function Dining() {
   const [activeMenuCategory, setActiveMenuCategory] = useState("all");
   const [activeVowDetail, setActiveVowDetail] = useState<string | null>("purity");
   const [slideIndex, setSlideIndex] = useState(0);
+  const [activeGarhwaliTab, setActiveGarhwaliTab] = useState("signature");
+
+  const garhwaliMenus = {
+    breakfast: {
+      title: "Himalayan Breakfast",
+      description: "Start your morning with warm, grounding traditional breakfasts prepared to elevate energy for high-altitude valley exploration.",
+      dishes: [
+        { name: "Mandua Roti with local butter", desc: "Stone-ground finger millet flatbreads cooked over open wood flame, served hot with fresh hand-churned salted mountain butter." },
+        { name: "Aloo ke Gutke", desc: "Crispy skin-on mountain potatoes stir-fried in mustard oil and tempered with the aromatic native Jakhiya herb (wild mustard)." },
+        { name: "Fresh curd", desc: "Naturally set, thick and creamy probiotic curd made from regional pasture-grazed A2 cow milk." },
+        { name: "Mountain tea", desc: "A steaming restorative infusion of crushed mountain ginger, fresh lemongrass, and wild tulsi leaves." }
+      ]
+    },
+    signature: {
+      title: "Garhwali Signature Dishes",
+      description: "Traditional dishes slow-cooked on stone hearths inside heavy black iron and clayware to retain nutrients.",
+      dishes: [
+        { name: "Kafuli", desc: "The legendary green gravy of Uttarakhand. Made with fresh spinach and fenugreek leaves, simmered in iron pots and thickened with organic rice paste." },
+        { name: "Chainsoo", desc: "A roasted, stone-ground black gram (urad dal) soup cooked slow in iron pans to develop deep earthy flavors." },
+        { name: "Phaanu", desc: "A rich, complex legume soufflé-stew made by blending split green soybeans, slow-cooked in traditional earthenware." },
+        { name: "Dubuk", desc: "A velvety, comforting preparation of local pulses (bhatt or gahat) ground and slow-simmered over gentle embers." },
+        { name: "Kandali Ka Saag", desc: "Wild-harvested stinging nettle greens, carefully de-thorned, boiled and sautéed with local spices and wild garlic." },
+        { name: "Traditional Village Thali", desc: "A complete Garhwali meal featuring Mandua Roti, Jhangora (barnyard millet), seasonal vegetables, dal, Bhang Ki Chutney, and local pickle." }
+      ]
+    },
+    delicacies: {
+      title: "Local Delicacies",
+      description: "Lesser-known rustic preparations made in remote mountain villages, celebrating wild-foraged ingredients.",
+      dishes: [
+        { name: "Thechwani", desc: "Mountain potatoes and white radish roots crushed (thechyaye) and sautéed in local oil, tempered with wild caraway." },
+        { name: "Gahat Dal", desc: "Medicinal horse gram lentils simmered for hours, highly regarded in Ayurveda for kidney health and winter warmth." },
+        { name: "Bhatt preparations", desc: "Black soybeans cooked in various traditional styles, from dry roasted snacks to thick iron-cooked gravies (Bhatt ki Churkani)." },
+        { name: "Seasonal mountain greens", desc: "Wild-foraged forest fiddlehead ferns (Lingra) or organic amaranth leaves sautéed with mountain red chilies." }
+      ]
+    },
+    sweet: {
+      title: "Sweet Endings",
+      description: "Sweets made with jaggery, local millets, and wild forest leaves, prepared for auspicious Himalayan celebrations.",
+      dishes: [
+        { name: "Jhangora Ki Kheer", desc: "Creamy pudding made of organic barnyard millet cooked slow in sweetened A2 milk, finished with cardamom and dry nuts." },
+        { name: "Arsa", desc: "Crisp festival treats made by grinding soaked red rice, mixing with jaggery syrup, and frying in fresh cow ghee." },
+        { name: "Rot", desc: "Thick sweet flatbreads made of wheat flour, fennel, and jaggery, baked directly over wood embers." },
+        { name: "Singori", desc: "A sweet delicacy of concentrated milk solids (khoya) flavored with coconut, wrapped in fresh green Maalu leaves." }
+      ]
+    }
+  };
 
   // Prevent flash of fallback text while CMS content loads
   if (loading && content.length === 0) return <PageLoader />;
@@ -722,6 +768,130 @@ export default function Dining() {
           </div>
         </section>
       )}
+
+      {/* AUTHENTIC GARHWALI CUISINE SECTION */}
+      <section className="py-24 bg-[#FAF9F5] border-t border-stone-200/40 relative overflow-hidden text-left">
+        <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[radial-gradient(#1B4C44_1.5px,transparent_1.5px)] [background-size:24px_24px] z-0" />
+        
+        <div className="container mx-auto px-5 md:px-10 max-w-6xl relative z-10">
+          <div className="text-center space-y-4 mb-16">
+            <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
+              INDIGENOUS HARVEST
+            </span>
+            <h2 className="text-4xl md:text-6xl font-serif text-[#1B4C44] font-light leading-tight">
+              Authentic Garhwali Cuisine
+            </h2>
+            <p className="text-xs md:text-sm text-[#2E3438]/70 max-w-xl mx-auto font-sans leading-relaxed">
+              "Recipes passed down through generations, prepared with locally sourced ingredients from the Himalayan valleys."
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            {/* Left Column: Interactive Tab Buttons & Dishes list */}
+            <div className="lg:col-span-7 space-y-8">
+              {/* Tab Navigation */}
+              <div className="flex flex-wrap gap-2 pb-2 border-b border-stone-200">
+                {Object.entries(garhwaliMenus).map(([key, menu]) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveGarhwaliTab(key)}
+                    className={`px-4 py-2.5 text-[9.5px] tracking-widest font-sans font-bold uppercase transition-all duration-300 border cursor-pointer ${
+                      activeGarhwaliTab === key
+                        ? "bg-[#1B4C44] text-[#FAF9F5] border-transparent shadow-sm rounded-none"
+                        : "bg-transparent text-[#2E3438]/60 border-[#D8CBB8]/30 hover:border-[#1B4C44]/40 hover:text-[#2E3438] rounded-none"
+                    }`}
+                  >
+                    {menu.title}
+                  </button>
+                ))}
+              </div>
+
+              {/* Selected Menu Description */}
+              <div className="space-y-6">
+                <p className="text-xs md:text-sm text-[#2E3438]/65 font-sans leading-relaxed italic font-light">
+                  {garhwaliMenus[activeGarhwaliTab as keyof typeof garhwaliMenus].description}
+                </p>
+
+                {/* Dishes list */}
+                <div className="space-y-6">
+                  {garhwaliMenus[activeGarhwaliTab as keyof typeof garhwaliMenus].dishes.map((dish, idx) => (
+                    <motion.div 
+                      key={dish.name}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.05 }}
+                      className="group py-2 border-b border-stone-200/60"
+                    >
+                      <h4 className="text-md md:text-lg font-serif font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-200">
+                        {dish.name}
+                      </h4>
+                      <p className="text-xs text-[#2E3438]/70 leading-relaxed font-sans mt-1.5 font-light text-justify">
+                        {dish.desc}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Traditional Himalayan Thali Showcase Card */}
+            <div className="lg:col-span-5 bg-white border border-[#D8CBB8]/60 p-6 md:p-8 shadow-[0_8px_30px_rgba(46,52,56,0.03)] space-y-6 rounded-none">
+              <div className="space-y-1">
+                <span className="text-[8px] md:text-[9px] tracking-[0.2em] font-extrabold text-[#A88C52] uppercase block font-mono">
+                  Chef's Special Recommendation
+                </span>
+                <h3 className="text-xl md:text-2xl font-serif text-[#1B4C44] font-normal leading-tight">
+                  Traditional Himalayan Thali
+                </h3>
+              </div>
+
+              <div className="w-full aspect-[4/3] overflow-hidden bg-stone-100 border border-[#D8CBB8]/30">
+                <img 
+                  src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" 
+                  alt="Traditional Himalayan Thali at The Vedic Himalaya Retreat" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="space-y-4 font-sans text-xs">
+                <div>
+                  <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-2">
+                    Farm-to-Table Ingredients
+                  </span>
+                  <div className="grid grid-cols-2 gap-2 text-[#2E3438]/80">
+                    <div className="flex items-center gap-1.5 font-light">
+                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
+                      <span>Mandua (Finger Millet)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 font-light">
+                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
+                      <span>Jhangora (Barnyard Millet)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 font-light">
+                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
+                      <span>Gahat (Horse Gram)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 font-light">
+                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
+                      <span>Fresh Mountain Vegetables</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-stone-150">
+                  <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-1">
+                    Seasonal Specials
+                  </span>
+                  <p className="text-[#2E3438]/70 font-light leading-relaxed">
+                    Featuring slow-cooked <span className="font-semibold text-[#1B4C44]">Kandali Ka Saag</span>, local festival recipes, and our chef's daily village-inspired menu.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 6. COMPLIMENTARY MENU: THE DAILY HARVEST OVERVIEWS (Line-Based Premium Design with Category Filters) */}
       {specialtyVisible && visibleSpecialtyDishes.length > 0 && (
