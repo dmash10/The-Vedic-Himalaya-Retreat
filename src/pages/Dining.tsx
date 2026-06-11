@@ -63,6 +63,7 @@ export default function Dining() {
   const diningRitualsVisible = getValue('dining', 'dining_rituals_visible', 'true') !== 'false';
   const diningPavilionVisible = getValue('dining', 'dining_pavilion_visible', 'true') !== 'false';
   const diningVowsVisible = getValue('dining', 'dining_vows_visible', 'true') !== 'false';
+  const diningGarhwaliVisible = getValue('dining', 'dining_garhwali_visible', 'true') !== 'false';
 
   // New Text Fields
   const diningHeroSubtitle = getValue('dining', 'dining_hero_subtitle', 'SATTVIK NOURISHMENT');
@@ -101,8 +102,8 @@ export default function Dining() {
   const diningSpecialtyDesc = getValue('dining', 'dining_specialty_desc', 'Slowly constructed dishes prepared fresh each sunrise and twilight, complementary to all resident guests of our hillside valleys.');
   
   const diningMenuTagline = getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING');
-  const diningMenuHeading1 = getValue('dining', 'dining_menu_heading1', 'The Restaurant');
-  const diningMenuHeading2 = getValue('dining', 'dining_menu_heading2', 'A la Carte');
+  const diningMenuHeading1 = getValue('dining', 'dining_menu_heading1', 'Taste of');
+  const diningMenuHeading2 = getValue('dining', 'dining_menu_heading2', 'Garhwal');
   const diningMenuDesc = getValue('dining', 'dining_menu_desc', 'Carefully curated items available for order. All dishes are prepared from seasonal ridge-grown crops and organic valley spices.');
   
   const diningFooterWarning = getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify our dining team 2 hours in advance for specific allergy or custom diets.');
@@ -235,56 +236,9 @@ export default function Dining() {
   }
   const visibleDiningPolaroids = diningPolaroids.filter((p: any) => p.is_visible !== false);
 
-  const [activeSpecialtyCategory, setActiveSpecialtyCategory] = useState("all");
   const [activeMenuCategory, setActiveMenuCategory] = useState("all");
   const [activeVowDetail, setActiveVowDetail] = useState<string | null>("purity");
   const [slideIndex, setSlideIndex] = useState(0);
-  const [activeGarhwaliTab, setActiveGarhwaliTab] = useState("signature");
-
-  const garhwaliMenus = {
-    breakfast: {
-      title: "Himalayan Breakfast",
-      description: "Start your morning with warm, grounding traditional breakfasts prepared to elevate energy for high-altitude valley exploration.",
-      dishes: [
-        { name: "Mandua Roti with local butter", desc: "Stone-ground finger millet flatbreads cooked over open wood flame, served hot with fresh hand-churned salted mountain butter." },
-        { name: "Aloo ke Gutke", desc: "Crispy skin-on mountain potatoes stir-fried in mustard oil and tempered with the aromatic native Jakhiya herb (wild mustard)." },
-        { name: "Fresh curd", desc: "Naturally set, thick and creamy probiotic curd made from regional pasture-grazed A2 cow milk." },
-        { name: "Mountain tea", desc: "A steaming restorative infusion of crushed mountain ginger, fresh lemongrass, and wild tulsi leaves." }
-      ]
-    },
-    signature: {
-      title: "Garhwali Signature Dishes",
-      description: "Traditional dishes slow-cooked on stone hearths inside heavy black iron and clayware to retain nutrients.",
-      dishes: [
-        { name: "Kafuli", desc: "The legendary green gravy of Uttarakhand. Made with fresh spinach and fenugreek leaves, simmered in iron pots and thickened with organic rice paste." },
-        { name: "Chainsoo", desc: "A roasted, stone-ground black gram (urad dal) soup cooked slow in iron pans to develop deep earthy flavors." },
-        { name: "Phaanu", desc: "A rich, complex legume soufflé-stew made by blending split green soybeans, slow-cooked in traditional earthenware." },
-        { name: "Dubuk", desc: "A velvety, comforting preparation of local pulses (bhatt or gahat) ground and slow-simmered over gentle embers." },
-        { name: "Kandali Ka Saag", desc: "Wild-harvested stinging nettle greens, carefully de-thorned, boiled and sautéed with local spices and wild garlic." },
-        { name: "Traditional Village Thali", desc: "A complete Garhwali meal featuring Mandua Roti, Jhangora (barnyard millet), seasonal vegetables, dal, Bhang Ki Chutney, and local pickle." }
-      ]
-    },
-    delicacies: {
-      title: "Local Delicacies",
-      description: "Lesser-known rustic preparations made in remote mountain villages, celebrating wild-foraged ingredients.",
-      dishes: [
-        { name: "Thechwani", desc: "Mountain potatoes and white radish roots crushed (thechyaye) and sautéed in local oil, tempered with wild caraway." },
-        { name: "Gahat Dal", desc: "Medicinal horse gram lentils simmered for hours, highly regarded in Ayurveda for kidney health and winter warmth." },
-        { name: "Bhatt preparations", desc: "Black soybeans cooked in various traditional styles, from dry roasted snacks to thick iron-cooked gravies (Bhatt ki Churkani)." },
-        { name: "Seasonal mountain greens", desc: "Wild-foraged forest fiddlehead ferns (Lingra) or organic amaranth leaves sautéed with mountain red chilies." }
-      ]
-    },
-    sweet: {
-      title: "Sweet Endings",
-      description: "Sweets made with jaggery, local millets, and wild forest leaves, prepared for auspicious Himalayan celebrations.",
-      dishes: [
-        { name: "Jhangora Ki Kheer", desc: "Creamy pudding made of organic barnyard millet cooked slow in sweetened A2 milk, finished with cardamom and dry nuts." },
-        { name: "Arsa", desc: "Crisp festival treats made by grinding soaked red rice, mixing with jaggery syrup, and frying in fresh cow ghee." },
-        { name: "Rot", desc: "Thick sweet flatbreads made of wheat flour, fennel, and jaggery, baked directly over wood embers." },
-        { name: "Singori", desc: "A sweet delicacy of concentrated milk solids (khoya) flavored with coconut, wrapped in fresh green Maalu leaves." }
-      ]
-    }
-  };
 
   // Prevent flash of fallback text while CMS content loads
   if (loading && content.length === 0) return <PageLoader />;
@@ -369,65 +323,122 @@ export default function Dining() {
   }
   const visibleDiningVows = diningVows.filter((v: any) => v.is_visible !== false);
 
-  const defaultPahadiDishes = [
-    {
-      id: "pahadi-thali",
-      category: "pahadi",
-      name: "Pahadi Thali",
-      description: "A traditional Himalayan platter featuring Mandua Roti, Gehat Dal, Phaanu, Aloo ke Gutke, Jhangora Kheer, and Bhang ki Chutney.",
-      price: 450,
-      is_visible: true,
-      image_url: null
-    },
-    {
-      id: "kafuli",
-      category: "pahadi",
-      name: "Kafuli",
-      description: "A nutrient-dense green preparation of fresh hillside spinach and fenugreek leaves, slow-cooked in iron pots and thickened with rice paste.",
-      price: 260,
-      is_visible: true,
-      image_url: null
-    },
-    {
-      id: "aloo-gutke",
-      category: "pahadi",
-      name: "Aloo ke Gutke",
-      description: "Mountain potatoes sautéed in mustard oil and tempered with wild mustard seeds (Jakhiya) and red chilies.",
-      price: 180,
-      is_visible: true,
-      image_url: null
-    },
-    {
-      id: "jhangora-kheer",
-      category: "pahadi",
-      name: "Jhangore ki Kheer",
-      description: "Local barnyard millet cooked slow in sweetened mountain milk, finished with local cardamom and almonds.",
-      price: 190,
-      is_visible: true,
-      image_url: null
-    },
-    {
-      id: "chainsoo",
-      category: "pahadi",
-      name: "Chainsoo",
-      description: "A rich, roasted black gram (urad dal) soup prepared in cast iron pans, tempered with mountain herbs.",
-      price: 240,
-      is_visible: true,
-      image_url: null
-    }
-  ];
+  let garhwaliDishes = [];
+  try {
+    garhwaliDishes = JSON.parse(getValue('dining', 'garhwali_dishes', '[]'));
+  } catch (e) {}
+  if (!garhwaliDishes || garhwaliDishes.length === 0) {
+    garhwaliDishes = [
+      { name: "Mandua Roti with local butter", desc: "Stone-ground finger millet flatbreads cooked over open wood flame, served hot with fresh hand-churned salted mountain butter.", category: "breakfast" },
+      { name: "Aloo ke Gutke", desc: "Crispy skin-on mountain potatoes stir-fried in mustard oil and tempered with the aromatic native Jakhiya herb (wild mustard).", category: "breakfast" },
+      { name: "Fresh curd", desc: "Naturally set, thick and creamy probiotic curd made from regional pasture-grazed A2 cow milk.", category: "breakfast" },
+      { name: "Mountain tea", desc: "A steaming restorative infusion of crushed mountain ginger, fresh lemongrass, and wild tulsi leaves.", category: "breakfast" },
+      { name: "Kafuli", desc: "The legendary green gravy of Uttarakhand. Made with fresh spinach and fenugreek leaves, simmered in iron pots and thickened with organic rice paste.", category: "signature" },
+      { name: "Chainsoo", desc: "A roasted, stone-ground black gram (urad dal) soup cooked slow in iron pans to develop deep earthy flavors.", category: "signature" },
+      { name: "Phaanu", desc: "A rich, complex legume soufflé-stew made by blending split green soybeans, slow-cooked in traditional earthenware.", category: "signature" },
+      { name: "Dubuk", desc: "A velvety, comforting preparation of local pulses (bhatt or gahat) ground and slow-simmered over gentle embers.", category: "signature" },
+      { name: "Kandali Ka Saag", desc: "Wild-harvested stinging nettle greens, carefully de-thorned, boiled and sautéed with local spices and wild garlic.", category: "signature" },
+      { name: "Traditional Village Thali", desc: "A complete Garhwali meal featuring Mandua Roti, Jhangora (barnyard millet), seasonal vegetables, dal, Bhang Ki Chutney, and local pickle.", category: "signature" },
+      { name: "Thechwani", desc: "Mountain potatoes and white radish roots crushed (thechyaye) and sautéed in local oil, tempered with wild caraway.", category: "delicacies" },
+      { name: "Gahat Dal", desc: "Medicinal horse gram lentils simmered for hours, highly regarded in Ayurveda for kidney health and winter warmth.", category: "delicacies" },
+      { name: "Bhatt preparations", desc: "Black soybeans cooked in various traditional styles, from dry roasted snacks to thick iron-cooked gravies (Bhatt ki Churkani).", category: "delicacies" },
+      { name: "Seasonal mountain greens", desc: "Wild-foraged forest fiddlehead ferns (Lingra) or organic amaranth leaves sautéed with mountain red chilies.", category: "delicacies" },
+      { name: "Jhangora Ki Kheer", desc: "Creamy pudding made of organic barnyard millet cooked slow in sweetened A2 milk, finished with cardamom and dry nuts.", category: "sweet" },
+      { name: "Arsa", desc: "Crisp festival treats made by grinding soaked red rice, mixing with jaggery syrup, and frying in fresh cow ghee.", category: "sweet" },
+      { name: "Rot", desc: "Thick sweet flatbreads made of wheat flour, fennel, and jaggery, baked directly over wood embers.", category: "sweet" },
+      { name: "Singori", desc: "A sweet delicacy of concentrated milk solids (khoya) flavored with coconut, wrapped in fresh green Maalu leaves.", category: "sweet" }
+    ];
+  }
 
-  const allMenuItems = [...menuItems];
-  defaultPahadiDishes.forEach(defaultItem => {
-    if (!allMenuItems.some(item => item.name === defaultItem.name)) {
-      allMenuItems.push(defaultItem);
+  const thaliSubtitle = getValue('dining', 'dining_garhwali_thali_subtitle', "Chef's Special Recommendation");
+  const thaliTitle = getValue('dining', 'dining_garhwali_thali_title', "Traditional Himalayan Thali");
+  const thaliImage = getValue('dining', 'dining_garhwali_thali_image', "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800");
+  const thaliIngredientsLabel = getValue('dining', 'dining_garhwali_thali_ingredients_label', "Farm-to-Table Ingredients");
+  
+  let thaliIngredients = [];
+  try {
+    thaliIngredients = JSON.parse(getValue('dining', 'dining_garhwali_thali_ingredients', '[]'));
+  } catch (e) {}
+  if (!thaliIngredients || thaliIngredients.length === 0) {
+    thaliIngredients = [
+      "Mandua (Finger Millet)",
+      "Jhangora (Barnyard Millet)",
+      "Gahat (Horse Gram)",
+      "Fresh Mountain Vegetables"
+    ];
+  }
+
+  const thaliSpecialsLabel = getValue('dining', 'dining_garhwali_thali_specials_label', "Seasonal Specials");
+  const thaliSpecialsDesc = getValue('dining', 'dining_garhwali_thali_specials_desc', "Featuring slow-cooked Kandali Ka Saag, local festival recipes, and our chef's daily village-inspired menu.");
+
+  const tabTitleBreakfast = getValue('dining', 'dining_garhwali_breakfast_title', 'Himalayan Breakfast');
+  const tabTitleSignature = getValue('dining', 'dining_garhwali_signature_title', 'Garhwali Signatures');
+  const tabTitleGrainsStews = getValue('dining', 'dining_garhwali_grains_stews_title', 'Grains & Claypot Stews');
+  const tabTitleMain = getValue('dining', 'dining_garhwali_main_title', 'Main Course');
+  const tabTitleSweet = getValue('dining', 'dining_garhwali_sweet_title', 'Local Desserts');
+  const tabTitleElixirs = getValue('dining', 'dining_garhwali_elixirs_title', 'Purifying Elixirs');
+
+  const getUnifiedCategory = (cat: string) => {
+    const c = (cat || '').toLowerCase().trim();
+    if (c === 'breakfast') return 'breakfast';
+    if (c === 'signature' || c === 'pahadi' || c === 'gahwal' || c === 'garhwali') return 'signature';
+    if (c === 'grains' || c === 'stews' || c === 'grains-stews' || c === 'soup' || c === 'salad') return 'grains-stews';
+    if (c === 'main' || c === 'main course') return 'main';
+    if (c === 'sweet' || c === 'dessert') return 'sweet';
+    if (c === 'elixirs' || c === 'beverage' || c === 'beverages') return 'elixirs';
+    return 'signature';
+  };
+
+  const mergedDishes: any[] = [];
+  
+  specialtyDishes.forEach((d: any) => {
+    if (d.is_visible !== false) {
+      mergedDishes.push({
+        name: d.title || d.name,
+        desc: d.desc || d.description,
+        price: d.price || 0,
+        category: getUnifiedCategory(d.category || 'grains-stews'),
+        tag: d.energy || d.attribute || 'Specialty',
+        origin: d.origin || 'Local Ridge Farms'
+      });
     }
   });
 
-  const visibleMenuItems = allMenuItems.filter(item => item.is_visible !== false);
-  const filteredMenuItems = activeMenuCategory === "all"
-    ? visibleMenuItems
-    : visibleMenuItems.filter(item => item.category === activeMenuCategory);
+  garhwaliDishes.forEach((d: any) => {
+    if (d.is_visible !== false) {
+      mergedDishes.push({
+        name: d.name || d.title,
+        desc: d.desc || d.description,
+        price: d.price || 0,
+        category: getUnifiedCategory(d.category || 'signature'),
+        tag: d.tag || d.attribute || 'Garhwali',
+        origin: d.origin || 'Garhwal Highlands'
+      });
+    }
+  });
+
+  menuItems.forEach((d: any) => {
+    if (d.is_visible !== false) {
+      mergedDishes.push({
+        name: d.name,
+        desc: d.description,
+        price: d.price || 0,
+        category: getUnifiedCategory(d.category),
+        tag: d.tag || 'A la Carte',
+        origin: d.origin || 'Sourced daily'
+      });
+    }
+  });
+
+  const uniqueDishesMap = new Map();
+  mergedDishes.forEach((d: any) => {
+    uniqueDishesMap.set(d.name.toLowerCase().trim(), d);
+  });
+  const uniqueDishes = Array.from(uniqueDishesMap.values());
+
+  const filteredDishes = activeMenuCategory === "all"
+    ? uniqueDishes
+    : uniqueDishes.filter((dish: any) => dish.category === activeMenuCategory);
 
   return (
     <div className="bg-[#FAF9F5] text-[#2E3438] pb-24 min-h-screen font-sans antialiased overflow-x-hidden">
@@ -770,286 +781,157 @@ export default function Dining() {
       )}
 
       {/* AUTHENTIC GARHWALI CUISINE SECTION */}
-      <section className="py-24 bg-[#FAF9F5] border-t border-stone-200/40 relative overflow-hidden text-left">
-        <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[radial-gradient(#1B4C44_1.5px,transparent_1.5px)] [background-size:24px_24px] z-0" />
-        
-        <div className="container mx-auto px-5 md:px-10 max-w-6xl relative z-10">
-          <div className="text-center space-y-4 mb-16">
-            <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-              INDIGENOUS HARVEST
-            </span>
-            <h2 className="text-4xl md:text-6xl font-serif text-[#1B4C44] font-light leading-tight">
-              Authentic Garhwali Cuisine
-            </h2>
-            <p className="text-xs md:text-sm text-[#2E3438]/70 max-w-xl mx-auto font-sans leading-relaxed">
-              "Recipes passed down through generations, prepared with locally sourced ingredients from the Himalayan valleys."
-            </p>
-          </div>
+      {diningGarhwaliVisible && (
+        <section id="dining-menu" className="py-24 bg-[#FAF9F5] border-t border-stone-200/40 relative overflow-hidden text-left">
+          <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[radial-gradient(#1B4C44_1.5px,transparent_1.5px)] [background-size:24px_24px] z-0" />
+          
+          <div className="container mx-auto px-5 md:px-10 max-w-6xl relative z-10">
+            <div className="text-center space-y-4 mb-16">
+              <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
+                {diningMenuTagline}
+              </span>
+              <h2 className="text-4xl md:text-6xl font-serif text-[#1B4C44] font-light leading-tight">
+                {diningMenuHeading1} <span className="italic font-normal font-serif">{diningMenuHeading2}</span>
+              </h2>
+              <p className="text-xs md:text-sm text-[#2E3438]/70 max-w-xl mx-auto font-sans leading-relaxed">
+                {diningMenuDesc}
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            {/* Left Column: Interactive Tab Buttons & Dishes list */}
-            <div className="lg:col-span-7 space-y-8">
-              {/* Tab Navigation */}
-              <div className="flex flex-wrap gap-2 pb-2 border-b border-stone-200">
-                {Object.entries(garhwaliMenus).map(([key, menu]) => (
-                  <button
-                    key={key}
-                    onClick={() => setActiveGarhwaliTab(key)}
-                    className={`px-4 py-2.5 text-[9.5px] tracking-widest font-sans font-bold uppercase transition-all duration-300 border cursor-pointer ${
-                      activeGarhwaliTab === key
-                        ? "bg-[#1B4C44] text-[#FAF9F5] border-transparent shadow-sm rounded-none"
-                        : "bg-transparent text-[#2E3438]/60 border-[#D8CBB8]/30 hover:border-[#1B4C44]/40 hover:text-[#2E3438] rounded-none"
-                    }`}
+            {/* Menu Tabs Navigation */}
+            <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3 mb-12 border-b border-stone-200 pb-6">
+              {[
+                { id: "all", label: "All Dishes" },
+                { id: "breakfast", label: tabTitleBreakfast },
+                { id: "signature", label: tabTitleSignature },
+                { id: "grains-stews", label: tabTitleGrainsStews },
+                { id: "main", label: tabTitleMain },
+                { id: "sweet", label: tabTitleSweet },
+                { id: "elixirs", label: tabTitleElixirs }
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveMenuCategory(cat.id)}
+                  className={`px-4 py-2.5 text-[9.5px] tracking-widest font-sans font-bold uppercase transition-all duration-300 border cursor-pointer ${
+                    activeMenuCategory === cat.id
+                      ? "bg-[#1B4C44] text-[#FAF9F5] border-transparent shadow-sm rounded-none"
+                      : "bg-transparent text-[#2E3438]/60 border-[#D8CBB8]/30 hover:border-[#1B4C44]/40 hover:text-[#2E3438] rounded-none"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+              {/* Left Column: Menu Items List */}
+              <div className="lg:col-span-7 space-y-6">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeMenuCategory}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-6"
                   >
-                    {menu.title}
-                  </button>
-                ))}
-              </div>
+                    {filteredDishes.map((dish: any, idx: number) => (
+                      <div key={idx} className="group py-3.5 border-b border-stone-200/50">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                          <h4 className="text-md md:text-lg font-serif font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
+                            {dish.name}
+                          </h4>
+                          {/* Clean dotted line connector */}
+                          <span className="hidden sm:inline-block flex-grow mx-4 border-b border-dotted border-stone-300" />
+                          <span className="text-xs font-mono font-bold text-[#A88C52]">
+                            {dish.price > 0 ? `₹${dish.price}` : 'Complimentary'}
+                          </span>
+                        </div>
 
-              {/* Selected Menu Description */}
-              <div className="space-y-6">
-                <p className="text-xs md:text-sm text-[#2E3438]/65 font-sans leading-relaxed italic font-light">
-                  {garhwaliMenus[activeGarhwaliTab as keyof typeof garhwaliMenus].description}
-                </p>
+                        {/* Tags block */}
+                        <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-2.5 text-[7.5px] font-bold uppercase tracking-widest text-[#2E3438]/45 font-mono">
+                          {dish.origin && (
+                            <span className="inline-flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#1B4C44]"></span>
+                              {dish.origin}
+                            </span>
+                          )}
+                          {dish.tag && (
+                            <span className="inline-flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#A88C52]"></span>
+                              {dish.tag}
+                            </span>
+                          )}
+                        </div>
 
-                {/* Dishes list */}
-                <div className="space-y-6">
-                  {garhwaliMenus[activeGarhwaliTab as keyof typeof garhwaliMenus].dishes.map((dish, idx) => (
-                    <motion.div 
-                      key={dish.name}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      className="group py-2 border-b border-stone-200/60"
-                    >
-                      <h4 className="text-md md:text-lg font-serif font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-200">
-                        {dish.name}
-                      </h4>
-                      <p className="text-xs text-[#2E3438]/70 leading-relaxed font-sans mt-1.5 font-light text-justify">
-                        {dish.desc}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Traditional Himalayan Thali Showcase Card */}
-            <div className="lg:col-span-5 bg-white border border-[#D8CBB8]/60 p-6 md:p-8 shadow-[0_8px_30px_rgba(46,52,56,0.03)] space-y-6 rounded-none">
-              <div className="space-y-1">
-                <span className="text-[8px] md:text-[9px] tracking-[0.2em] font-extrabold text-[#A88C52] uppercase block font-mono">
-                  Chef's Special Recommendation
-                </span>
-                <h3 className="text-xl md:text-2xl font-serif text-[#1B4C44] font-normal leading-tight">
-                  Traditional Himalayan Thali
-                </h3>
-              </div>
-
-              <div className="w-full aspect-[4/3] overflow-hidden bg-stone-100 border border-[#D8CBB8]/30">
-                <img 
-                  src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" 
-                  alt="Traditional Himalayan Thali at The Vedic Himalaya Retreat" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              <div className="space-y-4 font-sans text-xs">
-                <div>
-                  <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-2">
-                    Farm-to-Table Ingredients
-                  </span>
-                  <div className="grid grid-cols-2 gap-2 text-[#2E3438]/80">
-                    <div className="flex items-center gap-1.5 font-light">
-                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
-                      <span>Mandua (Finger Millet)</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 font-light">
-                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
-                      <span>Jhangora (Barnyard Millet)</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 font-light">
-                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
-                      <span>Gahat (Horse Gram)</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 font-light">
-                      <span className="w-1.5 h-1.5 bg-[#A88C52]" />
-                      <span>Fresh Mountain Vegetables</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-stone-150">
-                  <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-1">
-                    Seasonal Specials
-                  </span>
-                  <p className="text-[#2E3438]/70 font-light leading-relaxed">
-                    Featuring slow-cooked <span className="font-semibold text-[#1B4C44]">Kandali Ka Saag</span>, local festival recipes, and our chef's daily village-inspired menu.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. COMPLIMENTARY MENU: THE DAILY HARVEST OVERVIEWS (Line-Based Premium Design with Category Filters) */}
-      {specialtyVisible && visibleSpecialtyDishes.length > 0 && (
-        <section id="provisions-menu" className="container mx-auto px-5 md:px-10 max-w-4xl pt-16 pb-12">
-          <div className="text-center space-y-3 mb-10">
-            <span className="font-script text-2xl md:text-3.5xl text-[#A88C52]">
-              {diningSpecialtyTagline}
-            </span>
-            <h2 className="text-3xl md:text-5xl font-serif text-[#1B4C44] font-light">
-              {diningSpecialtyHeading1} <span className="italic font-normal font-serif">{diningSpecialtyHeading2}</span>
-            </h2>
-            <p className="text-xs md:text-sm text-[#2E3438]/60 max-w-md mx-auto leading-relaxed">
-              {diningSpecialtyDesc}
-            </p>
-          </div>
-
-          {/* Premium Animated Menu Filter controls */}
-          <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3 mb-12 border-b border-stone-200 pb-6">
-            {[
-              { id: "all", label: "All Items" },
-              { id: "grains", label: "Restorative Grains" },
-              { id: "stews", label: "Claypot Stews" },
-              { id: "elixirs", label: "Purifying Elixirs" }
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveSpecialtyCategory(cat.id)}
-                className={`px-4 py-2 text-[10px] md:text-xs font-bold font-sans uppercase tracking-[0.15em] rounded-full transition-all cursor-pointer ${
-                  activeSpecialtyCategory === cat.id
-                    ? "bg-[#1B4C44] text-white shadow-xs"
-                    : "bg-[#EFEAE1]/30 hover:bg-[#EFEAE1]/80 text-[#2E3438]/80"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Traditional Paper Menu Line Design */}
-          <div className="grid grid-cols-1 gap-12">
-            <AnimatePresence mode="wait">
-              <motion.div 
-                key={activeSpecialtyCategory}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-8"
-              >
-                {visibleSpecialtyDishes
-                  .filter((dish: any) => activeSpecialtyCategory === "all" || dish.category === activeSpecialtyCategory)
-                  .map((dish: any, i: number) => (
-                    <div key={i} className="group py-3.5 border-b border-stone-200/50">
-                      
-                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                        <h4 className="text-md md:text-xl font-serif text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
-                          <span className="text-xs font-mono tracking-wider text-[#A88C52] mr-3">{dish.num}.</span>
-                          {dish.title}
-                        </h4>
-                        
-                        {/* Clean dotted line connector */}
-                        <span className="hidden sm:inline-block flex-grow mx-4 border-b border-dotted border-stone-300" />
-                        
-                        <span className="text-[8px] md:text-[9.5px] font-extrabold uppercase tracking-widest text-[#A88C52] font-mono whitespace-nowrap mt-1 sm:mt-0">
-                          {dish.energy}
-                        </span>
+                        {dish.desc && (
+                          <p className="text-xs md:text-sm text-[#2E3438]/75 leading-relaxed font-sans mt-3 text-pretty font-light text-justify text-left">
+                            {dish.desc}
+                          </p>
+                        )}
                       </div>
+                    ))}
 
-                      {/* Tags block */}
-                      <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-2.5 text-[7.5px] font-bold uppercase tracking-widest text-[#2E3438]/45 font-mono">
-                        <span className="inline-flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1B4C44]"></span>
-                          {dish.origin}
-                        </span>
-                        <span className="inline-flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#A88C52]"></span>
-                          {dish.attribute}
-                        </span>
+                    {filteredDishes.length === 0 && (
+                      <div className="text-center py-10 font-sans text-stone-400 text-sm">
+                        No dishes available under this category.
                       </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-                      {/* Description */}
-                      <p className="text-xs md:text-sm text-[#2E3438]/75 leading-relaxed font-sans mt-3 text-pretty font-light text-justify text-left">
-                        {dish.desc}
-                      </p>
+              {/* Right Column: Traditional Himalayan Thali Showcase Card */}
+              <div className="lg:col-span-5 bg-white border border-[#D8CBB8]/60 p-6 md:p-8 shadow-[0_8px_30px_rgba(46,52,56,0.03)] space-y-6 rounded-none">
+                <div className="space-y-1">
+                  <span className="text-[8px] md:text-[9px] tracking-[0.2em] font-extrabold text-[#A88C52] uppercase block font-mono">
+                    {thaliSubtitle}
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-serif text-[#1B4C44] font-normal leading-tight">
+                    {thaliTitle}
+                  </h3>
+                </div>
 
-                    </div>
-                ))}
-                {visibleSpecialtyDishes.filter((dish: any) => activeSpecialtyCategory === "all" || dish.category === activeSpecialtyCategory).length === 0 && (
-                  <div className="text-center py-10 font-sans text-stone-400 text-sm">
-                    No items under this category.
+                {thaliImage && (
+                  <div className="w-full aspect-[4/3] overflow-hidden bg-stone-100 border border-[#D8CBB8]/30">
+                    <img 
+                      src={thaliImage} 
+                      alt={thaliTitle} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
                 )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </section>
-      )}
 
-      {/* 7. FULL RESTAURANT MENU SECTION (from menu_items table via useMenu) */}
-      {visibleMenuItems.length > 0 && (
-        <section id="restaurant-menu" className="container mx-auto px-5 md:px-10 max-w-4xl pt-16 pb-24 border-t border-stone-200/50">
-          <div className="text-center space-y-3 mb-10">
-            <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase text-[#A88C52] block font-mono">
-              {diningMenuTagline}
-            </span>
-            <h2 className="text-3xl md:text-5xl font-serif text-[#1B4C44] font-light">
-              {diningMenuHeading1} <span className="italic font-normal font-serif">{diningMenuHeading2}</span>
-            </h2>
-            <p className="text-xs md:text-sm text-[#2E3438]/60 max-w-md mx-auto leading-relaxed">
-              {diningMenuDesc}
-            </p>
-          </div>
+                <div className="space-y-4 font-sans text-xs">
+                  <div>
+                    <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-2">
+                      {thaliIngredientsLabel}
+                    </span>
+                    <div className="grid grid-cols-2 gap-2 text-[#2E3438]/80">
+                      {thaliIngredients.map((ing: string, i: number) => (
+                        <div key={i} className="flex items-center gap-1.5 font-light">
+                          <span className="w-1.5 h-1.5 bg-[#A88C52]" />
+                          <span>{ing}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Categories for full menu */}
-          <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3 mb-12 border-b border-stone-200 pb-6">
-            {[
-              { id: "all", label: "All Items" },
-              { id: "breakfast", label: "Breakfast" },
-              { id: "soup", label: "Soups" },
-              { id: "salad", label: "Salads & Starters" },
-              { id: "main", label: "Main Course" },
-              { id: "pahadi", label: "Pahadi Cuisine" },
-              { id: "dessert", label: "Dessert" },
-              { id: "beverage", label: "Beverages" }
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveMenuCategory(cat.id)}
-                className={`px-4 py-2 text-[10px] md:text-xs font-bold font-sans uppercase tracking-[0.15em] rounded-full transition-all cursor-pointer ${
-                  activeMenuCategory === cat.id
-                    ? "bg-[#1B4C44] text-white shadow-xs"
-                    : "bg-[#EFEAE1]/30 hover:bg-[#EFEAE1]/80 text-[#2E3438]/80"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Menu Items Grid/List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-            {filteredMenuItems.map((item) => (
-              <div key={item.id} className="group py-3 border-b border-stone-200/40 text-left">
-                <h4 className="text-sm md:text-base font-heading font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
-                  {item.name}
-                </h4>
-                {item.description && (
-                  <p className="text-[11.5px] md:text-xs text-[#2E3438]/70 leading-relaxed font-sans mt-1.5 font-light">
-                    {item.description}
-                  </p>
-                )}
+                  {thaliSpecialsDesc && (
+                    <div className="pt-4 border-t border-stone-150">
+                      <span className="text-[10px] font-bold text-[#1B4C44] uppercase tracking-wider block mb-1">
+                        {thaliSpecialsLabel}
+                      </span>
+                      <p className="text-[#2E3438]/70 font-light leading-relaxed">
+                        {thaliSpecialsDesc}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            ))}
-            {filteredMenuItems.length === 0 && (
-              <div className="col-span-2 text-center py-10 font-sans text-stone-400 text-xs">
-                No items available in this category.
-              </div>
-            )}
+
+            </div>
           </div>
         </section>
       )}

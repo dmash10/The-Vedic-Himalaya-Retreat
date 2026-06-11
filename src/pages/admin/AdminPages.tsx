@@ -129,6 +129,27 @@ const DEFAULT_DINING_VOWS = [
   { id: "vow2", icon: "Flame", title: "Wood Hearth Embers", desc: "Cooking inside raw local clays and regional cast iron vessels.", expanded_desc: "We completely reject standard industrial pans, baking solely on ancestral heated flagstones and slow-simmering inside native clays.", is_visible: true }
 ];
 
+const DEFAULT_GARHWALI_DISHES = [
+  { name: "Mandua Roti with local butter", desc: "Stone-ground finger millet flatbreads cooked over open wood flame, served hot with fresh hand-churned salted mountain butter.", category: "breakfast", is_visible: true },
+  { name: "Aloo ke Gutke", desc: "Crispy skin-on mountain potatoes stir-fried in mustard oil and tempered with the aromatic native Jakhiya herb (wild mustard).", category: "breakfast", is_visible: true },
+  { name: "Fresh curd", desc: "Naturally set, thick and creamy probiotic curd made from regional pasture-grazed A2 cow milk.", category: "breakfast", is_visible: true },
+  { name: "Mountain tea", desc: "A steaming restorative infusion of crushed mountain ginger, fresh lemongrass, and wild tulsi leaves.", category: "breakfast", is_visible: true },
+  { name: "Kafuli", desc: "The legendary green gravy of Uttarakhand. Made with fresh spinach and fenugreek leaves, simmered in iron pots and thickened with organic rice paste.", category: "signature", is_visible: true },
+  { name: "Chainsoo", desc: "A roasted, stone-ground black gram (urad dal) soup cooked slow in iron pans to develop deep earthy flavors.", category: "signature", is_visible: true },
+  { name: "Phaanu", desc: "A rich, complex legume soufflé-stew made by blending split green soybeans, slow-cooked in traditional earthenware.", category: "signature", is_visible: true },
+  { name: "Dubuk", desc: "A velvety, comforting preparation of local pulses (bhatt or gahat) ground and slow-simmered over gentle embers.", category: "signature", is_visible: true },
+  { name: "Kandali Ka Saag", desc: "Wild-harvested stinging nettle greens, carefully de-thorned, boiled and sautéed with local spices and wild garlic.", category: "signature", is_visible: true },
+  { name: "Traditional Village Thali", desc: "A complete Garhwali meal featuring Mandua Roti, Jhangora (barnyard millet), seasonal vegetables, dal, Bhang Ki Chutney, and local pickle.", category: "signature", is_visible: true },
+  { name: "Thechwani", desc: "Mountain potatoes and white radish roots crushed (thechyaye) and sautéed in local oil, tempered with wild caraway.", category: "delicacies", is_visible: true },
+  { name: "Gahat Dal", desc: "Medicinal horse gram lentils simmered for hours, highly regarded in Ayurveda for kidney health and winter warmth.", category: "delicacies", is_visible: true },
+  { name: "Bhatt preparations", desc: "Black soybeans cooked in various traditional styles, from dry roasted snacks to thick iron-cooked gravies (Bhatt ki Churkani).", category: "delicacies", is_visible: true },
+  { name: "Seasonal mountain greens", desc: "Wild-foraged forest fiddlehead ferns (Lingra) or organic amaranth leaves sautéed with mountain red chilies.", category: "delicacies", is_visible: true },
+  { name: "Jhangora Ki Kheer", desc: "Creamy pudding made of organic barnyard millet cooked slow in sweetened A2 milk, finished with cardamom and dry nuts.", category: "sweet", is_visible: true },
+  { name: "Arsa", desc: "Crisp festival treats made by grinding soaked red rice, mixing with jaggery syrup, and frying in fresh cow ghee.", category: "sweet", is_visible: true },
+  { name: "Rot", desc: "Thick sweet flatbreads made of wheat flour, fennel, and jaggery, baked directly over wood embers.", category: "sweet", is_visible: true },
+  { name: "Singori", desc: "A sweet delicacy of concentrated milk solids (khoya) flavored with coconut, wrapped in fresh green Maalu leaves.", category: "sweet", is_visible: true }
+];
+
 const DEFAULT_WEDDINGS_POLAROIDS = [
   { image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800", title: "Sacred Canopy", desc: "VOWS UNDER MAJESTIC SUMMITS", is_visible: true },
   { image: "https://images.unsplash.com/photo-1519225495810-7512c322a3e6?auto=format&fit=crop&q=80&w=800", title: "Candlelit Glass", desc: "GLOWING EVENING SALON RECEPTIONS", is_visible: true },
@@ -882,6 +903,7 @@ export default function AdminPages() {
   const [amenities, setAmenities] = useState<any[]>([]);
   const [pillars, setPillars] = useState<any[]>([]);
   const [specialtyDishes, setSpecialtyDishes] = useState<any[]>([]);
+  const [garhwaliDishes, setGarhwaliDishes] = useState<any[]>([]);
   const [alchemies, setAlchemies] = useState<any[]>([]);
   const [diningPolaroids, setDiningPolaroids] = useState<any[]>([]);
   const [dailyRituals, setDailyRituals] = useState<any[]>([]);
@@ -908,7 +930,7 @@ export default function AdminPages() {
   useEffect(() => {
     if (initialLoadRef.current) return;
     setHasUnsavedChanges(true);
-  }, [formFields, visibilities, polaroids, offerings, amenities, pillars, specialtyDishes, alchemies, diningPolaroids, dailyRituals, diningVows, roomsAmenities, roomsReviews, weddingPolaroids, weddingsGallery, venues, weddingOfferings, experienceSlides, experiencePhotos, nearbySlides, treksDirectory, nearbyPhotos, galleryImages, marqueeSlogans, whyChooseItems, bentoGalleryItems, socialProofReviews, contactFaqs]);
+  }, [formFields, visibilities, polaroids, offerings, amenities, pillars, specialtyDishes, garhwaliDishes, alchemies, diningPolaroids, dailyRituals, diningVows, roomsAmenities, roomsReviews, weddingPolaroids, weddingsGallery, venues, weddingOfferings, experienceSlides, experiencePhotos, nearbySlides, treksDirectory, nearbyPhotos, galleryImages, marqueeSlogans, whyChooseItems, bentoGalleryItems, socialProofReviews, contactFaqs]);
 
   // Load effect
   useEffect(() => {
@@ -926,7 +948,7 @@ export default function AdminPages() {
       'specialty_visible', 'alchemy_visible', 'dining_polaroids_visible', 'weddings_hero_visible',
       'weddings_story_visible', 'weddings_polaroids_visible', 'weddings_venues_visible', 'weddings_offerings_visible', 'weddings_gallery_visible',
       'experiences_tour_visible', 'experiences_gallery_visible', 'nearby_tour_visible', 'nearby_treks_visible', 'nearby_gallery_visible',
-      'dining_hero_visible', 'dining_philosophy_visible', 'dining_rituals_visible', 'dining_pavilion_visible', 'dining_vows_visible',
+      'dining_hero_visible', 'dining_philosophy_visible', 'dining_rituals_visible', 'dining_pavilion_visible', 'dining_vows_visible', 'dining_garhwali_visible',
       'rooms_hero_visible', 'gallery_hero_visible', 'contact_hero_visible', 'contact_form_visible', 'booking_visible'
     ];
     const loadedVis: any = {};
@@ -1087,16 +1109,49 @@ export default function AdminPages() {
         dining_specialty_heading2: getValue('dining', 'dining_specialty_heading2', 'Meal Spread'),
         dining_specialty_desc: getValue('dining', 'dining_specialty_desc', 'Slowly constructed dishes prepared fresh each sunrise and twilight, complementary to all resident guests of our hillside valleys.'),
         dining_menu_tagline: getValue('dining', 'dining_menu_tagline', 'PUBLIC DINING'),
-        dining_menu_heading1: getValue('dining', 'dining_menu_heading1', 'The Restaurant'),
-        dining_menu_heading2: getValue('dining', 'dining_menu_heading2', 'A la Carte'),
+        dining_menu_heading1: getValue('dining', 'dining_menu_heading1', 'Taste of'),
+        dining_menu_heading2: getValue('dining', 'dining_menu_heading2', 'Garhwal'),
         dining_menu_desc: getValue('dining', 'dining_menu_desc', 'Carefully curated items available for order. All dishes are prepared from seasonal ridge-grown crops and organic valley spices.'),
         dining_footer_warning: getValue('dining', 'dining_footer_warning', 'Meals are crafted specifically to zero out village farm wastes. Please notify our dining team 2 hours in advance for specific allergy or custom diets.'),
+        
+        // Garhwali cuisine titles and Thali card settings
+        dining_garhwali_tagline: getValue('dining', 'dining_garhwali_tagline', 'INDIGENOUS HARVEST'),
+        dining_garhwali_heading: getValue('dining', 'dining_garhwali_heading', 'Authentic Garhwali Cuisine'),
+        dining_garhwali_desc: getValue('dining', 'dining_garhwali_desc', '"Recipes passed down through generations, prepared with locally sourced ingredients from the Himalayan valleys."'),
+        dining_garhwali_breakfast_title: getValue('dining', 'dining_garhwali_breakfast_title', 'Himalayan Breakfast'),
+        dining_garhwali_signature_title: getValue('dining', 'dining_garhwali_signature_title', 'Garhwali Signatures'),
+        dining_garhwali_grains_stews_title: getValue('dining', 'dining_garhwali_grains_stews_title', 'Grains & Claypot Stews'),
+        dining_garhwali_main_title: getValue('dining', 'dining_garhwali_main_title', 'Main Course'),
+        dining_garhwali_sweet_title: getValue('dining', 'dining_garhwali_sweet_title', 'Local Desserts'),
+        dining_garhwali_elixirs_title: getValue('dining', 'dining_garhwali_elixirs_title', 'Purifying Elixirs'),
+        
+        dining_garhwali_thali_subtitle: getValue('dining', 'dining_garhwali_thali_subtitle', "Chef's Special Recommendation"),
+        dining_garhwali_thali_title: getValue('dining', 'dining_garhwali_thali_title', "Traditional Himalayan Thali"),
+        dining_garhwali_thali_image: getValue('dining', 'dining_garhwali_thali_image', "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800"),
+        dining_garhwali_thali_ingredients_label: getValue('dining', 'dining_garhwali_thali_ingredients_label', "Farm-to-Table Ingredients"),
+        dining_garhwali_thali_specials_label: getValue('dining', 'dining_garhwali_thali_specials_label', "Seasonal Specials"),
+        dining_garhwali_thali_specials_desc: getValue('dining', 'dining_garhwali_thali_specials_desc', "Featuring slow-cooked Kandali Ka Saag, local festival recipes, and our chef's daily village-inspired menu."),
+        dining_garhwali_thali_ingredients: (() => {
+          let str = getValue('dining', 'dining_garhwali_thali_ingredients', '[]');
+          let arr = [];
+          try { arr = JSON.parse(str); } catch {}
+          if (!arr || arr.length === 0) {
+            arr = ["Mandua (Finger Millet)", "Jhangora (Barnyard Millet)", "Gahat (Horse Gram)", "Fresh Mountain Vegetables"];
+          }
+          return arr.join(', ');
+        })()
       });
       try {
         const val = JSON.parse(getValue('dining', 'specialty_dishes', '[]'));
         setSpecialtyDishes(Array.isArray(val) && val.length > 0 ? val : DEFAULT_DINING_SPECIALTIES);
       } catch {
         setSpecialtyDishes(DEFAULT_DINING_SPECIALTIES);
+      }
+      try {
+        const val = JSON.parse(getValue('dining', 'garhwali_dishes', '[]'));
+        setGarhwaliDishes(Array.isArray(val) && val.length > 0 ? val : DEFAULT_GARHWALI_DISHES);
+      } catch {
+        setGarhwaliDishes(DEFAULT_GARHWALI_DISHES);
       }
       try {
         const val = JSON.parse(getValue('dining', 'kitchen_alchemies', '[]'));
@@ -1442,10 +1497,20 @@ export default function AdminPages() {
       updates.push({ section: 'about', key: 'pillars', value: JSON.stringify(pillars) });
     } else if (activePageId === 'dining') {
       updates.push({ section: 'dining', key: 'specialty_dishes', value: JSON.stringify(specialtyDishes) });
+      updates.push({ section: 'dining', key: 'garhwali_dishes', value: JSON.stringify(garhwaliDishes) });
       updates.push({ section: 'dining', key: 'kitchen_alchemies', value: JSON.stringify(alchemies) });
       updates.push({ section: 'dining', key: 'dining_polaroids', value: JSON.stringify(diningPolaroids) });
       updates.push({ section: 'dining', key: 'daily_rituals', value: JSON.stringify(dailyRituals) });
       updates.push({ section: 'dining', key: 'dining_vows', value: JSON.stringify(diningVows) });
+      
+      let thaliIngsStr = formFields.dining_garhwali_thali_ingredients || '';
+      let thaliIngsArr = thaliIngsStr.split(',').map((s: string) => s.trim()).filter(Boolean);
+      const existingIdx = updates.findIndex(u => u.section === 'dining' && u.key === 'dining_garhwali_thali_ingredients');
+      if (existingIdx !== -1) {
+        updates[existingIdx].value = JSON.stringify(thaliIngsArr);
+      } else {
+        updates.push({ section: 'dining', key: 'dining_garhwali_thali_ingredients', value: JSON.stringify(thaliIngsArr) });
+      }
     } else if (activePageId === 'weddings') {
       updates.push({ section: 'weddings', key: 'weddings_polaroids', value: JSON.stringify(weddingPolaroids) });
       updates.push({ section: 'weddings', key: 'weddings_gallery', value: JSON.stringify(weddingsGallery) });
@@ -2344,51 +2409,94 @@ export default function AdminPages() {
                       </div>
                     )}
 
-                    <SectionToggle label="Specialty Dishes Section" checked={visibilities.specialty_visible} onChange={(v) => setVisibilities((prev: any) => ({ ...prev, specialty_visible: v }))} />
-                    {visibilities.specialty_visible && (
+                    <SectionToggle
+                      label="Taste of Garhwal Menu Section"
+                      checked={visibilities.dining_garhwali_visible}
+                      onChange={(v) => setVisibilities((prev: any) => ({ ...prev, dining_garhwali_visible: v }))}
+                      description="Toggle the main unified regional Garhwali cuisine and public dining menu"
+                    />
+                    {visibilities.dining_garhwali_visible && (
                       <div className="space-y-4">
                         <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
-                          <TextInputGroup label="Menu Tagline" icon={Type} value={formFields.dining_specialty_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_specialty_tagline: v }))} />
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Taste of Garhwal Menu Headings</div>
+                          <TextInputGroup label="Menu Tagline" icon={Type} value={formFields.dining_menu_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_tagline: v }))} />
                           <div className="grid grid-cols-2 gap-4">
-                            <TextInputGroup label="Menu Heading 1" icon={Type} value={formFields.dining_specialty_heading1} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_specialty_heading1: v }))} />
-                            <TextInputGroup label="Menu Heading 2 (Italic)" icon={Type} value={formFields.dining_specialty_heading2} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_specialty_heading2: v }))} />
+                            <TextInputGroup label="Menu Heading 1" icon={Type} value={formFields.dining_menu_heading1} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_heading1: v }))} />
+                            <TextInputGroup label="Menu Heading 2 (Italic)" icon={Type} value={formFields.dining_menu_heading2} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_heading2: v }))} />
                           </div>
-                          <TextAreaGroup label="Description" value={formFields.dining_specialty_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_specialty_desc: v }))} rows={2} />
+                          <TextAreaGroup label="Menu Description" value={formFields.dining_menu_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_desc: v }))} rows={2} />
                         </div>
+
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Category Tab Titles (Frontend Labels)</div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <TextInputGroup label="Himalayan Breakfast Tab" icon={Type} value={formFields.dining_garhwali_breakfast_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_breakfast_title: v }))} />
+                            <TextInputGroup label="Garhwali Signatures Tab" icon={Type} value={formFields.dining_garhwali_signature_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_signature_title: v }))} />
+                            <TextInputGroup label="Grains & Stews Tab" icon={Type} value={formFields.dining_garhwali_grains_stews_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_grains_stews_title: v }))} />
+                            <TextInputGroup label="Main Course Tab" icon={Type} value={formFields.dining_garhwali_main_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_main_title: v }))} />
+                            <TextInputGroup label="Local Desserts Tab" icon={Type} value={formFields.dining_garhwali_sweet_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_sweet_title: v }))} />
+                            <TextInputGroup label="Purifying Elixirs Tab" icon={Type} value={formFields.dining_garhwali_elixirs_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_elixirs_title: v }))} />
+                          </div>
+                        </div>
+
                         <ListEditor
-                          title="Specialty Dishes"
-                          items={specialtyDishes}
-                          onChange={setSpecialtyDishes}
-                          createDefaultItem={() => ({ num: '01', title: 'New Dish', desc: 'Description', energy: 'Sattvik', origin: 'Garden', attribute: 'Restorative', category: 'grains', is_visible: true })}
-                          getItemLabel={(item) => item.title}
+                          title="Taste of Garhwal Dishes Catalog"
+                          items={garhwaliDishes}
+                          onChange={setGarhwaliDishes}
+                          createDefaultItem={() => ({ name: 'New Dish', desc: 'Description', category: 'signature', price: 0, tag: 'Garhwali', origin: 'Garhwal Highlands', is_visible: true })}
+                          getItemLabel={(item) => `${item.name} (${item.category})`}
                           renderItemEditor={(item, idx, updateField) => (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                              <TextInputGroup label="Num" icon={Tag} value={item.num} onChange={(v) => updateField('num', v)} />
-                              <TextInputGroup label="Dish Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                              <TextAreaGroup label="Description" value={item.desc} onChange={(v) => updateField('desc', v)} />
-                              <div className="grid grid-cols-2 gap-2">
-                                <TextInputGroup label="Energy Attributes" icon={Sparkles} value={item.energy} onChange={(v) => updateField('energy', v)} />
-                                <TextInputGroup label="Origin field" icon={MapPin} value={item.origin} onChange={(v) => updateField('origin', v)} />
+                              <TextInputGroup label="Dish Name" icon={Type} value={item.name} onChange={(v) => updateField('name', v)} />
+                              <div className="text-left w-full">
+                                <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Tab</label>
+                                <select value={item.category || 'signature'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
+                                  <option value="breakfast" className="bg-[#0D1412]">Himalayan Breakfast</option>
+                                  <option value="signature" className="bg-[#0D1412]">Garhwali Signatures</option>
+                                  <option value="grains-stews" className="bg-[#0D1412]">Grains & Claypot Stews</option>
+                                  <option value="main" className="bg-[#0D1412]">Main Course</option>
+                                  <option value="sweet" className="bg-[#0D1412]">Local Desserts</option>
+                                  <option value="elixirs" className="bg-[#0D1412]">Purifying Elixirs & Beverages</option>
+                                </select>
                               </div>
-                              <TextInputGroup label="Beneficial Attribute" icon={Plus} value={item.attribute} onChange={(v) => updateField('attribute', v)} />
-                              <TextInputGroup label="Category (grains/stews/elixirs)" icon={Tag} value={item.category} onChange={(v) => updateField('category', v)} />
+                              <TextAreaGroup label="Description" value={item.desc} onChange={(v) => updateField('desc', v)} />
+                              <div className="space-y-4">
+                                <TextInputGroup label="Price (0 for Complimentary)" icon={Tag} value={String(item.price)} onChange={(v) => updateField('price', parseInt(v) || 0)} />
+                                <TextInputGroup label="Tag (e.g. Sattvik, High Protein)" icon={Sparkles} value={item.tag} onChange={(v) => updateField('tag', v)} />
+                                <TextInputGroup label="Origin (e.g. High Ridge Farms)" icon={MapPin} value={item.origin} onChange={(v) => updateField('origin', v)} />
+                              </div>
                             </div>
                           )}
                           onSave={handleSavePage}
                           isSaving={isSaving !== null}
                         />
+
+                        {/* Chef's Special Thali Showcase Card Editor */}
+                        <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
+                          <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Thali Recommendation Card (Right Showcase)</div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="md:col-span-2 space-y-4">
+                              <TextInputGroup label="Thali Subtitle Tag" icon={Type} value={formFields.dining_garhwali_thali_subtitle} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_subtitle: v }))} />
+                              <TextInputGroup label="Thali Card Title" icon={Type} value={formFields.dining_garhwali_thali_title} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_title: v }))} />
+                              <TextInputGroup label="Ingredients Label" icon={Type} value={formFields.dining_garhwali_thali_ingredients_label} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_ingredients_label: v }))} />
+                              <TextInputGroup label="Ingredients List (Comma separated)" icon={Tag} value={formFields.dining_garhwali_thali_ingredients} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_ingredients: v }))} />
+                              <div className="grid grid-cols-2 gap-4">
+                                <TextInputGroup label="Specials Label" icon={Type} value={formFields.dining_garhwali_thali_specials_label} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_specials_label: v }))} />
+                                <TextInputGroup label="Specials Description text" icon={Type} value={formFields.dining_garhwali_thali_specials_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_specials_desc: v }))} />
+                              </div>
+                            </div>
+                            <div className="flex flex-col justify-start">
+                              <ImageUploader 
+                                label="Thali Photo Image" 
+                                currentImage={formFields.dining_garhwali_thali_image} 
+                                onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, dining_garhwali_thali_image: p }))} 
+                                aspectRatio="aspect-[4/3] w-full" 
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
-
-                    <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
-                      <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">A la Carte Menu Headings</div>
-                      <TextInputGroup label="A la Carte Tagline" icon={Type} value={formFields.dining_menu_tagline} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_tagline: v }))} />
-                      <div className="grid grid-cols-2 gap-4">
-                        <TextInputGroup label="A la Carte Heading 1" icon={Type} value={formFields.dining_menu_heading1} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_heading1: v }))} />
-                        <TextInputGroup label="A la Carte Heading 2 (Italic)" icon={Type} value={formFields.dining_menu_heading2} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_heading2: v }))} />
-                      </div>
-                      <TextAreaGroup label="A la Carte Description" value={formFields.dining_menu_desc} onChange={(v) => setFormFields((prev: any) => ({ ...prev, dining_menu_desc: v }))} rows={2} />
-                    </div>
 
                     <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
                       <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Footer Notice Warning</div>
