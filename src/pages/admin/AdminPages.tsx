@@ -1368,79 +1368,86 @@ export default function AdminPages() {
 
   // Bulk Upload State & Methods
   const [isBulkUploading, setIsBulkUploading] = useState<string | null>(null);
+  const [bulkUploadProgress, setBulkUploadProgress] = useState<{
+    total: number;
+    current: number;
+    fileName: string;
+  }>({ total: 0, current: 0, fileName: '' });
 
   const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetList: 'gallery' | 'experience' | 'nearby') => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsBulkUploading(targetList);
+    setBulkUploadProgress({
+      total: files.length,
+      current: 0,
+      fileName: files[0].name,
+    });
     let successCount = 0;
 
-    if (targetList === 'gallery') {
-      const newImages = [...galleryImages];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (!file.type.startsWith('image/')) continue;
-        try {
-          const result = await uploadImageDirect(file);
-          if (result?.success && result.url) {
-            newImages.push({
-              src: result.url,
-              category: 'Peaks & Vibe',
-              title: file.name.split('.')[0] || 'New Photo',
-              desc: 'Uploaded via bulk catalog',
-              is_visible: true
-            });
-            successCount++;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!file.type.startsWith('image/')) continue;
+
+      setBulkUploadProgress({
+        total: files.length,
+        current: i,
+        fileName: file.name,
+      });
+
+      try {
+        const result = await uploadImageDirect(file);
+        if (result?.success && result.url) {
+          successCount++;
+          setHasUnsavedChanges(true);
+
+          if (targetList === 'gallery') {
+            setGalleryImages(prev => [
+              ...prev,
+              {
+                src: result.url,
+                category: 'Mountain Views',
+                title: file.name.split('.')[0] || 'New Photo',
+                desc: 'Uploaded via bulk catalog',
+                is_visible: true
+              }
+            ]);
+          } else if (targetList === 'experience') {
+            setExperiencePhotos(prev => [
+              ...prev,
+              {
+                url: result.url,
+                caption: file.name.split('.')[0] || 'New Scene',
+                is_visible: true
+              }
+            ]);
+          } else if (targetList === 'nearby') {
+            setNearbyPhotos(prev => [
+              ...prev,
+              {
+                url: result.url,
+                caption: file.name.split('.')[0] || 'New Scene',
+                is_visible: true
+              }
+            ]);
           }
-        } catch (err) {
-          console.error("Bulk upload error:", err);
         }
+      } catch (err) {
+        console.error("Bulk upload error:", err);
       }
-      setGalleryImages(newImages);
-    } else if (targetList === 'experience') {
-      const newPhotos = [...experiencePhotos];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (!file.type.startsWith('image/')) continue;
-        try {
-          const result = await uploadImageDirect(file);
-          if (result?.success && result.url) {
-            newPhotos.push({
-              url: result.url,
-              caption: file.name.split('.')[0] || 'New Scene',
-              is_visible: true
-            });
-            successCount++;
-          }
-        } catch (err) {
-          console.error("Bulk upload error:", err);
-        }
-      }
-      setExperiencePhotos(newPhotos);
-    } else if (targetList === 'nearby') {
-      const newPhotos = [...nearbyPhotos];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (!file.type.startsWith('image/')) continue;
-        try {
-          const result = await uploadImageDirect(file);
-          if (result?.success && result.url) {
-            newPhotos.push({
-              url: result.url,
-              caption: file.name.split('.')[0] || 'New Scene',
-              is_visible: true
-            });
-            successCount++;
-          }
-        } catch (err) {
-          console.error("Bulk upload error:", err);
-        }
-      }
-      setNearbyPhotos(newPhotos);
     }
 
+    setBulkUploadProgress(prev => ({
+      ...prev,
+      current: files.length,
+      fileName: 'All uploads completed!',
+    }));
+
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     setIsBulkUploading(null);
+    setBulkUploadProgress({ total: 0, current: 0, fileName: '' });
     toast.success(`Successfully uploaded ${successCount} files to the collection!`);
   };
 
@@ -2884,6 +2891,27 @@ export default function AdminPages() {
                           </label>
                         </div>
 
+                        {isBulkUploading === 'experience' && bulkUploadProgress.total > 0 && (
+                          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 space-y-2.5 text-left">
+                            <div className="flex items-center justify-between text-xs text-[#E2E8F0] font-medium">
+                              <span className="flex items-center gap-1.5 text-[#C4A665]">
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                {bulkUploadProgress.current === bulkUploadProgress.total ? 'Wrapping up uploads...' : `Uploading image ${bulkUploadProgress.current + 1} of ${bulkUploadProgress.total}...`}
+                              </span>
+                              <span className="font-mono text-[#8E9F96]">{Math.round((bulkUploadProgress.current / bulkUploadProgress.total) * 100)}%</span>
+                            </div>
+                            <div className="w-full bg-[#1A2E2A] rounded-full h-1.5 overflow-hidden">
+                              <div 
+                                className="bg-[#C4A665] h-1.5 rounded-full transition-all duration-300" 
+                                style={{ width: `${(bulkUploadProgress.current / bulkUploadProgress.total) * 100}%` }}
+                              />
+                            </div>
+                            <div className="text-[10px] text-[#8E9F96] truncate">
+                              Current: {bulkUploadProgress.fileName}
+                            </div>
+                          </div>
+                        )}
+
                         <ListEditor
                           title="Experience Photo Scenes"
                           items={experiencePhotos}
@@ -3110,6 +3138,27 @@ export default function AdminPages() {
                           </label>
                         </div>
 
+                        {isBulkUploading === 'nearby' && bulkUploadProgress.total > 0 && (
+                          <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 space-y-2.5 text-left">
+                            <div className="flex items-center justify-between text-xs text-[#E2E8F0] font-medium">
+                              <span className="flex items-center gap-1.5 text-[#C4A665]">
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                {bulkUploadProgress.current === bulkUploadProgress.total ? 'Wrapping up uploads...' : `Uploading image ${bulkUploadProgress.current + 1} of ${bulkUploadProgress.total}...`}
+                              </span>
+                              <span className="font-mono text-[#8E9F96]">{Math.round((bulkUploadProgress.current / bulkUploadProgress.total) * 100)}%</span>
+                            </div>
+                            <div className="w-full bg-[#1A2E2A] rounded-full h-1.5 overflow-hidden">
+                              <div 
+                                className="bg-[#C4A665] h-1.5 rounded-full transition-all duration-300" 
+                                style={{ width: `${(bulkUploadProgress.current / bulkUploadProgress.total) * 100}%` }}
+                              />
+                            </div>
+                            <div className="text-[10px] text-[#8E9F96] truncate">
+                              Current: {bulkUploadProgress.fileName}
+                            </div>
+                          </div>
+                        )}
+
                         <ListEditor
                           title="Nearby Photo Scenes"
                           items={nearbyPhotos}
@@ -3183,6 +3232,27 @@ export default function AdminPages() {
                         <input type="file" multiple accept="image/*" disabled={isBulkUploading === 'gallery'} onChange={(e) => handleBulkUpload(e, 'gallery')} className="hidden" />
                       </label>
                     </div>
+
+                    {isBulkUploading === 'gallery' && bulkUploadProgress.total > 0 && (
+                      <div className="bg-[#0D1412] border border-[#1C2E2A] rounded-xl p-4 space-y-2.5 text-left">
+                        <div className="flex items-center justify-between text-xs text-[#E2E8F0] font-medium">
+                          <span className="flex items-center gap-1.5 text-[#C4A665]">
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            {bulkUploadProgress.current === bulkUploadProgress.total ? 'Wrapping up uploads...' : `Uploading image ${bulkUploadProgress.current + 1} of ${bulkUploadProgress.total}...`}
+                          </span>
+                          <span className="font-mono text-[#8E9F96]">{Math.round((bulkUploadProgress.current / bulkUploadProgress.total) * 100)}%</span>
+                        </div>
+                        <div className="w-full bg-[#1A2E2A] rounded-full h-1.5 overflow-hidden">
+                          <div 
+                            className="bg-[#C4A665] h-1.5 rounded-full transition-all duration-300" 
+                            style={{ width: `${(bulkUploadProgress.current / bulkUploadProgress.total) * 100}%` }}
+                          />
+                        </div>
+                        <div className="text-[10px] text-[#8E9F96] truncate">
+                          Current: {bulkUploadProgress.fileName}
+                        </div>
+                      </div>
+                    )}
 
                     <ListEditor
                       title="Bento Masonry Gallery Images"
