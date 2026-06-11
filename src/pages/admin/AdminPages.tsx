@@ -1148,6 +1148,9 @@ export default function AdminPages() {
         weddings_gallery_heading: getValue('weddings', 'weddings_gallery_heading', 'Celebration'),
         weddings_gallery_heading_italic: getValue('weddings', 'weddings_gallery_heading_italic', 'Aesthetics'),
         weddings_gallery_desc: getValue('weddings', 'weddings_gallery_desc', 'A cinematic visual registry of tables decorated exclusively with wild mountain blooms and wooden embers.'),
+        weddings_cta_title: getValue('weddings', 'weddings_cta_title', 'Begin Your Sacred Journey'),
+        weddings_cta_desc: getValue('weddings', 'weddings_cta_desc', 'Request our wedding packages and discuss customized deodar-sky setups directly with our reservations supervisor.'),
+        weddings_cta_bg_image: getValue('weddings', 'weddings_cta_bg_image', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1800'),
         weddings_cta_btn_text: getValue('weddings', 'weddings_cta_btn_text', 'Inquire for Events'),
         weddings_cta_btn_link: getValue('weddings', 'weddings_cta_btn_link', '/contact'),
         weddings_cta_footnote: getValue('weddings', 'weddings_cta_footnote', 'Booking open for 2026/2027 Himalayan Seasons'),
@@ -2622,11 +2625,25 @@ export default function AdminPages() {
 
                     <div className="p-4 bg-white/5 rounded-xl border border-[#1C2E2A] space-y-4">
                       <div className="text-xs font-bold text-[#C4A665] uppercase tracking-wider mb-2">Bottom CTA Section</div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <TextInputGroup label="CTA Button Text" icon={Type} value={formFields.weddings_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_text: v }))} />
-                        <TextInputGroup label="CTA Button Link" icon={LinkIcon} value={formFields.weddings_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_link: v }))} />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2 space-y-4">
+                          <TextInputGroup label="CTA Title" icon={Type} value={formFields.weddings_cta_title || ''} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_title: v }))} />
+                          <TextAreaGroup label="CTA Description" value={formFields.weddings_cta_desc || ''} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_desc: v }))} rows={2} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <TextInputGroup label="CTA Button Text" icon={Type} value={formFields.weddings_cta_btn_text} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_text: v }))} />
+                            <TextInputGroup label="CTA Button Link" icon={LinkIcon} value={formFields.weddings_cta_btn_link} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_btn_link: v }))} />
+                          </div>
+                          <TextInputGroup label="Footnote Text" icon={Type} value={formFields.weddings_cta_footnote} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_footnote: v }))} />
+                        </div>
+                        <div className="flex flex-col justify-start">
+                          <ImageUploader 
+                            label="CTA Background Image" 
+                            currentImage={formFields.weddings_cta_bg_image || ''} 
+                            onImageChange={(p) => setFormFields((prev: any) => ({ ...prev, weddings_cta_bg_image: p }))} 
+                            aspectRatio="aspect-video w-full" 
+                          />
+                        </div>
                       </div>
-                      <TextInputGroup label="Footnote Text" icon={Type} value={formFields.weddings_cta_footnote} onChange={(v) => setFormFields((prev: any) => ({ ...prev, weddings_cta_footnote: v }))} />
                     </div>
 
                     <SectionSaveButton onSave={handleSavePage} isSaving={isSaving !== null} label="Save Weddings Changes" />
