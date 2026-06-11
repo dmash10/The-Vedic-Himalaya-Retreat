@@ -51,12 +51,12 @@ export function CookieConsent() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.98 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-[340px] md:max-w-[380px] bg-[#FAF9F5] border border-[#D8CBB8]/70 text-[#2E3438] rounded-xl p-4 sm:p-5 shadow-[0_12px_36px_rgba(46,52,56,0.12)] z-50 font-sans"
+          className="fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-[340px] md:max-w-[360px] bg-[#FAF9F5] border border-[#D8CBB8]/70 text-[#2E3438] rounded-none p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] z-50 font-sans"
         >
           {!showPreferences ? (
             <div className="space-y-3.5">
               <div className="flex items-start gap-2.5 text-left">
-                <div className="p-1.5 bg-[#FAF9F5] rounded-lg border border-[#D8CBB8]/40 text-[#A88C52] shrink-0 mt-0.5">
+                <div className="p-1.5 bg-[#FAF9F5] rounded-none border border-[#D8CBB8]/40 text-[#A88C52] shrink-0 mt-0.5">
                   <Cookie size={16} strokeWidth={1.5} />
                 </div>
                 <div className="space-y-0.5">
@@ -70,24 +70,24 @@ export function CookieConsent() {
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-2 pt-1 text-[9.5px] tracking-widest font-mono font-bold uppercase">
+              <div className="flex gap-2 pt-1 text-[9.5px] tracking-widest font-sans font-bold uppercase">
                 <button
                   onClick={handleAcceptAll}
-                  className="flex-1 bg-[#1B4C44] hover:bg-[#A88C52] text-white py-2 rounded-lg border border-transparent transition-colors duration-300 cursor-pointer text-center flex items-center justify-center gap-1"
+                  className="flex-1 bg-[#1B4C44] hover:bg-[#A88C52] text-white py-2.5 rounded-none border border-transparent transition-colors duration-300 cursor-pointer text-center flex items-center justify-center gap-1.5"
                 >
                   <Check size={11} strokeWidth={2.5} />
                   <span>Accept All</span>
                 </button>
                 <button
                   onClick={() => setShowPreferences(true)}
-                  className="flex-1 bg-white hover:bg-stone-50 text-[#2E3438] py-2 rounded-lg border border-stone-300 transition-colors cursor-pointer text-center flex items-center justify-center gap-1"
+                  className="flex-1 bg-white hover:bg-stone-50 text-[#2E3438] py-2.5 rounded-none border border-stone-300 transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5"
                 >
                   <Settings size={11} strokeWidth={1.5} />
                   <span>Customize</span>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between pt-1 border-t border-stone-200/60 text-[9px] font-mono text-stone-500 uppercase tracking-widest select-none">
+              <div className="flex items-center justify-between pt-2 border-t border-stone-200/60 text-[9px] font-sans text-stone-500 uppercase tracking-wider select-none">
                 <div className="flex items-center gap-1.5">
                   <Link to="/privacy-policy" className="hover:text-[#A88C52] transition-colors underline">Privacy Policy</Link>
                   <span>•</span>
@@ -104,7 +104,7 @@ export function CookieConsent() {
           ) : (
             <div className="space-y-3.5">
               <div className="flex items-center justify-between border-b border-stone-200 pb-2">
-                <h4 className="text-[10px] font-mono font-bold tracking-widest uppercase text-[#1B4C44] flex items-center gap-1">
+                <h4 className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#1B4C44] flex items-center gap-1.5">
                   <Settings size={12} className="text-[#A88C52]" />
                   <span>Preference Settings</span>
                 </h4>
@@ -118,25 +118,25 @@ export function CookieConsent() {
 
               <div className="space-y-2 text-left">
                 {/* Category 1 */}
-                <div className="flex items-center justify-between p-2 rounded-lg bg-stone-50 border border-stone-100">
+                <div className="flex items-center justify-between p-2.5 rounded-none bg-stone-50 border border-stone-100">
                   <div>
                     <span className="text-[10.5px] font-bold text-[#1B4C44] uppercase tracking-wider block">Essential Session</span>
-                    <span className="text-[9.5px] text-stone-500 leading-none block">Reservation & payment access logs.</span>
+                    <span className="text-[9.5px] text-stone-500 leading-none block font-light">Reservation & payment access logs.</span>
                   </div>
-                  <div className="text-[8.5px] font-mono tracking-widest bg-stone-200/50 text-stone-500 px-1.5 py-0.5 rounded uppercase font-bold select-none">
+                  <div className="text-[8.5px] font-sans tracking-wider bg-stone-200/50 text-stone-500 px-1.5 py-0.5 rounded-none uppercase font-bold select-none">
                     MANDATORY
                   </div>
                 </div>
 
                 {/* Category 2 */}
-                <div className="flex items-center justify-between p-2 rounded-lg bg-stone-50 border border-stone-100">
+                <div className="flex items-center justify-between p-2.5 rounded-none bg-stone-50 border border-stone-100">
                   <div>
                     <span className="text-[10.5px] font-bold text-[#1B4C44] uppercase tracking-wider block">Analytics</span>
-                    <span className="text-[9.5px] text-stone-500 leading-none block">Anonymized page counts and guides statistics.</span>
+                    <span className="text-[9.5px] text-stone-500 leading-none block font-light">Anonymized page counts and guides statistics.</span>
                   </div>
                   <button
                     onClick={() => setConsent(c => ({ ...c, analytics: !c.analytics }))}
-                    className={`px-2 py-1 rounded font-mono text-[8.5px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
+                    className={`px-2.5 py-1 rounded-none font-sans text-[8.5px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
                       consent.analytics 
                         ? "bg-[#1B4C44] border-transparent text-white" 
                         : "bg-white border-stone-300 text-stone-400 hover:bg-stone-50"
@@ -147,14 +147,14 @@ export function CookieConsent() {
                 </div>
 
                 {/* Category 3 */}
-                <div className="flex items-center justify-between p-2 rounded-lg bg-stone-50 border border-stone-100">
+                <div className="flex items-center justify-between p-2.5 rounded-none bg-stone-50 border border-stone-100">
                   <div>
                     <span className="text-[10.5px] font-bold text-[#1B4C44] uppercase tracking-wider block">Functional Memories</span>
-                    <span className="text-[9.5px] text-stone-500 leading-none block">Preserves specific theme parameters.</span>
+                    <span className="text-[9.5px] text-stone-500 leading-none block font-light">Preserves specific theme parameters.</span>
                   </div>
                   <button
                     onClick={() => setConsent(c => ({ ...c, functional: !c.functional }))}
-                    className={`px-2 py-1 rounded font-mono text-[8.5px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
+                    className={`px-2.5 py-1 rounded-none font-sans text-[8.5px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
                       consent.functional 
                         ? "bg-[#1B4C44] border-transparent text-white" 
                         : "bg-white border-stone-300 text-stone-400 hover:bg-stone-50"
@@ -166,16 +166,16 @@ export function CookieConsent() {
               </div>
 
               {/* Preference controls bottom */}
-              <div className="flex items-center gap-2 text-[9px] font-mono font-bold uppercase pt-1">
+              <div className="flex items-center gap-2 text-[9px] font-sans font-bold uppercase pt-1">
                 <button
                   onClick={() => setShowPreferences(false)}
-                  className="flex-1 bg-white hover:bg-stone-50 text-[#2E3438] py-2 rounded-lg border border-stone-300 transition-colors cursor-pointer text-center"
+                  className="flex-1 bg-white hover:bg-stone-50 text-[#2E3438] py-2.5 rounded-none border border-stone-300 transition-colors cursor-pointer text-center"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSavePreferences}
-                  className="flex-1 bg-[#1B4C44] hover:bg-[#A88C52] text-white py-2 rounded-lg border border-transparent transition-colors cursor-pointer text-center"
+                  className="flex-1 bg-[#1B4C44] hover:bg-[#A88C52] text-white py-2.5 rounded-none border border-transparent transition-colors cursor-pointer text-center"
                 >
                   Save Choices
                 </button>

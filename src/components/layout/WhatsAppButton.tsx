@@ -13,12 +13,6 @@ export function WhatsAppButton() {
     const dismissed = sessionStorage.getItem("whatsapp_prompt_dismissed");
     if (dismissed === "true") {
       setIsDismissed(true);
-    } else {
-      // Show the message bubble after a premium 4-second delay to catch user interest
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 4000);
-      return () => clearTimeout(timer);
     }
   }, []);
 
