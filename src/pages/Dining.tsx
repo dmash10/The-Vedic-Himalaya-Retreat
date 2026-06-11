@@ -148,6 +148,15 @@ export default function Dining() {
         origin: "Retreat Herbal Garden",
         attribute: "Active Peak Warmth",
         category: "elixirs"
+      },
+      {
+        num: "05",
+        title: "Kali Dal Ka Chaunsa",
+        desc: "A traditional high-altitude Garhwali dish of dry-roasted and stone-ground black urad lentils, slow-cooked in seasoned iron pans, and tempered with the aromatic native herb Jakhiya.",
+        energy: "High Protein & Warming",
+        origin: "Garhwal Highlands",
+        attribute: "Ancestral Iron Pot",
+        category: "grains"
       }
     ];
   }
@@ -314,7 +323,62 @@ export default function Dining() {
   }
   const visibleDiningVows = diningVows.filter((v: any) => v.is_visible !== false);
 
-  const visibleMenuItems = menuItems.filter(item => item.is_visible !== false);
+  const defaultPahadiDishes = [
+    {
+      id: "pahadi-thali",
+      category: "pahadi",
+      name: "Pahadi Thali",
+      description: "A traditional Himalayan platter featuring Mandua Roti, Gehat Dal, Phaanu, Aloo ke Gutke, Jhangora Kheer, and Bhang ki Chutney.",
+      price: 450,
+      is_visible: true,
+      image_url: null
+    },
+    {
+      id: "kafuli",
+      category: "pahadi",
+      name: "Kafuli",
+      description: "A nutrient-dense green preparation of fresh hillside spinach and fenugreek leaves, slow-cooked in iron pots and thickened with rice paste.",
+      price: 260,
+      is_visible: true,
+      image_url: null
+    },
+    {
+      id: "aloo-gutke",
+      category: "pahadi",
+      name: "Aloo ke Gutke",
+      description: "Mountain potatoes sautéed in mustard oil and tempered with wild mustard seeds (Jakhiya) and red chilies.",
+      price: 180,
+      is_visible: true,
+      image_url: null
+    },
+    {
+      id: "jhangora-kheer",
+      category: "pahadi",
+      name: "Jhangore ki Kheer",
+      description: "Local barnyard millet cooked slow in sweetened mountain milk, finished with local cardamom and almonds.",
+      price: 190,
+      is_visible: true,
+      image_url: null
+    },
+    {
+      id: "chainsoo",
+      category: "pahadi",
+      name: "Chainsoo",
+      description: "A rich, roasted black gram (urad dal) soup prepared in cast iron pans, tempered with mountain herbs.",
+      price: 240,
+      is_visible: true,
+      image_url: null
+    }
+  ];
+
+  const allMenuItems = [...menuItems];
+  defaultPahadiDishes.forEach(defaultItem => {
+    if (!allMenuItems.some(item => item.name === defaultItem.name)) {
+      allMenuItems.push(defaultItem);
+    }
+  });
+
+  const visibleMenuItems = allMenuItems.filter(item => item.is_visible !== false);
   const filteredMenuItems = activeMenuCategory === "all"
     ? visibleMenuItems
     : visibleMenuItems.filter(item => item.category === activeMenuCategory);
@@ -779,6 +843,7 @@ export default function Dining() {
               { id: "soup", label: "Soups" },
               { id: "salad", label: "Salads & Starters" },
               { id: "main", label: "Main Course" },
+              { id: "pahadi", label: "Pahadi Cuisine" },
               { id: "dessert", label: "Dessert" },
               { id: "beverage", label: "Beverages" }
             ].map((cat) => (
@@ -800,15 +865,9 @@ export default function Dining() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
             {filteredMenuItems.map((item) => (
               <div key={item.id} className="group py-3 border-b border-stone-200/40 text-left">
-                <div className="flex items-baseline justify-between gap-2">
-                  <h4 className="text-sm md:text-base font-heading font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
-                    {item.name}
-                  </h4>
-                  <span className="flex-grow border-b border-dotted border-stone-300 mx-2" />
-                  <span className="text-xs md:text-sm font-sans font-bold text-[#A88C52]">
-                    ₹{item.price}
-                  </span>
-                </div>
+                <h4 className="text-sm md:text-base font-heading font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
+                  {item.name}
+                </h4>
                 {item.description && (
                   <p className="text-[11.5px] md:text-xs text-[#2E3438]/70 leading-relaxed font-sans mt-1.5 font-light">
                     {item.description}

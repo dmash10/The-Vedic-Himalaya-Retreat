@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useMenu, MenuItem } from '@/hooks/useMenu';
 import {
   Plus, Trash2, Eye, EyeOff, Loader2, IndianRupee, X, Save,
-  Coffee, UtensilsCrossed, Soup, Salad, Beef, IceCream, Type, FileText
+  Coffee, UtensilsCrossed, Soup, Salad, Beef, IceCream, Type, FileText, Leaf
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -12,6 +12,7 @@ const CATEGORIES = [
   { id: 'soup', label: 'Soups', icon: Soup },
   { id: 'salad', label: 'Salads & Starters', icon: Salad },
   { id: 'main', label: 'Main Course', icon: Beef },
+  { id: 'pahadi', label: 'Pahadi Cuisine', icon: Leaf },
   { id: 'dessert', label: 'Dessert', icon: IceCream },
   { id: 'beverage', label: 'Beverages', icon: Coffee },
 ];
