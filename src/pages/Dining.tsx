@@ -841,11 +841,6 @@ export default function Dining() {
                           <h4 className="text-md md:text-lg font-serif font-bold text-[#2E3438] group-hover:text-[#1B4C44] transition-colors duration-300">
                             {dish.name}
                           </h4>
-                          {/* Clean dotted line connector */}
-                          <span className="hidden sm:inline-block flex-grow mx-4 border-b border-dotted border-stone-300" />
-                          <span className="text-xs font-mono font-bold text-[#A88C52]">
-                            {dish.price > 0 ? `₹${dish.price}` : 'Complimentary'}
-                          </span>
                         </div>
 
                         {/* Tags block */}

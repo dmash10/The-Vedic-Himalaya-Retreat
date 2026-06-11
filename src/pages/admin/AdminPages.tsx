@@ -2461,7 +2461,6 @@ export default function AdminPages() {
                               </div>
                               <TextAreaGroup label="Description" value={item.desc} onChange={(v) => updateField('desc', v)} />
                               <div className="space-y-4">
-                                <TextInputGroup label="Price (0 for Complimentary)" icon={Tag} value={String(item.price)} onChange={(v) => updateField('price', parseInt(v) || 0)} />
                                 <TextInputGroup label="Tag (e.g. Sattvik, High Protein)" icon={Sparkles} value={item.tag} onChange={(v) => updateField('tag', v)} />
                                 <TextInputGroup label="Origin (e.g. High Ridge Farms)" icon={MapPin} value={item.origin} onChange={(v) => updateField('origin', v)} />
                               </div>
