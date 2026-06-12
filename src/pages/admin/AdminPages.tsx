@@ -884,6 +884,37 @@ const DEFAULT_CONTACT_FAQS = [
   }
 ];
 
+function sanitizePhotoList(list: any[], defaultTitle: string): any[] {
+  if (!Array.isArray(list)) return [];
+  return list.map(item => {
+    const isGalleryItem = 'src' in item;
+    const currentTitle = isGalleryItem ? item.title : item.caption;
+    
+    const lowercaseTitle = (currentTitle || '').toLowerCase();
+    const isRawFileName = lowercaseTitle.includes('whatsapp') ||
+                          lowercaseTitle.includes('screenshot') ||
+                          lowercaseTitle.includes('uploaded') ||
+                          /\.(jpe?g|png|webp|gif|bmp)$/i.test(lowercaseTitle) ||
+                          /^[a-z0-9_-]+\d{4,}/i.test(lowercaseTitle);
+    
+    if (isRawFileName) {
+      if (isGalleryItem) {
+        return {
+          ...item,
+          title: defaultTitle,
+          desc: item.desc === 'Uploaded via bulk catalog' ? '' : (item.desc || '')
+        };
+      } else {
+        return {
+          ...item,
+          caption: defaultTitle
+        };
+      }
+    }
+    return item;
+  });
+}
+
 export default function AdminPages() {
   const { content, loading: contentLoading, getValue, updateContent, updateMultipleContent } = useContent();
   const { zones, loading: zonesLoading, uploadImageDirect } = useImageZones();
@@ -1263,7 +1294,7 @@ export default function AdminPages() {
       }
       try {
         const val = JSON.parse(getValue('experiences', 'experience_gallery', '[]'));
-        setExperiencePhotos(Array.isArray(val) && val.length > 0 ? val : DEFAULT_EXPERIENCES_GALLERY);
+        setExperiencePhotos(Array.isArray(val) && val.length > 0 ? sanitizePhotoList(val, 'Retreat Scene') : DEFAULT_EXPERIENCES_GALLERY);
       } catch {
         setExperiencePhotos(DEFAULT_EXPERIENCES_GALLERY);
       }
@@ -1305,7 +1336,7 @@ export default function AdminPages() {
       }
       try {
         const val = JSON.parse(getValue('nearby', 'nearby_gallery', '[]'));
-        setNearbyPhotos(Array.isArray(val) && val.length > 0 ? val : DEFAULT_NEARBY_GALLERY);
+        setNearbyPhotos(Array.isArray(val) && val.length > 0 ? sanitizePhotoList(val, 'Nearby Attraction') : DEFAULT_NEARBY_GALLERY);
       } catch {
         setNearbyPhotos(DEFAULT_NEARBY_GALLERY);
       }
@@ -1320,7 +1351,7 @@ export default function AdminPages() {
       });
       try {
         const val = JSON.parse(getValue('gallery', 'gallery_images', '[]'));
-        setGalleryImages(Array.isArray(val) ? val : []);
+        setGalleryImages(Array.isArray(val) ? sanitizePhotoList(val, 'Mountain Views') : []);
       } catch {
         setGalleryImages([]);
       }
