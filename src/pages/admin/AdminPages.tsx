@@ -1382,7 +1382,7 @@ export default function AdminPages() {
     setBulkUploadProgress({
       total: files.length,
       current: 0,
-      fileName: files[0].name,
+      fileName: 'File 1',
     });
     let successCount = 0;
 
@@ -1393,7 +1393,7 @@ export default function AdminPages() {
       setBulkUploadProgress({
         total: files.length,
         current: i,
-        fileName: file.name,
+        fileName: `File ${i + 1}`,
       });
 
       try {
@@ -1408,7 +1408,7 @@ export default function AdminPages() {
               {
                 src: result.url,
                 category: 'Mountain Views',
-                title: 'New Photo',
+                title: 'Mountain Views',
                 desc: '',
                 is_visible: true
               }
@@ -1418,7 +1418,7 @@ export default function AdminPages() {
               ...prev,
               {
                 url: result.url,
-                caption: 'New Scene',
+                caption: 'Retreat Scene',
                 is_visible: true
               }
             ]);
@@ -1427,7 +1427,7 @@ export default function AdminPages() {
               ...prev,
               {
                 url: result.url,
-                caption: 'New Scene',
+                caption: 'Nearby Attraction',
                 is_visible: true
               }
             ]);
