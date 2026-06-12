@@ -1408,8 +1408,8 @@ export default function AdminPages() {
               {
                 src: result.url,
                 category: 'Mountain Views',
-                title: file.name.split('.')[0] || 'New Photo',
-                desc: 'Uploaded via bulk catalog',
+                title: 'New Photo',
+                desc: '',
                 is_visible: true
               }
             ]);
@@ -1418,7 +1418,7 @@ export default function AdminPages() {
               ...prev,
               {
                 url: result.url,
-                caption: file.name.split('.')[0] || 'New Scene',
+                caption: 'New Scene',
                 is_visible: true
               }
             ]);
@@ -1427,7 +1427,7 @@ export default function AdminPages() {
               ...prev,
               {
                 url: result.url,
-                caption: file.name.split('.')[0] || 'New Scene',
+                caption: 'New Scene',
                 is_visible: true
               }
             ]);
