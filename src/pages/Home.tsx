@@ -1433,12 +1433,26 @@ export default function Home() {
             </div>
              
              {(() => {
-               const visibleBentoItems = bentoGalleryItems.filter((item: any) => item.is_visible !== false).slice(0, 6);
-               const mappedBentoItems = visibleBentoItems.map((item, idx) => ({
-                 image: item.image,
-                 title: item.title,
-                 category: `Slide ${(idx + 1).toString().padStart(2, "0")}`
-               }));
+                const visibleBentoItems = bentoGalleryItems.filter((item: any) => item.is_visible !== false).slice(0, 6);
+                const mappedBentoItems = visibleBentoItems.map((item, idx) => {
+                  const rawTitle = item.title || "";
+                  const lowercaseTitle = rawTitle.toLowerCase();
+                  const isFileNameTitle = lowercaseTitle.includes('whatsapp') ||
+                                          lowercaseTitle.includes('screenshot') ||
+                                          lowercaseTitle.includes('uploaded') ||
+                                          /\.(jpe?g|png|webp|gif|bmp)$/i.test(lowercaseTitle) ||
+                                          /^[a-z0-9_-]+\d{4,}/i.test(lowercaseTitle);
+                  
+                  const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Retreat View", "Mountain Views", "Retreat Scene", "Nearby Attraction"].includes(rawTitle.trim()) || isFileNameTitle;
+                  const title = isPlaceholderTitle ? "" : rawTitle;
+                  const category = item.category && item.category !== 'undefined' ? item.category : "Mountain Views";
+
+                  return {
+                    image: item.image,
+                    title: title,
+                    category: category
+                  };
+                });
                return (
                  <BentoGallery 
                    items={mappedBentoItems} 

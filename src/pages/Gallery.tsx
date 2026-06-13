@@ -33,7 +33,7 @@ export default function Gallery() {
     if (Array.isArray(parsedBento)) {
       bentoImages = parsedBento.map((item: any) => ({
         src: item.image,
-        category: item.category || "Mountain Views",
+        category: item.category && item.category !== 'undefined' ? item.category : "Mountain Views",
         title: item.title || "",
         desc: item.description || item.desc || "",
         is_visible: item.is_visible !== false
