@@ -1434,13 +1434,12 @@ export default function AdminPages() {
           setHasUnsavedChanges(true);
 
           if (targetList === 'gallery') {
-            setGalleryImages(prev => [
+            setBentoGalleryItems(prev => [
               ...prev,
               {
-                src: result.url,
+                image: result.url,
                 category: 'Mountain Views',
                 title: 'Mountain Views',
-                desc: '',
                 is_visible: true
               }
             ]);
@@ -1562,7 +1561,6 @@ export default function AdminPages() {
       updates.push({ section: 'nearby', key: 'treks_directory', value: JSON.stringify(treksDirectory) });
       updates.push({ section: 'nearby', key: 'nearby_gallery', value: JSON.stringify(nearbyPhotos) });
     } else if (activePageId === 'gallery') {
-      updates.push({ section: 'gallery', key: 'gallery_images', value: JSON.stringify(galleryImages) });
       updates.push({ section: 'home', key: 'bento_gallery_items', value: JSON.stringify(bentoGalleryItems) });
     } else if (activePageId === 'contact') {
       updates.push({ section: 'contact', key: 'contact_faqs', value: JSON.stringify(contactFaqs) });
@@ -1982,12 +1980,9 @@ export default function AdminPages() {
                                 <div className="text-left w-full">
                                   <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
                                   <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                    <option value="Mountain Views" className="bg-[#0D1412]">Mountain Views</option>
-                                    <option value="Rooms & Suites" className="bg-[#0D1412]">Rooms & Suites</option>
-                                    <option value="Sacred Spaces" className="bg-[#0D1412]">Sacred Spaces</option>
-                                    <option value="Food & Dining" className="bg-[#0D1412]">Food & Dining</option>
-                                    <option value="Forest Trails" className="bg-[#0D1412]">Forest Trails</option>
-                                    <option value="Mist & Ridges" className="bg-[#0D1412]">Mist & Ridges</option>
+                                    {(getValue('gallery', 'gallery_categories', 'Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges')).split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
+                                      <option key={c} value={c} className="bg-[#0D1412]">{c}</option>
+                                    ))}
                                   </select>
                                 </div>
                               </div>
@@ -3286,34 +3281,6 @@ export default function AdminPages() {
                     )}
 
                     <ListEditor
-                      title="Bento Masonry Gallery Images"
-                      items={galleryImages}
-                      onChange={setGalleryImages}
-                      createDefaultItem={() => ({ src: '', category: 'Mountain Views', title: 'New Photo', desc: 'Description...', is_visible: true })}
-                      getItemLabel={(item) => item.title}
-                      getItemImage={(item) => item.src}
-                      renderItemEditor={(item, idx, updateField) => (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                          <div className="space-y-4">
-                            <TextInputGroup label="Title" icon={Type} value={item.title} onChange={(v) => updateField('title', v)} />
-                            <TextInputGroup label="Description" icon={Type} value={item.desc} onChange={(v) => updateField('desc', v)} />
-                            <div className="text-left w-full">
-                              <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
-                              <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                {(formFields.gallery_categories || "Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges").split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
-                                  <option key={c} value={c} className="bg-[#0D1412]">{c}</option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                          <ImageUploader label="Gallery Image" currentImage={item.src} onImageChange={(p) => updateField('src', p)} aspectRatio="aspect-[4/3] w-full" />
-                        </div>
-                      )}
-                      onSave={handleSavePage}
-                      isSaving={isSaving !== null}
-                    />
-
-                    <ListEditor
                       title="Synced Home Page Bento Images"
                       items={bentoGalleryItems}
                       onChange={setBentoGalleryItems}
@@ -3327,12 +3294,9 @@ export default function AdminPages() {
                             <div className="text-left w-full">
                               <label className="block text-[9px] font-bold text-[#C4A665] uppercase tracking-[0.2em] mb-1.5">Category Group</label>
                               <select value={item.category || 'Mountain Views'} onChange={(e) => updateField('category', e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-[#1C2E2A] rounded-lg text-xs text-[#E2E8F0] focus:outline-none focus:border-[#C4A665]">
-                                <option value="Mountain Views" className="bg-[#0D1412]">Mountain Views</option>
-                                <option value="Rooms & Suites" className="bg-[#0D1412]">Rooms & Suites</option>
-                                <option value="Sacred Spaces" className="bg-[#0D1412]">Sacred Spaces</option>
-                                <option value="Food & Dining" className="bg-[#0D1412]">Food & Dining</option>
-                                <option value="Forest Trails" className="bg-[#0D1412]">Forest Trails</option>
-                                <option value="Mist & Ridges" className="bg-[#0D1412]">Mist & Ridges</option>
+                                {(getValue('gallery', 'gallery_categories', 'Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges')).split(',').map((c: string) => c.trim()).filter(Boolean).map((c: string) => (
+                                  <option key={c} value={c} className="bg-[#0D1412]">{c}</option>
+                                ))}
                               </select>
                             </div>
                           </div>

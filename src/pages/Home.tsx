@@ -1433,7 +1433,7 @@ export default function Home() {
             </div>
              
              {(() => {
-               const visibleBentoItems = bentoGalleryItems.filter((item: any) => item.is_visible !== false);
+               const visibleBentoItems = bentoGalleryItems.filter((item: any) => item.is_visible !== false).slice(0, 6);
                const mappedBentoItems = visibleBentoItems.map((item, idx) => ({
                  image: item.image,
                  title: item.title,

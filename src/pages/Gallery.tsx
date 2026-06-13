@@ -26,51 +26,24 @@ export default function Gallery() {
   const galleryHeroVisible = getValue('gallery', 'gallery_hero_visible', 'true') !== 'false';
   const galleryHeroBadge = getValue('gallery', 'gallery_hero_badge', 'OUR VISUAL STORY');
 
-  let dbImages: GalleryImage[] = [];
+  let bentoImages: GalleryImage[] = [];
   try {
-    const rawImagesStr = getValue('gallery', 'gallery_images', '[]');
-    dbImages = rawImagesStr ? JSON.parse(rawImagesStr) : [];
-  } catch (e) {
-    console.error("Failed to parse gallery images:", e);
-  }
-
-  let homeImages: GalleryImage[] = [];
-  try {
-    const homeImagesStr = getValue('home', 'bento_gallery_items', '[]');
-    const parsedHome = homeImagesStr ? JSON.parse(homeImagesStr) : [];
-    if (Array.isArray(parsedHome)) {
-      homeImages = parsedHome.map((item: any) => ({
+    const bentoImagesStr = getValue('home', 'bento_gallery_items', '[]');
+    const parsedBento = bentoImagesStr ? JSON.parse(bentoImagesStr) : [];
+    if (Array.isArray(parsedBento)) {
+      bentoImages = parsedBento.map((item: any) => ({
         src: item.image,
         category: item.category || "Mountain Views",
         title: item.title || "",
-        desc: item.description || "",
+        desc: item.description || item.desc || "",
         is_visible: item.is_visible !== false
       }));
     }
   } catch (e) {
-    console.error("Failed to parse home gallery images:", e);
+    console.error("Failed to parse bento gallery images:", e);
   }
 
-  // Merge and deduplicate by image URL (src)
-  const combinedImages: GalleryImage[] = [];
-  const seenUrls = new Set<string>();
-
-  const mainSource = dbImages || [];
-  for (const img of mainSource) {
-    if (img && img.src && !seenUrls.has(img.src)) {
-      seenUrls.add(img.src);
-      combinedImages.push(img);
-    }
-  }
-
-  for (const img of homeImages) {
-    if (img && img.src && !seenUrls.has(img.src)) {
-      seenUrls.add(img.src);
-      combinedImages.push(img);
-    }
-  }
-
-  const visibleImages = combinedImages.filter((img) => img.is_visible !== false);
+  const visibleImages = bentoImages.filter((img) => img.is_visible !== false);
 
   // 1. Get configured categories from database settings
   const categoriesStr = getValue('gallery', 'gallery_categories', 'Mountain Views, Rooms & Suites, Sacred Spaces, Food & Dining, Forest Trails, Mist & Ridges');
@@ -131,11 +104,23 @@ export default function Gallery() {
         {(() => {
           const mappedGalleryItems = filteredImages.map(img => {
             const rawTitle = img.title || "";
-            const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Retreat View"].includes(rawTitle.trim());
+            const lowercaseTitle = rawTitle.toLowerCase();
+            const isFileNameTitle = lowercaseTitle.includes('whatsapp') ||
+                                    lowercaseTitle.includes('screenshot') ||
+                                    lowercaseTitle.includes('uploaded') ||
+                                    /\.(jpe?g|png|webp|gif|bmp)$/i.test(lowercaseTitle) ||
+                                    /^[a-z0-9_-]+\d{4,}/i.test(lowercaseTitle);
+            
+            const isPlaceholderTitle = ["New Photo", "Visual Photo", "Untitled Card", "Retreat View", "Mountain Views", "Retreat Scene", "Nearby Attraction"].includes(rawTitle.trim()) || isFileNameTitle;
             const title = isPlaceholderTitle ? "" : rawTitle;
 
             const rawDesc = img.desc || "";
-            const isPlaceholderDesc = ["Description...", "Uploaded via bulk catalog"].includes(rawDesc.trim());
+            const lowercaseDesc = rawDesc.toLowerCase();
+            const isPlaceholderDesc = ["Description...", "Uploaded via bulk catalog"].includes(rawDesc.trim()) || 
+                                      lowercaseDesc.includes('whatsapp') ||
+                                      lowercaseDesc.includes('screenshot') ||
+                                      lowercaseDesc.includes('uploaded') ||
+                                      /\.(jpe?g|png|webp|gif|bmp)$/i.test(lowercaseDesc);
             const description = isPlaceholderDesc ? "" : rawDesc;
 
             return {
