@@ -4,18 +4,12 @@ import { Button } from "@/components/ui/Button";
 import { Link } from "react-router-dom";
 import SocialProofSection from "@/components/SocialProofSection";
 import { ArrowRight, Maximize2, BedDouble, Bath, Mountain, Flame, Sparkles, Compass, Bed, Fan, Tv, Wifi, Wind, Leaf, MapPin, Droplets, Zap, Car, Utensils, ShieldCheck, Briefcase, Users, ChevronLeft, ChevronRight, Star, Coffee } from "lucide-react";
-import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useRooms } from "@/hooks/useRooms";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import PageLoader from "@/components/PageLoader";
 import BentoGallery from "@/components/BentoGallery";
-
-function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
-  const Icon = (LucideIcons as any)[name];
-  if (!Icon) return <Sparkles className={className} strokeWidth={strokeWidth} />;
-  return <Icon className={className} strokeWidth={strokeWidth} />;
-}
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 
 interface OfferingCardProps {
   key?: string | number;

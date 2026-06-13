@@ -1,16 +1,10 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { Leaf, Flame, Wind, Sparkles, Utensils, Coffee, ChevronRight, Check, ChevronLeft } from "lucide-react";
-import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { useMenu } from "@/hooks/useMenu";
 import PageLoader from "@/components/PageLoader";
-
-function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
-  const Icon = (LucideIcons as any)[name];
-  if (!Icon) return <Leaf className={className} strokeWidth={strokeWidth} />;
-  return <Icon className={className} strokeWidth={strokeWidth} />;
-}
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 
 export default function Dining() {
   const easePremium = [0.22, 1, 0.36, 1] as const;

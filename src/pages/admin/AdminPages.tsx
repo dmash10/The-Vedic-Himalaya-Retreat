@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import ImageUploader from '@/components/admin/ImageUploader';
-import * as LucideIcons from 'lucide-react';
 
 const AVAILABLE_ICONS = [
   "Bed", "Droplets", "Wifi", "ShieldCheck", "Compass", "Briefcase", "Utensils", "Fan",

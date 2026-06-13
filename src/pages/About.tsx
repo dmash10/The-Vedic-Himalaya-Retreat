@@ -1,14 +1,8 @@
 import { motion } from "motion/react";
 import { Mountain, Compass, ShieldCheck, Heart, Sparkles, Sun } from "lucide-react";
-import * as LucideIcons from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import PageLoader from "@/components/PageLoader";
-
-function DynamicIcon({ name, className = "h-4 w-4", strokeWidth = 1.5 }: { name: string; className?: string; strokeWidth?: number }) {
-  const Icon = (LucideIcons as any)[name];
-  if (!Icon) return <Sparkles className={className} strokeWidth={strokeWidth} />;
-  return <Icon className={className} strokeWidth={strokeWidth} />;
-}
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 
 export default function About() {
   const easePremium = [0.22, 1, 0.36, 1] as const;

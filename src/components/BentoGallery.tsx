@@ -124,6 +124,7 @@ export default function BentoGallery({
                 <img 
                   src={readyToLoad ? item.image : ""} 
                   alt={item.title} 
+                  loading="lazy"
                   onLoad={() => setLoadedMap(prev => ({ ...prev, [imgKey]: true }))}
                   className={`w-full h-full md:h-full md:w-auto md:min-w-full object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-[1.05] contrast-105 ${borderRadiusClass} ${isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`} 
                   referrerPolicy="no-referrer"
